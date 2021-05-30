@@ -108,7 +108,9 @@ type TransactionParseResult = {
 const parseTransactions = (
   filePath: string,
   accountId: string,
-  accountName: string
+  accountName: string,
+  importIdPrefix: string = '',
+  importIdPostfix: string = ''
 ): TransactionDetail[] => {
   const transactions: TransactionDetail[] = [];
 
@@ -131,7 +133,7 @@ const parseTransactions = (
 
     const transaction: TransactionDetail = {
       id: '', // need to provide a value for typescript validation
-      import_id: `${id}-test2`,
+      import_id: `${importIdPrefix}-${id}-${importIdPostfix}`,
       account_id: accountId,
       cleared: ynab.SaveTransaction.ClearedEnum.Cleared,
       approved: false,
@@ -216,7 +218,7 @@ const ynabCredentials: YnabCredentials = {
     );
     const transactions = parseTransactions(
       transactionsFilePath,
-      '9e528ea0-b21d-447b-ae2e-e256cceb4bbf',
+      'ec2da106-1d26-4831-bdfa-28277212c98a',
       accountName
     );
     console.log(`Parsed ${transactions.length} transactions`);
@@ -231,4 +233,4 @@ const ynabCredentials: YnabCredentials = {
 })();
 
 // budget: "3f967bf6-9cad-473f-a72f-bcb27e42850a"
-// account: "9e528ea0-b21d-447b-ae2e-e256cceb4bbf"
+// account: "ec2da106-1d26-4831-bdfa-28277212c98a"
