@@ -917,6 +917,13 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@geofflamrock/westpac-au-scraper@^0.0.1-alpha.3":
+  version "0.0.1-alpha.3"
+  resolved "https://npm.pkg.github.com/download/@geofflamrock/westpac-au-scraper/0.0.1-alpha.3/6c0bba15a4a8f9b73ebe5cbe0e4d924613d7c4e652695c78ea959de3af0ad931#a7a5ed830495ea5f62811961110fe474530bab29"
+  integrity sha512-8ebL96p639/A+COXtOiBXGwmFjC1KDdPPjF65hGCWADG8hb04pLLRx8B+2N/X2aKDm9Wms65B7YdQUdhwjf+0A==
+  dependencies:
+    puppeteer "^9.1.1"
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"

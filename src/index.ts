@@ -1,10 +1,11 @@
-import puppeteer from 'puppeteer';
+import puppeteer, { Page } from 'puppeteer';
 import path from 'path';
 import tmp from 'tmp';
 import fs from 'fs';
 import { format } from 'date-fns';
 import ynab, { TransactionDetail } from 'ynab';
 import ofx from 'ofx';
+import { login } from '@geofflamrock/westpac-au-scraper';
 
 export type Credentials = {
   username: string;
@@ -21,32 +22,10 @@ const getFirstDayOfMonth = () => {
 };
 
 export const getWestpacTransactions = async (
-  credentials: Credentials,
+  page: Page,
   accountName: string
 ): Promise<string> => {
   console.log(`Getting transactions from Westpac`);
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.setViewport({
-    width: 1920,
-    height: 1080,
-    deviceScaleFactor: 1,
-  });
-  await page.goto(
-    'https://banking.westpac.com.au/wbc/banking/handler?TAM_OP=login&segment=personal&logout=false'
-  );
-
-  console.log(`Authenticating using username '${credentials.username}'`);
-
-  await page.type('#fakeusername', credentials.username);
-  await page.type('#password', credentials.password);
-  await page.click('#signin');
-
-  await page.waitForNavigation();
-
-  console.log(
-    `Authenticated successfully using username '${credentials.username}'`
-  );
 
   await page.goto(
     'https://banking.westpac.com.au/secure/banking/reportsandexports/exportparameters/2/'
@@ -94,15 +73,9 @@ export const getWestpacTransactions = async (
     await page.waitForTimeout(1000);
   }
 
-  await browser.close();
   console.log('Finished getting transactions from Westpac');
 
   return transactionsFile;
-};
-
-type TransactionParseResult = {
-  transactionsToCreate: TransactionDetail[];
-  transactionsToUpdate: TransactionDetail[];
 };
 
 const parseTransactions = (
@@ -123,12 +96,11 @@ const parseTransactions = (
 
   for (let txn of ofxTransactions) {
     const id = txn.FITID;
-    // console.log(txn.DTPOSTED);
     const dateISO = `${txn.DTPOSTED.substr(0, 4)}-${txn.DTPOSTED.substr(
       4,
       2
     )}-${txn.DTPOSTED.substr(6, 2)}`;
-    const amountMilliunits = txn.TRNAMT * 1000;
+    const amountMilliunits = Math.round(txn.TRNAMT * 1000);
     const memo = txn.MEMO;
 
     const transaction: TransactionDetail = {
@@ -144,8 +116,6 @@ const parseTransactions = (
       account_name: accountName,
       subtransactions: [],
     };
-
-    // console.log(transaction);
 
     transactions.push(transaction);
   }
@@ -165,17 +135,22 @@ const importTransactions = async (
     budgetId,
     firstDayOfMonth
   );
-  // console.log(existingTransactions.data.transactions);
+
   const transactionsToCreate: TransactionDetail[] = [];
   const transactionsToUpdate: TransactionDetail[] = [];
 
   transactions.forEach(transaction => {
-    if (
-      existingTransactions.data.transactions.find(
-        t => t.import_id === transaction.import_id
+    const existingTransaction:
+      | TransactionDetail
+      | undefined = existingTransactions.data.transactions.find(
+      t => t.import_id === transaction.import_id
+    );
+    if (existingTransaction) {
+      if (
+        existingTransaction.amount !== transaction.amount ||
+        existingTransaction.date !== transaction.date
       )
-    ) {
-      transactionsToUpdate.push(transaction);
+        transactionsToUpdate.push(transaction);
     } else {
       transactionsToCreate.push(transaction);
     }
@@ -187,7 +162,11 @@ const importTransactions = async (
       budgetId,
       { transactions: transactionsToCreate }
     );
-    console.log(createResponse);
+    console.log(
+      `Transaction create response: ${JSON.stringify(createResponse)}`
+    );
+  } else {
+    console.log('No new transactions to create');
   }
 
   if (transactionsToUpdate && transactionsToUpdate.length) {
@@ -196,13 +175,17 @@ const importTransactions = async (
       budgetId,
       { transactions: transactionsToUpdate }
     );
-    console.log(updateResponse);
+    console.log(
+      `Transaction update response: ${JSON.stringify(updateResponse)}`
+    );
+  } else {
+    console.log('No existing transactions to update');
   }
 };
 
 const credentials: Credentials = {
-  username: process.env.USERNAME || '',
-  password: process.env.PASSWORD || '',
+  username: process.env.WESTPAC_USERNAME || '',
+  password: process.env.WESTPAC_PASSWORD || '',
 };
 
 const ynabCredentials: YnabCredentials = {
@@ -210,10 +193,17 @@ const ynabCredentials: YnabCredentials = {
 };
 
 (async () => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
   try {
+    console.log(`Logging in with username '${credentials.username}'`);
+    await login(page, credentials.username, credentials.password);
+    console.log(
+      `Successfully logged in with username '${credentials.username}'`
+    );
     const accountName = 'Transaction';
     const transactionsFilePath = await getWestpacTransactions(
-      credentials,
+      page,
       accountName
     );
     const transactions = parseTransactions(
@@ -229,6 +219,8 @@ const ynabCredentials: YnabCredentials = {
     );
   } catch (error) {
     console.error(error);
+  } finally {
+    await browser.close();
   }
 })();
 
