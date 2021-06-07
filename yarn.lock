@@ -917,12 +917,15 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@geofflamrock/westpac-au-scraper@^0.0.1-alpha.3":
-  version "0.0.1-alpha.3"
-  resolved "https://npm.pkg.github.com/download/@geofflamrock/westpac-au-scraper/0.0.1-alpha.3/6c0bba15a4a8f9b73ebe5cbe0e4d924613d7c4e652695c78ea959de3af0ad931#a7a5ed830495ea5f62811961110fe474530bab29"
-  integrity sha512-8ebL96p639/A+COXtOiBXGwmFjC1KDdPPjF65hGCWADG8hb04pLLRx8B+2N/X2aKDm9Wms65B7YdQUdhwjf+0A==
+"@geofflamrock/westpac-au-scraper@^0.0.1-alpha.10":
+  version "0.0.1-alpha.10"
+  resolved "https://npm.pkg.github.com/download/@geofflamrock/westpac-au-scraper/0.0.1-alpha.10/12837524f35c93dd4b6a8baac36568cdbb3d71f506cec93259b8ecf4029dd9a6#b659e9e609659c2caab3a322574e31fc445ce985"
+  integrity sha512-JMa67s5zXpPMiK2Htpw/f9CIot3m0xtd/pEnLIe4R4VtlZQJDyGAyUlCR0376cJafrzs1C4O+Cf9Ed5SPgZnNA==
   dependencies:
+    "@types/tmp" "^0.2.0"
+    date-fns "^2.22.1"
     puppeteer "^9.1.1"
+    tmp "^0.2.1"
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
@@ -2931,6 +2934,11 @@ date-fns@^2.21.3:
   version "2.21.3"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.21.3.tgz#8f5f6889d7a96bbcc1f0ea50239b397a83357f9b"
   integrity sha512-HeYdzCaFflc1i4tGbj7JKMjM4cKGYoyxwcIIkHzNgCkX8xXDNJDZXgDDVchIWpN4eQc3lH37WarduXFZJOtxfw==
+
+date-fns@^2.22.1:
+  version "2.22.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.22.1.tgz#1e5af959831ebb1d82992bf67b765052d8f0efc4"
+  integrity sha512-yUFPQjrxEmIsMqlHhAhmxkuH769baF21Kk+nZwZGyrMoyLA+LugaQtC0+Tqf9CBUUULWwUJt6Q5ySI3LJDDCGg==
 
 debug@4, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
   version "4.3.1"

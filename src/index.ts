@@ -5,7 +5,11 @@ import fs from 'fs';
 import { format } from 'date-fns';
 import ynab, { TransactionDetail } from 'ynab';
 import ofx from 'ofx';
-import { login } from '@geofflamrock/westpac-au-scraper';
+import {
+  login,
+  exportTransactions,
+  ExportFormat,
+} from '@geofflamrock/westpac-au-scraper';
 
 export type Credentials = {
   username: string;
@@ -21,61 +25,9 @@ const getFirstDayOfMonth = () => {
   return new Date(now.getFullYear(), now.getMonth(), 1);
 };
 
-export const getWestpacTransactions = async (
-  page: Page,
-  accountName: string
-): Promise<string> => {
-  console.log(`Getting transactions from Westpac`);
-
-  await page.goto(
-    'https://banking.westpac.com.au/secure/banking/reportsandexports/exportparameters/2/'
-  );
-
-  // Select all of the start date field and replace with first of the month
-  const firstDayOfMonth = getFirstDayOfMonth();
-  const startDate = format(firstDayOfMonth, 'dd/MM/yyyy');
-
-  console.log(`Setting export parameter start date '${startDate}'`);
-  await page.click('#DateRange_StartDate', { clickCount: 3 });
-  await page.type('#DateRange_StartDate', startDate);
-
-  console.log(`Setting export parameter account '${accountName}'`);
-  await page.type('#Accounts_1', accountName);
-  await page.waitForTimeout(2000);
-  await page.waitForSelector('.autosuggest-suggestions:first-child');
-  await page.click('.autosuggest-suggestions:first-child');
-
-  console.log(`Setting export parameter file format 'ofx'`);
-  await page.waitForTimeout(2000);
-  await page.waitForSelector('#File_type_3');
-  await page.click('#File_type_3'); // OFX
-
-  const tempDir = tmp.dirSync();
-  console.log(`Exporting transaction file to '${tempDir.name}'`);
-
-  const client = await page.target().createCDPSession();
-  await client.send('Page.setDownloadBehavior', {
-    behavior: 'allow',
-    downloadPath: tempDir.name,
-  });
-  await page.click('.btn-actions > .btn.export-link');
-
-  let transactionsFile = '';
-
-  while (true) {
-    const downloadDirFiles = fs.readdirSync(tempDir.name);
-
-    if (downloadDirFiles.length > 0) {
-      transactionsFile = path.join(tempDir.name, downloadDirFiles[0]);
-      console.log(`Transactions exported to '${transactionsFile}'`);
-      break;
-    }
-    await page.waitForTimeout(1000);
-  }
-
-  console.log('Finished getting transactions from Westpac');
-
-  return transactionsFile;
+const getYesterday = () => {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
 };
 
 const parseTransactions = (
@@ -195,6 +147,7 @@ const ynabCredentials: YnabCredentials = {
 (async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
+
   try {
     console.log(`Logging in with username '${credentials.username}'`);
     await login(page, credentials.username, credentials.password);
@@ -202,16 +155,32 @@ const ynabCredentials: YnabCredentials = {
       `Successfully logged in with username '${credentials.username}'`
     );
     const accountName = 'Transaction';
-    const transactionsFilePath = await getWestpacTransactions(
-      page,
-      accountName
+
+    const startDate = getFirstDayOfMonth();
+    const endDate = getYesterday();
+
+    console.log(
+      `Exporting transactions from westpac for account '${accountName}' for dates '${format(
+        startDate,
+        'dd/MM/yyyy'
+      )}' to '${format(endDate, 'dd/MM/yyyy')}'`
     );
+    const transactionsFilePath = await exportTransactions(
+      page,
+      accountName,
+      startDate
+    );
+
+    console.log(`Exported transactions to '${transactionsFilePath}'`);
+
     const transactions = parseTransactions(
       transactionsFilePath,
       'ec2da106-1d26-4831-bdfa-28277212c98a',
       accountName
     );
+
     console.log(`Parsed ${transactions.length} transactions`);
+
     await importTransactions(
       ynabCredentials,
       '3f967bf6-9cad-473f-a72f-bcb27e42850a',
