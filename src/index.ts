@@ -1,6 +1,10 @@
 import puppeteer from 'puppeteer';
 import { format, startOfMonth, startOfYesterday } from 'date-fns';
-import { login, exportTransactions } from '@geofflamrock/westpac-au-scraper';
+import {
+  login,
+  exportTransactions,
+  ExportFormat,
+} from '@geofflamrock/westpac-au-scraper';
 import { ITransactionParser } from './parser/ITransactionParser';
 import { OfxTransactionParser } from './parser/OfxTransactionParser';
 import {
@@ -53,7 +57,12 @@ const debug: boolean = !!process.env.YNAB_SYNC_DEBUG || false;
     const transactionsFilePath = await exportTransactions(
       page,
       accountName,
-      startDate
+      startDate,
+      undefined, // TODO: Make this work with end date as it fails currently
+      ExportFormat.Ofx,
+      {
+        debug: debug,
+      }
     );
 
     console.log(`Exported transactions to '${transactionsFilePath}'`);
