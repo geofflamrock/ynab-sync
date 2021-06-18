@@ -27,7 +27,9 @@ const ynabCredentials: YnabCredentials = {
   apiKey: process.env.YNAB_API_KEY || '',
 };
 
-const debug: boolean = !!process.env.YNAB_SYNC_DEBUG || false;
+let debug: boolean = false;
+
+if (process.env.YNAB_SYNC_DEBUG?.toLowerCase() === 'true') debug = true;
 
 (async () => {
   const browser = await puppeteer.launch();
@@ -74,7 +76,9 @@ const debug: boolean = !!process.env.YNAB_SYNC_DEBUG || false;
       transactionsFilePath
     );
 
-    console.log(`Parsed ${transactions.length} transactions`);
+    console.log(
+      `Parsed ${transactions.length} transactions from '${transactionsFilePath}'`
+    );
 
     let importer: ITransactionImporter = new YnabTransactionImporter({
       credentials: ynabCredentials,
