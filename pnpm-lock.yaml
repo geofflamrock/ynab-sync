@@ -30,12 +30,6 @@ importers:
       prettier: 2.3.1
       typescript: 4.3.4
 
-  packages/workspace-test:
-    specifiers:
-      ynab-sync: workspace:0.0.1
-    dependencies:
-      ynab-sync: link:../ynab-sync
-
   packages/ynab-sync:
     specifiers:
       '@geofflamrock/westpac-au-scraper': ^0.0.1-alpha.11
