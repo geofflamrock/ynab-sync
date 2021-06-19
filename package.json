@@ -1,66 +1,49 @@
 {
-  "version": "0.1.0",
-  "license": "MIT",
+  "name": "ynab-sync-monorepo",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Sync for YNAB",
+  "module": "dist/index.js",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "engines": {
-    "node": ">=10"
-  },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test",
-    "lint": "tsdx lint",
-    "prepare": "tsdx build",
-    "size": "size-limit",
-    "analyze": "size-limit --why"
+    "build": "pnpm run build --filter \"{packages}\"",
+    "changeset": "changeset",
+    "ci:version": "pnpm run changeset version && pnpm install --frozen-lockfile=false",
+    "lint:fix": "eslint . --fix",
+    "lint": "eslint .",
+    "outdated": "pnpm outdated --filter \"{packages}\"",
+    "preinstall": "npx only-allow pnpm",
+    "publish": "pnpm run build && pnpm publish -r --access public",
+    "test": "pnpm run test --filter \"{packages}\""
   },
-  "peerDependencies": {},
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geofflamrock/ynab-sync.git"
   },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
-  },
-  "name": "ynab-sync",
-  "author": "Geoff Lamrock",
-  "module": "dist/ynab-sync.esm.js",
-  "size-limit": [
-    {
-      "path": "dist/ynab-sync.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "dist/ynab-sync.esm.js",
-      "limit": "10 KB"
-    }
+  "keywords": [
+    "ynab"
   ],
+  "author": "Geoff Lamrock",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geofflamrock/ynab-sync/issues"
+  },
+  "homepage": "https://github.com/geofflamrock/ynab-sync#readme",
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^4.10.3",
-    "@types/lodash": "^4.14.170",
-    "@types/tmp": "^0.2.0",
-    "husky": "^6.0.0",
-    "size-limit": "^4.10.3",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.2.0",
+    "@changesets/cli": "^2.16.0",
+    "@types/node": "^14.14.41",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.24.0",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.3.5",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.2.1",
     "typescript": "^4.2.4"
   },
-  "dependencies": {
-    "@geofflamrock/westpac-au-scraper": "^0.0.1-alpha.11",
-    "date-fns": "^2.21.3",
-    "lodash": "^4.17.21",
-    "ofx": "^0.5.0",
-    "puppeteer": "^9.1.1",
-    "tmp": "^0.2.1",
-    "ynab": "^1.25.0"
+  "directories": {
+    "doc": "docs"
   }
 }
