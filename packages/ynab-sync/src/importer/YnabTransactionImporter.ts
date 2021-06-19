@@ -1,6 +1,6 @@
-import ynab, { TransactionDetail } from 'ynab';
-import { ITransactionImporter } from './ITransactionImporter';
-import { minBy } from 'lodash';
+import ynab, { TransactionDetail } from "ynab";
+import { ITransactionImporter } from "./ITransactionImporter";
+import { minBy } from "lodash";
 
 export type YnabCredentials = {
   apiKey: string;
@@ -24,7 +24,7 @@ export class YnabTransactionImporter implements ITransactionImporter {
   ): Promise<void> {
     const ynabAPI = new ynab.API(this.options.credentials.apiKey);
 
-    const minDate = minBy(transactions, 'date');
+    const minDate = minBy(transactions, "date");
     const existingTransactions = await ynabAPI.transactions.getTransactions(
       budgetId,
       minDate?.date
@@ -33,12 +33,11 @@ export class YnabTransactionImporter implements ITransactionImporter {
     const transactionsToCreate: TransactionDetail[] = [];
     const transactionsToUpdate: TransactionDetail[] = [];
 
-    transactions.forEach(transaction => {
-      const existingTransaction:
-        | TransactionDetail
-        | undefined = existingTransactions.data.transactions.find(
-        t => t.import_id === transaction.import_id
-      );
+    transactions.forEach((transaction) => {
+      const existingTransaction: TransactionDetail | undefined =
+        existingTransactions.data.transactions.find(
+          (t) => t.import_id === transaction.import_id
+        );
       if (existingTransaction) {
         if (
           existingTransaction.amount !== transaction.amount ||
@@ -66,7 +65,7 @@ export class YnabTransactionImporter implements ITransactionImporter {
           `Transaction create response: ${JSON.stringify(createResponse)}`
         );
     } else {
-      if (this.options.debug) console.log('No new transactions to create');
+      if (this.options.debug) console.log("No new transactions to create");
     }
 
     if (transactionsToUpdate && transactionsToUpdate.length) {
@@ -85,7 +84,7 @@ export class YnabTransactionImporter implements ITransactionImporter {
           `Transaction update response: ${JSON.stringify(updateResponse)}`
         );
     } else {
-      if (this.options.debug) console.log('No existing transactions to update');
+      if (this.options.debug) console.log("No existing transactions to update");
     }
   }
 }
