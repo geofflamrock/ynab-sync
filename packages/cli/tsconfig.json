@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "ES5",
+    "baseUrl": "src",
+    "esModuleInterop": true,
+    "module": "CommonJS",
+    "lib": [
+      "es2015"
+    ],
+    "strict": true,
+    "allowJs": true
+  },
+  "include": [
+    "src/cli.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "bin",
+    "dist"
+  ]
+}

@@ -14,7 +14,8 @@
     "outdated": "pnpm outdated --filter \"{packages}\"",
     "preinstall": "npx only-allow pnpm",
     "publish": "pnpm run build && pnpm publish -r --access public",
-    "test": "pnpm run test --filter \"{packages}\""
+    "test": "pnpm run test --filter \"{packages}\"",
+    "publish-cli": "pnpm run build && pnpm run publish-cli --filter \"{packages}\""
   },
   "repository": {
     "type": "git",

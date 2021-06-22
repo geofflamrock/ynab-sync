@@ -1,0 +1,29 @@
+{
+  "name": "ynab-sync-cli",
+  "author": "Geoff Lamrock",
+  "version": "0.0.1",
+  "description": "CLI for creating and running YNAB synchronisations",
+  "license": "MIT",
+  "bin": "./dist/cli.js",
+  "files": [
+    "dist/*",
+    "bin/*",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "publish-cli": "pkg ./package.json --out-path ./bin"
+  },
+  "keywords": [
+    "ynab"
+  ],
+  "devDependencies": {
+    "tslib": "^2.2.0",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "commander": "^7.2.0",
+    "inquirer": "^8.1.1",
+    "ynab-sync": "workspace:0.0.1"
+  }
+}
