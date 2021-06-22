@@ -38,7 +38,7 @@ importers:
       typescript: ^4.2.4
       westpac-au-scraper: ^0.0.1-alpha.11
       ynab: ^1.25.0
-      ynab-sync-core: workspace:../ynab-sync-core
+      ynab-sync-core: workspace:^0.0.2
     dependencies:
       date-fns: 2.22.1
       puppeteer: 9.1.1
