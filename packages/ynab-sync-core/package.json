@@ -2,12 +2,12 @@
   "version": "0.0.1",
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "dist/ynab-sync.esm.js",
+  "module": "dist/ynab-sync-core.esm.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --declaration"
   },
-  "name": "ynab-sync",
+  "name": "ynab-sync-core",
   "author": "Geoff Lamrock",
   "devDependencies": {
     "@types/lodash": "^4.14.170",
