@@ -1,5 +1,11 @@
 # ynab-sync-core
 
+## 0.0.5
+
+### Patch Changes
+
+- 0398ec7: Removes incorrect module output
+
 ## 0.0.4
 
 ### Patch Changes
