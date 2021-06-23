@@ -2,7 +2,6 @@
   "version": "0.0.3",
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "dist/ynab-sync-westpac-au.esm.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --declaration"
