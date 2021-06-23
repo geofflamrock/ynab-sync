@@ -1,7 +1,7 @@
-import fs from 'fs';
-import ynab, { TransactionDetail } from 'ynab';
-import ofx from 'ofx';
-import { ITransactionParser } from './ITransactionParser';
+import fs from "fs";
+import { TransactionDetail, SaveTransaction } from "ynab";
+import ofx from "ofx";
+import { ITransactionParser } from "./ITransactionParser";
 
 export type OfxTransactionParserOptions = {
   importIdPrefix?: string;
@@ -14,8 +14,8 @@ export class OfxTransactionParser implements ITransactionParser {
 
   constructor(options: OfxTransactionParserOptions) {
     this.options = {
-      importIdPrefix: options?.importIdPrefix || '',
-      importIdPostfix: options?.importIdPostfix || '',
+      importIdPrefix: options?.importIdPrefix || "",
+      importIdPostfix: options?.importIdPostfix || "",
       debug: options?.debug || false,
     };
   }
@@ -26,7 +26,7 @@ export class OfxTransactionParser implements ITransactionParser {
     if (this.options.debug)
       console.log(`Reading transactions from '${filePath}`);
 
-    const ofxRawData = fs.readFileSync(filePath, 'utf8');
+    const ofxRawData = fs.readFileSync(filePath, "utf8");
     const ofxParsed = ofx.parse(ofxRawData);
     const ofxTransactions =
       ofxParsed.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.BANKTRANLIST.STMTTRN;
@@ -41,16 +41,16 @@ export class OfxTransactionParser implements ITransactionParser {
       const memo = txn.MEMO;
 
       const transaction: TransactionDetail = {
-        id: '',
+        id: "",
         import_id: `${this.options.importIdPrefix}-${id}-${this.options.importIdPostfix}`,
         account_id: accountId,
-        cleared: ynab.SaveTransaction.ClearedEnum.Cleared,
+        cleared: SaveTransaction.ClearedEnum.Cleared,
         approved: false,
         date: dateISO,
         amount: amountMilliunits,
         payee_name: memo,
         deleted: false,
-        account_name: '',
+        account_name: "",
         subtransactions: [],
       };
 
