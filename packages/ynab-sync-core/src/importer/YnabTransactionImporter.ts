@@ -1,4 +1,4 @@
-import ynab, { TransactionDetail } from "ynab";
+import { API, TransactionDetail } from "ynab";
 import { ITransactionImporter } from "./ITransactionImporter";
 import { minBy } from "lodash";
 
@@ -22,7 +22,7 @@ export class YnabTransactionImporter implements ITransactionImporter {
     budgetId: string,
     transactions: TransactionDetail[]
   ): Promise<void> {
-    const ynabAPI = new ynab.API(this.options.credentials.apiKey);
+    const ynabAPI = new API(this.options.credentials.apiKey);
 
     const minDate = minBy(transactions, "date");
     const existingTransactions = await ynabAPI.transactions.getTransactions(
