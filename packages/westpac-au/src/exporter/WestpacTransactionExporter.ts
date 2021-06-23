@@ -8,6 +8,9 @@ export type WestpacTransactionExportInputs = {
   username: string;
   password: string;
   accountName: string;
+  startDate?: Date;
+  endDate?: Date;
+  debug?: boolean;
 };
 
 export class WestpacTransactionExporter
@@ -24,11 +27,11 @@ export class WestpacTransactionExporter
     const filePath = await exportTransactions(
       page,
       inputs.accountName,
-      new Date("01/06/2021"), // TEMP
-      undefined,
+      inputs.startDate,
+      inputs.endDate,
       undefined,
       {
-        debug: true,
+        debug: inputs.debug || false,
       }
     );
 
