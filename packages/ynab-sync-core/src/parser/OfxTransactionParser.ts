@@ -2,20 +2,20 @@ import fs from "fs";
 import { TransactionDetail, SaveTransaction } from "ynab";
 import ofx from "ofx";
 import { ITransactionParser } from "./ITransactionParser";
+import format from "string-template";
 
 export type OfxTransactionParserOptions = {
-  importIdPrefix?: string;
-  importIdPostfix?: string;
+  importIdTemplate?: string;
   debug?: boolean;
 };
 
 export class OfxTransactionParser implements ITransactionParser {
   private options: OfxTransactionParserOptions;
+  private defaultImportIdTemplate: string = "{id}";
 
   constructor(options: OfxTransactionParserOptions) {
     this.options = {
-      importIdPrefix: options?.importIdPrefix || "",
-      importIdPostfix: options?.importIdPostfix || "",
+      importIdTemplate: options?.importIdTemplate,
       debug: options?.debug || false,
     };
   }
@@ -42,7 +42,6 @@ export class OfxTransactionParser implements ITransactionParser {
 
       const transaction: TransactionDetail = {
         id: "",
-        import_id: `${this.options.importIdPrefix}-${id}-${this.options.importIdPostfix}`,
         account_id: accountId,
         cleared: SaveTransaction.ClearedEnum.Cleared,
         approved: false,
@@ -53,6 +52,33 @@ export class OfxTransactionParser implements ITransactionParser {
         account_name: "",
         subtransactions: [],
       };
+
+      const importIdTemplateParameters = {
+        id: id,
+        date: dateISO,
+        amount: amountMilliunits,
+        memo: memo,
+      };
+
+      const importId = format(
+        this.options.importIdTemplate || this.defaultImportIdTemplate,
+        importIdTemplateParameters
+      );
+
+      if (this.options.debug) {
+        console.log(
+          `Created import id '${importId}' from template '${
+            this.options.importIdTemplate || this.defaultImportIdTemplate
+          }' and parameters`,
+          importIdTemplateParameters
+        );
+      }
+
+      transaction.import_id = importId;
+
+      if (this.options.debug) {
+        console.log("Parsed transaction", transaction);
+      }
 
       transactions.push(transaction);
     }
