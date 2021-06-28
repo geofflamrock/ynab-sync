@@ -36,13 +36,13 @@ importers:
       puppeteer: ^9.1.1
       tslib: ^2.2.0
       typescript: ^4.2.4
-      westpac-au-scraper: ^0.0.1-alpha.11
+      westpac-au-scraper: ^0.0.1-alpha.12
       ynab: ^1.25.0
       ynab-sync-core: workspace:^0.1.0
     dependencies:
       date-fns: 2.22.1
       puppeteer: 9.1.1
-      westpac-au-scraper: 0.0.1-alpha.11
+      westpac-au-scraper: 0.0.1-alpha.12
       ynab: 1.25.0
       ynab-sync-core: link:../ynab-sync-core
     devDependencies:
@@ -2826,8 +2826,8 @@ packages:
       defaults: 1.0.3
     dev: true
 
-  /westpac-au-scraper/0.0.1-alpha.11:
-    resolution: {integrity: sha512-06IakjahDfSxw4RHUAuJJYa93u6ZHyYkXY1+B/c4TQeDurU3Um9yFeWmIEdhk3/1A3YbKwjm5O0KwPwO5cnFwg==}
+  /westpac-au-scraper/0.0.1-alpha.12:
+    resolution: {integrity: sha512-iup4MC/IP9k1b7hzbYMJ2yFulsbRAnbbJ1zsruCezN2UHyXmwzE3k5fXkMd/MNJOZ+CJhwl+eiC2PYkJr9COuw==}
     engines: {node: '>=10'}
     dependencies:
       '@types/tmp': 0.2.0
