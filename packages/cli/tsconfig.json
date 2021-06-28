@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "outDir": "bin",
+        "target": "ES5",
+        "baseUrl": "src",
+        "esModuleInterop": true,
+        "module": "CommonJS",
+        "lib": [
+            "es2015",
+            "dom"
+        ],
+        "strict": true,
+        "allowJs": true
+    },
+    "include": [
+        "src/index.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "bin",
+        "dist"
+    ]
+}
