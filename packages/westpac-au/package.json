@@ -1,5 +1,5 @@
 {
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,6 +17,6 @@
     "date-fns": "^2.21.3",
     "puppeteer": "^9.1.1",
     "ynab": "^1.25.0",
-    "ynab-sync-core": "workspace:^0.0.5"
+    "ynab-sync-core": "workspace:^0.1.0"
   }
 }

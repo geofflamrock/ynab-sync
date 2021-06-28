@@ -1,5 +1,11 @@
 # ynab-sync-core
 
+## 0.1.0
+
+### Minor Changes
+
+- cb98b3d: Adds support for templating of import id and results from import
+
 ## 0.0.5
 
 ### Patch Changes
