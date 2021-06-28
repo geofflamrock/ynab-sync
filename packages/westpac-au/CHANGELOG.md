@@ -1,5 +1,11 @@
 # ynab-sync-westpac-au
 
+## 0.1.3
+
+### Patch Changes
+
+- 33e745d: Adds cli and bumps westpac-au-scraper version to get another fix
+
 ## 0.1.2
 
 ### Patch Changes
