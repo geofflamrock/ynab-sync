@@ -1,5 +1,11 @@
 # ynab-sync-westpac-au
 
+## 0.1.1
+
+### Patch Changes
+
+- 0134501: Fixes issue with uncreated directory for export file
+
 ## 0.1.0
 
 ### Minor Changes
