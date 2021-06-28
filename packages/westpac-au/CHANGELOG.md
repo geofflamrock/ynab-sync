@@ -1,5 +1,11 @@
 # ynab-sync-westpac-au
 
+## 0.1.2
+
+### Patch Changes
+
+- df7e906: Bumps version of westpac-au-scraper to get fixes
+
 ## 0.1.1
 
 ### Patch Changes
