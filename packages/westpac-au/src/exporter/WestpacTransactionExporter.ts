@@ -10,6 +10,7 @@ export type WestpacTransactionExportInputs = {
   accountName: string;
   startDate?: Date;
   endDate?: Date;
+  downloadDirectory?: string;
   debug?: boolean;
 };
 
@@ -32,6 +33,7 @@ export class WestpacTransactionExporter
       undefined,
       {
         debug: inputs.debug || false,
+        downloadDirectory: inputs.downloadDirectory,
       }
     );
 
