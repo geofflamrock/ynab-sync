@@ -1,5 +1,11 @@
 # ynab-sync-westpac-au
 
+## 0.1.0
+
+### Minor Changes
+
+- 66a0085: Adds support for specifying download directory to westpac-au export
+
 ## 0.0.5
 
 ### Patch Changes
