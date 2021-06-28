@@ -1,5 +1,8 @@
 import { API, TransactionDetail } from "ynab";
-import { ITransactionImporter } from "./ITransactionImporter";
+import {
+  ITransactionImporter,
+  TransactionImportResults,
+} from "./ITransactionImporter";
 import { minBy } from "lodash";
 
 export type YnabCredentials = {
@@ -21,7 +24,7 @@ export class YnabTransactionImporter implements ITransactionImporter {
   async import(
     budgetId: string,
     transactions: TransactionDetail[]
-  ): Promise<void> {
+  ): Promise<TransactionImportResults> {
     const ynabAPI = new API(this.options.credentials.apiKey);
 
     const minDate = minBy(transactions, "date");
@@ -32,6 +35,7 @@ export class YnabTransactionImporter implements ITransactionImporter {
 
     const transactionsToCreate: TransactionDetail[] = [];
     const transactionsToUpdate: TransactionDetail[] = [];
+    const transactionsUnchanged: TransactionDetail[] = [];
 
     transactions.forEach((transaction) => {
       const existingTransaction: TransactionDetail | undefined =
@@ -42,12 +46,21 @@ export class YnabTransactionImporter implements ITransactionImporter {
         if (
           existingTransaction.amount !== transaction.amount ||
           existingTransaction.date !== transaction.date
-        )
+        ) {
           transactionsToUpdate.push(transaction);
+        } else {
+          transactionsUnchanged.push(transaction);
+        }
       } else {
         transactionsToCreate.push(transaction);
       }
     });
+
+    let results: TransactionImportResults = {
+      transactionsCreated: [],
+      transactionsUpdated: [],
+      transactionsUnchanged: transactionsUnchanged,
+    };
 
     if (transactionsToCreate && transactionsToCreate.length) {
       if (this.options.debug)
@@ -61,9 +74,9 @@ export class YnabTransactionImporter implements ITransactionImporter {
       );
 
       if (this.options.debug)
-        console.log(
-          `Transaction create response: ${JSON.stringify(createResponse)}`
-        );
+        console.log("Transaction create response", createResponse);
+
+      results.transactionsCreated = createResponse.data.transactions ?? [];
     } else {
       if (this.options.debug) console.log("No new transactions to create");
     }
@@ -80,11 +93,13 @@ export class YnabTransactionImporter implements ITransactionImporter {
       );
 
       if (this.options.debug)
-        console.log(
-          `Transaction update response: ${JSON.stringify(updateResponse)}`
-        );
+        console.log("Transaction update response:", updateResponse);
+
+      results.transactionsUpdated = updateResponse.data.transactions ?? [];
     } else {
       if (this.options.debug) console.log("No existing transactions to update");
     }
+
+    return results;
   }
 }
