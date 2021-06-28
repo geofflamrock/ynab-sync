@@ -69,7 +69,7 @@ export const exportTransactions = async (
   const transactions = parser.parse(params.ynabAccountId, output.filePath);
 
   console.log(
-    `Parsed '${transactions.length}' transactions from '${output.filePath}'`
+    `Parsed ${transactions.length} transactions from '${output.filePath}'`
   );
 
   const importer: ITransactionImporter = new YnabTransactionImporter({
@@ -79,7 +79,7 @@ export const exportTransactions = async (
     debug: params.debug,
   });
 
-  console.log(`Importing '${transactions.length}' transactions into YNAB`);
+  console.log(`Importing ${transactions.length} transactions into YNAB`);
 
   const importResults = await importer.import(
     params.ynabBudgetId,
@@ -88,7 +88,7 @@ export const exportTransactions = async (
   );
 
   console.log(
-    `Imported '${transactions.length}' transactions into YNAB successfully: ${importResults.transactionsCreated.length} created, ${importResults.transactionsUpdated.length} updated, ${importResults.transactionsUnchanged.length} not changed`
+    `Imported ${transactions.length} transactions into YNAB successfully: ${importResults.transactionsCreated.length} created, ${importResults.transactionsUpdated.length} updated, ${importResults.transactionsUnchanged.length} not changed`
   );
 };
 
