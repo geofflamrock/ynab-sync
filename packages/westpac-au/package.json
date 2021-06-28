@@ -13,7 +13,7 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "westpac-au-scraper": "^0.0.1-alpha.12",
+    "westpac-au-scraper": "^0.0.1-alpha.13",
     "date-fns": "^2.21.3",
     "puppeteer": "^9.1.1",
     "ynab": "^1.25.0",
