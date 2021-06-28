@@ -83,6 +83,7 @@ export const exportTransactions = async (
 
   const importResults = await importer.import(
     params.ynabBudgetId,
+    params.ynabAccountId,
     transactions
   );
 

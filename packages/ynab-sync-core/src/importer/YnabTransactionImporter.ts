@@ -23,15 +23,18 @@ export class YnabTransactionImporter implements ITransactionImporter {
 
   async import(
     budgetId: string,
+    accountId: string,
     transactions: TransactionDetail[]
   ): Promise<TransactionImportResults> {
     const ynabAPI = new API(this.options.credentials.apiKey);
 
     const minDate = minBy(transactions, "date");
-    const existingTransactions = await ynabAPI.transactions.getTransactions(
-      budgetId,
-      minDate?.date
-    );
+    const existingTransactions =
+      await ynabAPI.transactions.getTransactionsByAccount(
+        budgetId,
+        accountId,
+        minDate?.date
+      );
 
     const transactionsToCreate: TransactionDetail[] = [];
     const transactionsToUpdate: TransactionDetail[] = [];
@@ -65,7 +68,8 @@ export class YnabTransactionImporter implements ITransactionImporter {
     if (transactionsToCreate && transactionsToCreate.length) {
       if (this.options.debug)
         console.log(
-          `Creating ${transactionsToCreate.length} transactions in budget '${budgetId}'`
+          `Creating ${transactionsToCreate.length} transactions in budget '${budgetId}'`,
+          transactionsToCreate
         );
 
       const createResponse = await ynabAPI.transactions.createTransactions(
@@ -84,7 +88,8 @@ export class YnabTransactionImporter implements ITransactionImporter {
     if (transactionsToUpdate && transactionsToUpdate.length) {
       if (this.options.debug)
         console.log(
-          `Updating ${transactionsToUpdate.length} transactions in budget '${budgetId}'`
+          `Updating ${transactionsToUpdate.length} transactions in budget '${budgetId}'`,
+          transactionsToUpdate
         );
 
       const updateResponse = await ynabAPI.transactions.updateTransactions(
