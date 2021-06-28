@@ -1,5 +1,11 @@
 # ynab-sync-core
 
+## 0.1.1
+
+### Patch Changes
+
+- 2169692: Fixes transaction import to be by account
+
 ## 0.1.0
 
 ### Minor Changes

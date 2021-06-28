@@ -1,6 +1,15 @@
 # ynab-sync-cli
 
+## 0.0.2
+
+### Patch Changes
+
+- 2169692: Fixes transaction import to be by account
+- Updated dependencies [2169692]
+  - ynab-sync-core@0.1.1
+
 ## 0.0.1
+
 ### Patch Changes
 
 - 33e745d: Adds cli and bumps westpac-au-scraper version to get another fix
