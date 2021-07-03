@@ -1,4 +1,5 @@
 import { format, isValid, parseISO, subDays } from "date-fns";
+import { getUserLocale } from "../util";
 import {
   ITransactionImporter,
   ITransactionParser,
@@ -40,11 +41,18 @@ export const exportTransactions = async (
 
   const exporter = new WestpacTransactionExporter();
 
+  const locale = await getUserLocale();
+
   console.log(
     `Exporting westpac transactions with date range of '${format(
       startDate,
-      "P"
-    )}' to '${format(endDate ?? new Date(), "P")}'`
+      "P",
+      {
+        locale: locale,
+      }
+    )}' to '${format(endDate ?? new Date(), "P", {
+      locale: locale,
+    })}'`
   );
 
   const output = await exporter.export({
