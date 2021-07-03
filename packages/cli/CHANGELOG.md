@@ -1,5 +1,11 @@
 # ynab-sync-cli
 
+## 0.0.3
+
+### Patch Changes
+
+- 5c549b8: Formats dates using current locale
+
 ## 0.0.2
 
 ### Patch Changes
