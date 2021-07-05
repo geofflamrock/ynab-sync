@@ -1,8 +1,9 @@
-import { createPageAndLogin, exportTransactions } from "westpac-au-scraper";
+import { exportTransactions, login } from "westpac-au-scraper";
 import {
   FileTransactionExportOutput,
   ITransactionExporter,
 } from "ynab-sync-core";
+import { createBrowser } from "ynab-sync-puppeteer";
 
 export type WestpacTransactionExportInputs = {
   username: string;
@@ -24,7 +25,10 @@ export class WestpacTransactionExporter
   async export(
     inputs: WestpacTransactionExportInputs
   ): Promise<FileTransactionExportOutput> {
-    const page = await createPageAndLogin(inputs.username, inputs.password);
+    const browser = await createBrowser();
+    const page = await browser.newPage();
+
+    await login(page, inputs.username, inputs.password);
     const filePath = await exportTransactions(
       page,
       inputs.accountName,

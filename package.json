@@ -12,6 +12,7 @@
     "lint:fix": "eslint . --fix",
     "lint": "eslint .",
     "outdated": "pnpm outdated --filter \"{packages}\"",
+    "pkg": "pnpm run build && pnpm pkg -r",
     "preinstall": "npx only-allow pnpm",
     "publish": "pnpm run build && pnpm publish -r --access public",
     "test": "pnpm run test --filter \"{packages}\""
