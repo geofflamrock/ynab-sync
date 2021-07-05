@@ -9,21 +9,30 @@ on:
 
 jobs:
   build:
+    name: Create cli executable on Node ${{ matrix.node-version }}, Platform ${{ matrix.platform }}
+
     strategy:
       matrix:
         node-version: ["14"]
-        platform:
-          - ubuntu:
-              runner: ubuntu-latest
-              target: node14-linux-x64
-          - macos:
-              runner: macos-latest
-              target: node14-macos-x64
-          - windows:
-              runner: windows-latest
-              target: node14-win-x64
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+        include:
+          - node-version: 14
+            platform: ubuntu-latest
+            target: node14-linux-x64
+            cli-artifact: cli-linux
+            cli-exe: ynab-sync-cli-linux
+          - node-version: 14
+            platform: macos-latest
+            target: node14-macos-x64
+            cli-artifact: cli-macos
+            cli-exe: ynab-sync-cli-macos
+          - node-version: 14
+            platform: windows-latest
+            target: node14-win-x64
+            cli-artifact: cli-win
+            cli-exe: ynab-sync-cli-win.exe
 
-    runs-on: ${{ matrix.platform.runner }}
+    runs-on: ${{ matrix.platform }}
 
     steps:
       - name: checkout
@@ -46,13 +55,25 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Create Packages
-        run: pnpm pkg -- -- --target ${{ matrix.platform.runner }}
+      - name: Create CLI Package
+        run: pnpm pkg -- -- --target ${{ matrix.platform.runner }} --output ./bin/cli/${{ matrix.cli-exe }}
+
+      - name: Publish CLI Package
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.cli-artifact }}
+          path: packages/cli/bin/cli/${{ matrix.cli-exe }}
+
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v2
 
       - name: Create Release
         uses: ncipollo/release-action@v1.8.6
         with:
           commit: main
           tag: ${{ github.event.inputs.version }}
-          artifacts: packages/cli/bin/cli/*
+          artifacts: "**/*"
           token: ${{ secrets.GITHUB_TOKEN }}

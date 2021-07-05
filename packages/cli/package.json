@@ -4,7 +4,7 @@
   "description": "Command line interface for running YNAB syncs",
   "scripts": {
     "build": "tsc",
-    "pkg": "pkg . --out-path ./bin/cli"
+    "pkg": "pkg ."
   },
   "author": "Geoff Lamrock",
   "license": "ISC",
