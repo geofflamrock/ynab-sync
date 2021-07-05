@@ -9,11 +9,21 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: ["14"]
+        platform:
+          - ubuntu:
+              runner: ubuntu-latest
+              target: node14-linux-x64
+          - macos:
+              runner: macos-latest
+              target: node14-macos-x64
+          - windows:
+              runner: windows-latest
+              target: node14-win-x64
+
+    runs-on: ${{ matrix.platform.runner }}
 
     steps:
       - name: checkout
@@ -37,7 +47,7 @@ jobs:
         run: pnpm install
 
       - name: Create Packages
-        run: pnpm pkg
+        run: pnpm pkg -- -- --target ${{ matrix.platform.runner }}
 
       - name: Create Release
         uses: ncipollo/release-action@v1.8.6

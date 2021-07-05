@@ -11,10 +11,21 @@ jobs:
   build:
     name: Build, lint, and test on Node ${{ matrix.node-version }}
 
-    runs-on: "ubuntu-latest"
+    runs-on: ${{ matrix.platform.runner }}
+
     strategy:
       matrix:
         node-version: ["14"]
+        platform:
+          - ubuntu:
+              runner: ubuntu-latest
+              target: node14-linux-x64
+          - macos:
+              runner: macos-latest
+              target: node14-macos-x64
+          - windows:
+              runner: windows-latest
+              target: node14-win-x64
 
     steps:
       - name: Checkout repo
@@ -44,7 +55,7 @@ jobs:
         run: pnpm run test
 
       - name: Package
-        run: pnpm run pkg
+        run: pnpm run pkg -- -- --target ${{ matrix.platform.target }}
 
 env:
   CI: true
