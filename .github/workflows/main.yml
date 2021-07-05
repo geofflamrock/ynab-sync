@@ -43,5 +43,8 @@ jobs:
       - name: Tests
         run: pnpm run test
 
+      - name: Package
+        run: pnpm run pkg
+
 env:
   CI: true
