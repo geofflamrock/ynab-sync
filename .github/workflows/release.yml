@@ -20,16 +20,19 @@ jobs:
             os: Linux
             platform: ubuntu-latest
             target: node14-linux-x64
+            cli-artifact: cli-linux
             cli-exe: ynab-sync-cli-linux
           - node-version: 14
             os: MacOS
             platform: macos-latest
             target: node14-macos-x64
+            cli-artifact: cli-macos
             cli-exe: ynab-sync-cli-macos
           - node-version: 14
             os: Windows
             platform: windows-latest
             target: node14-win-x64
+            cli-artifact: cli-win
             cli-exe: ynab-sync-cli-win.exe
 
     runs-on: ${{ matrix.platform }}
