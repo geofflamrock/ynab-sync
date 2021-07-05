@@ -9,24 +9,27 @@ on:
 
 jobs:
   build:
-    name: Build, lint, and test on Node ${{ matrix.node-version }}, Platform ${{ matrix.platform }}
+    name: "${{ matrix.os}}: Build, lint and test"
 
     runs-on: ${{ matrix.platform }}
 
     strategy:
       matrix:
         node-version: ["14"]
-        platform: ["ubuntu-latest", "macos-latest", "windows-latest"]
+        os: ["Linux", "MacOS", "Windows"]
         include:
           - node-version: 14
+            os: Linux
             platform: ubuntu-latest
             target: node14-linux-x64
             cli-exe: ynab-sync-cli-linux
           - node-version: 14
+            os: MacOS
             platform: macos-latest
             target: node14-macos-x64
             cli-exe: ynab-sync-cli-macos
           - node-version: 14
+            os: Windows
             platform: windows-latest
             target: node14-win-x64
             cli-exe: ynab-sync-cli-win.exe
@@ -44,7 +47,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.platform }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install pnpm
         run: curl -f https://get.pnpm.io/v6.js | node - add --global pnpm@6
@@ -58,8 +61,14 @@ jobs:
       - name: Tests
         run: pnpm run test
 
-      - name: Package
+      - name: Create CLI
         run: pnpm run pkg -- -- --target ${{ matrix.target }} --output ${{ matrix.cli-exe }}
+
+      - name: Publish CLI
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.cli-artifact }}
+          path: packages/cli/bin/cli/${{ matrix.cli-exe }}
 
 env:
   CI: true
