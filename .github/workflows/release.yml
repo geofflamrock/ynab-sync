@@ -56,7 +56,7 @@ jobs:
         run: pnpm install
 
       - name: Create CLI Package
-        run: pnpm pkg -- -- --target ${{ matrix.platform.runner }} --output ./bin/cli/${{ matrix.cli-exe }}
+        run: "pnpm run pkg -- -- --target ${{ matrix.target }} --output ./bin/cli/${{ matrix.cli-exe }}"
 
       - name: Publish CLI Package
         uses: actions/upload-artifact@v2
