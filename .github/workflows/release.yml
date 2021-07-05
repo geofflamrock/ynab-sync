@@ -43,6 +43,6 @@ jobs:
         uses: ncipollo/release-action@v1.8.6
         with:
           commit: main
-          tag: inputs.version
+          tag: ${{ inputs.version }}
           artifacts: packages/cli/bin/cli/*
           token: ${{ secrets.GITHUB_TOKEN }}
