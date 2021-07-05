@@ -78,5 +78,5 @@ jobs:
         with:
           commit: main
           tag: ${{ github.event.inputs.version }}
-          artifacts: "**/*"
+          artifacts: "cli-*/*"
           token: ${{ secrets.GITHUB_TOKEN }}
