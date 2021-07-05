@@ -103,8 +103,14 @@ export const exportTransactions = async (
 export const createWestpacAuSyncCommand = (): commander.Command => {
   return new commander.Command("westpac-au")
     .description("Sync Westpac Australia transactions to YNAB")
-    .requiredOption("--westpac-username <username>", "Westpac username")
-    .requiredOption("--westpac-password <password>", "Westpac password")
+    .requiredOption(
+      "--westpac-username <username>",
+      "Westpac online banking username"
+    )
+    .requiredOption(
+      "--westpac-password <password>",
+      "Westpac online banking password"
+    )
     .requiredOption(
       "--westpac-account-name  <account-name>",
       "Name of Westpac account to sync from"
