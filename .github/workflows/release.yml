@@ -9,11 +9,33 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: "${{ matrix.os}}: Create cli executable"
 
     strategy:
       matrix:
         node-version: ["14"]
+        os: ["Linux", "MacOS", "Windows"]
+        include:
+          - node-version: 14
+            os: Linux
+            platform: ubuntu-latest
+            target: node14-linux-x64
+            cli-artifact: cli-linux
+            cli-exe: ynab-sync-cli-linux
+          - node-version: 14
+            os: MacOS
+            platform: macos-latest
+            target: node14-macos-x64
+            cli-artifact: cli-macos
+            cli-exe: ynab-sync-cli-macos
+          - node-version: 14
+            os: Windows
+            platform: windows-latest
+            target: node14-win-x64
+            cli-artifact: cli-win
+            cli-exe: ynab-sync-cli-win.exe
+
+    runs-on: ${{ matrix.platform }}
 
     steps:
       - name: checkout
@@ -36,13 +58,25 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Create Packages
-        run: pnpm pkg
+      - name: Create CLI Package
+        run: "pnpm run pkg -- -- --target ${{ matrix.target }} --output ./bin/cli/${{ matrix.cli-exe }}"
+
+      - name: Publish CLI Package
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.cli-artifact }}
+          path: packages/cli/bin/cli/${{ matrix.cli-exe }}
+
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v2
 
       - name: Create Release
         uses: ncipollo/release-action@v1.8.6
         with:
           commit: main
           tag: ${{ github.event.inputs.version }}
-          artifacts: packages/cli/bin/cli/*
+          artifacts: "cli-*/*"
           token: ${{ secrets.GITHUB_TOKEN }}
