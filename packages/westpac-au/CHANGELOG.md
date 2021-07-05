@@ -1,5 +1,13 @@
 # ynab-sync-westpac-au
 
+## 0.1.4
+
+### Patch Changes
+
+- 0816087: Adds support for building cli as executable, and changes to download chromium as part of application
+- Updated dependencies [0816087]
+  - ynab-sync-puppeteer@0.0.1
+
 ## 0.1.3
 
 ### Patch Changes

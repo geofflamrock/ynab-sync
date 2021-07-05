@@ -1,6 +1,6 @@
 {
   "name": "ynab-sync-cli",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Command line interface for running YNAB syncs",
   "scripts": {
     "build": "tsc",
@@ -13,7 +13,7 @@
     "date-fns": "^2.22.1",
     "os-locale": "^5.0.0",
     "ynab-sync-core": "workspace:^0.1.1",
-    "ynab-sync-westpac-au": "workspace:^0.1.3"
+    "ynab-sync-westpac-au": "workspace:^0.1.4"
   },
   "devDependencies": {
     "@types/node": "^15.12.4",
