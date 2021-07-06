@@ -87,7 +87,7 @@ jobs:
       - name: Publish CLI Package
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.artifact }}
+          name: ${{ matrix.artifact-name }}
           path: packages/cli/bin/cli/${{ matrix.binary-name }}
 
       - name: Upload CLI
