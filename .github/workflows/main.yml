@@ -22,20 +22,17 @@ jobs:
             os: Linux
             platform: ubuntu-latest
             target: node14-linux-x64
-            artifact-name: linux.x64
-            binary-name: ynab-sync
+            binary-name: ynab-sync-linux-x64
           - node-version: 14
             os: MacOS
             platform: macos-latest
             target: node14-macos-x64
-            artifact-name: macos.x64
-            binary-name: ynab-sync
+            binary-name: ynab-sync-macos-x64
           - node-version: 14
             os: Windows
             platform: windows-latest
             target: node14-win-x64
-            artifact-name: win.x64
-            binary-name: ynab-sync.exe
+            binary-name: ynab-sync-win-x64.exe
 
     steps:
       - name: Checkout repo
@@ -70,7 +67,7 @@ jobs:
       - name: Publish CLI Package
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.artifact-name }}
+          name: ${{ matrix.binary-name }}
           path: packages/cli/bin/cli/${{ matrix.binary-name }}
 
 env:
