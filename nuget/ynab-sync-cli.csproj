@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.Build.NoTargets/3.0.4">
+  <PropertyGroup>    
+    <TargetFramework>net5.0</TargetFramework>
+    <PackageId>ynab-sync-cli</PackageId>
+    <Title>YNAB Sync</Title>
+    <Authors>Geoff Lamrock</Authors>    
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>Synchronise transactions from banks to YNAB</Description>
+    <PackageProjectUrl>https://github.com/geofflamrock/ynab-sync</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/geofflamrock/ynab-sync</RepositoryUrl>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <NoWarn>$(NoWarn);NU5128;NU5100</NoWarn>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+  </PropertyGroup>
+  <ItemGroup>
+      <Content Include="../content/**/*">
+          <PackagePath></PackagePath>
+          <Pack>true</Pack>
+      </Content>
+  </ItemGroup>
+</Project>
