@@ -72,12 +72,45 @@ jobs:
     needs: build
 
     steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
       - uses: actions/download-artifact@v2
+        with:
+          name: cli-linux
+          path: /content
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: cli-macos
+          path: /content
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: cli-win
+          path: /content
 
       - name: Create Release
         uses: ncipollo/release-action@v1.8.6
         with:
           commit: main
           tag: ${{ github.event.inputs.version }}
-          artifacts: "cli-*/*"
+          artifacts: "content/*"
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup .NET Core SDK 5.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+          source-url: https://nuget.pkg.github.com/geofflamrock/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Restore
+        run: dotnet restore ./nuget
+
+      - name: Pack
+        run: dotnet pack ./nuget -p:PackageVersion=${{ github.event.inputs.version }} --no-build --no-restore --output ./dist --configuration Release
+
+      - name: Push
+        run: dotnet nuget push ./dist
