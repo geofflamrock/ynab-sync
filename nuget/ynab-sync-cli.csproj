@@ -16,7 +16,7 @@
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
   <ItemGroup>
-      <Content Include="../content/*">
+      <Content Include="../content/**/*">
           <PackagePath></PackagePath>
           <Pack>true</Pack>
       </Content>
