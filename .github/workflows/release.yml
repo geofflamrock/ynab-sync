@@ -119,4 +119,4 @@ jobs:
         run: dotnet pack ./nuget -p:PackageVersion=${{ github.event.inputs.version }} --no-build --no-restore --output ./dist --configuration Release
 
       - name: Push
-        run: dotnet nuget push ./dist
+        run: dotnet nuget push ./dist/*.nupkg
