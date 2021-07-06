@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base",
+  "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "dist",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/indexold.ts"
+  ]
+}

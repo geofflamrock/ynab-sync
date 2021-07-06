@@ -1,0 +1,28 @@
+{
+  "version": "0.0.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --declaration"
+  },
+  "name": "ynab-sync-st-george-au",
+  "author": "Geoff Lamrock",
+  "devDependencies": {
+    "@types/cli-progress": "^3.9.1",
+    "@types/lodash": "^4.14.170",
+    "tslib": "^2.2.0",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "cli-progress": "^3.9.0",
+    "date-fns": "^2.21.3",
+    "lodash": "^4.17.21",
+    "pretty-bytes": "^5.6.0",
+    "puppeteer": "^9.1.1",
+    "tmp": "^0.2.1",
+    "ynab": "^1.25.0",
+    "ynab-sync-core": "workspace:^0.1.0",
+    "ynab-sync-puppeteer": "workspace:^0.0.1"
+  }
+}

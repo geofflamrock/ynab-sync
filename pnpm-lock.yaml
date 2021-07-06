@@ -42,12 +42,14 @@ importers:
       tslib: ^2.3.0
       typescript: ^4.3.4
       ynab-sync-core: workspace:^0.1.1
+      ynab-sync-st-george-au: workspace:^0.0.0
       ynab-sync-westpac-au: workspace:^0.1.4
     dependencies:
       commander: 7.2.0
       date-fns: 2.22.1
       os-locale: 5.0.0
       ynab-sync-core: link:../core
+      ynab-sync-st-george-au: link:../st-george-au
       ynab-sync-westpac-au: link:../westpac-au
     devDependencies:
       '@types/node': 15.12.4
@@ -61,6 +63,7 @@ importers:
     specifiers:
       '@types/lodash': ^4.14.170
       '@types/string-template': ^1.0.2
+      csv-parse: ^4.16.0
       lodash: ^4.17.21
       ofx: ^0.5.0
       string-template: ^1.0.0
@@ -68,6 +71,7 @@ importers:
       typescript: ^4.2.4
       ynab: ^1.25.0
     dependencies:
+      csv-parse: 4.16.0
       lodash: 4.17.21
       ofx: 0.5.0
       string-template: 1.0.0
@@ -93,6 +97,37 @@ importers:
       lodash: 4.17.21
       pretty-bytes: 5.6.0
       puppeteer: 9.1.1
+    devDependencies:
+      '@types/cli-progress': 3.9.1
+      '@types/lodash': 4.14.170
+      tslib: 2.3.0
+      typescript: 4.3.4
+
+  packages/st-george-au:
+    specifiers:
+      '@types/cli-progress': ^3.9.1
+      '@types/lodash': ^4.14.170
+      cli-progress: ^3.9.0
+      date-fns: ^2.21.3
+      lodash: ^4.17.21
+      pretty-bytes: ^5.6.0
+      puppeteer: ^9.1.1
+      tmp: ^0.2.1
+      tslib: ^2.2.0
+      typescript: ^4.2.4
+      ynab: ^1.25.0
+      ynab-sync-core: workspace:^0.1.0
+      ynab-sync-puppeteer: workspace:^0.0.1
+    dependencies:
+      cli-progress: 3.9.0
+      date-fns: 2.22.1
+      lodash: 4.17.21
+      pretty-bytes: 5.6.0
+      puppeteer: 9.1.1
+      tmp: 0.2.1
+      ynab: 1.25.0
+      ynab-sync-core: link:../core
+      ynab-sync-puppeteer: link:../puppeteer
     devDependencies:
       '@types/cli-progress': 3.9.1
       '@types/lodash': 4.14.170
@@ -1011,7 +1046,6 @@ packages:
 
   /csv-parse/4.16.0:
     resolution: {integrity: sha512-Zb4tGPANH4SW0LgC9+s9Mnequs9aqn7N3/pCqNbVjs2XhEF6yWNU2Vm4OGl1v2Go9nw8rXt87Cm2QN/o6Vpqgg==}
-    dev: true
 
   /csv-stringify/5.6.2:
     resolution: {integrity: sha512-n3rIVbX6ylm1YsX2NEug9IaPV8xRnT+9/NNZbrA/bcHgOSSeqtWla6XnI/xmyu57wIw+ASCAoX1oM6EZtqJV0A==}

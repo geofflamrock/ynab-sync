@@ -15,6 +15,7 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
+    "csv-parse": "^4.16.0",
     "lodash": "^4.17.21",
     "ofx": "^0.5.0",
     "string-template": "^1.0.0",
