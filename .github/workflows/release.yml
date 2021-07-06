@@ -21,19 +21,19 @@ jobs:
             platform: ubuntu-latest
             target: node14-linux-x64
             cli-artifact: cli-linux
-            cli-exe: ynab-sync-cli-linux
+            cli-exe: ynab-sync
           - node-version: 14
             os: MacOS
             platform: macos-latest
             target: node14-macos-x64
             cli-artifact: cli-macos
-            cli-exe: ynab-sync-cli-macos
+            cli-exe: ynab-sync
           - node-version: 14
             os: Windows
             platform: windows-latest
             target: node14-win-x64
             cli-artifact: cli-win
-            cli-exe: ynab-sync-cli-win.exe
+            cli-exe: ynab-sync.exe
 
     runs-on: ${{ matrix.platform }}
 
@@ -82,17 +82,17 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: cli-linux
-          path: ./content
+          path: ./content/linux.x64
 
       - uses: actions/download-artifact@v2
         with:
           name: cli-macos
-          path: ./content
+          path: ./content/macos.x64
 
       - uses: actions/download-artifact@v2
         with:
           name: cli-win
-          path: ./content
+          path: ./content/win.x64
 
       - name: Create Release
         uses: ncipollo/release-action@v1.8.6
