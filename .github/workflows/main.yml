@@ -22,20 +22,20 @@ jobs:
             os: Linux
             platform: ubuntu-latest
             target: node14-linux-x64
-            cli-artifact: cli-linux
-            cli-exe: ynab-sync-cli-linux
+            artifact-name: linux.x64
+            binary-name: ynab-sync
           - node-version: 14
             os: MacOS
             platform: macos-latest
             target: node14-macos-x64
-            cli-artifact: cli-macos
-            cli-exe: ynab-sync-cli-macos
+            artifact-name: macos.x64
+            binary-name: ynab-sync
           - node-version: 14
             os: Windows
             platform: windows-latest
             target: node14-win-x64
-            cli-artifact: cli-win
-            cli-exe: ynab-sync-cli-win.exe
+            artifact-name: win.x64
+            binary-name: ynab-sync.exe
 
     steps:
       - name: Checkout repo
@@ -64,14 +64,14 @@ jobs:
       - name: Tests
         run: pnpm run test
 
-      - name: Create CLI
-        run: "pnpm run pkg -- -- --target ${{ matrix.target }} --output ./bin/cli/${{ matrix.cli-exe }}"
+      - name: Create CLI Package
+        run: "pnpm run pkg -- -- --target ${{ matrix.target }} --output ./bin/cli/${{ matrix.binary-name }}"
 
-      - name: Publish CLI
+      - name: Publish CLI Package
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.cli-artifact }}
-          path: packages/cli/bin/cli/${{ matrix.cli-exe }}
+          name: ${{ matrix.artifact-name }}
+          path: packages/cli/bin/cli/${{ matrix.binary-name }}
 
 env:
   CI: true
