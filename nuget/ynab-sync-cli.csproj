@@ -8,8 +8,7 @@
     <Description>Synchronise transactions from banks to YNAB</Description>
     <PackageProjectUrl>https://github.com/geofflamrock/ynab-sync</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/geofflamrock/ynab-sync.git"</RepositoryUrl>
+    <RepositoryUrl>https://github.com/geofflamrock/ynab-sync</RepositoryUrl>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content</ContentTargetFolders>
