@@ -1,5 +1,11 @@
 # ynab-sync-core
 
+## 0.2.0
+
+### Minor Changes
+
+- 9996981: Adds support for syncing St George AU transactions
+
 ## 0.1.1
 
 ### Patch Changes
