@@ -66,7 +66,7 @@ async function login(
 
 async function exportTransactions(
   page: Page,
-  accountBsb: string,
+  bsbNumber: string,
   accountNumber: string,
   startDate?: Date,
   endDate?: Date,
@@ -134,12 +134,12 @@ async function exportTransactions(
   if (options.debug) console.log(`Found ${accounts.length} accounts`, accounts);
 
   const accountIndex: number = accounts.findIndex(
-    (a) => a.bsbNumber === accountBsb && a.accountNumber === accountNumber
+    (a) => a.bsbNumber === bsbNumber && a.accountNumber === accountNumber
   );
 
   if (accountIndex < 0) {
     throw new Error(
-      `Could not find account with bsb '${accountBsb}' and number '${accountNumber}'`
+      `Could not find account with bsb '${bsbNumber}' and number '${accountNumber}'`
     );
   }
 
@@ -222,7 +222,7 @@ export type StGeorgeTransactionExportInputs = {
   accessNumber: string;
   password: string;
   securityNumber: number;
-  accountBsb: string;
+  bsbNumber: string;
   accountNumber: string;
   startDate?: Date;
   endDate?: Date;
@@ -245,7 +245,7 @@ export class StGeorgeTransactionExporter {
     );
     const filePath = await exportTransactions(
       page,
-      inputs.accountBsb,
+      inputs.bsbNumber,
       inputs.accountNumber,
       inputs.startDate,
       inputs.endDate,

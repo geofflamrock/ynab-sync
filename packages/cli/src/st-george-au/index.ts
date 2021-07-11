@@ -5,11 +5,11 @@ import { StGeorgeTransactionExporter } from "ynab-sync-st-george-au";
 import commander from "commander";
 
 export type StGeorgeTransactionExportParams = {
-  stGeorgeAccessNumber: string;
-  stGeorgePassword: string;
-  stGeorgeSecurityNumber: number;
-  stGeorgeAccountBsb: string;
-  stGeorgeAccountNumber: string;
+  accessNumber: string;
+  password: string;
+  securityNumber: number;
+  bsbNumber: string;
+  accountNumber: string;
   numberOfDaysToSync: number;
   startDate?: Date;
   endDate?: Date;
@@ -53,11 +53,11 @@ export const exportTransactions = async (
   );
 
   const output = await exporter.export({
-    accessNumber: params.stGeorgeAccessNumber,
-    password: params.stGeorgePassword,
-    securityNumber: params.stGeorgeSecurityNumber,
-    accountBsb: params.stGeorgeAccountBsb,
-    accountNumber: params.stGeorgeAccountNumber,
+    accessNumber: params.accessNumber,
+    password: params.password,
+    securityNumber: params.securityNumber,
+    bsbNumber: params.bsbNumber,
+    accountNumber: params.accountNumber,
     startDate: startDate,
     endDate: endDate,
     downloadDirectory: params.downloadDirectory,
