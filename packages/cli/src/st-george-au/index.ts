@@ -4,6 +4,11 @@ import { CsvTransactionParser, YnabTransactionImporter } from "ynab-sync-core";
 import { StGeorgeTransactionExporter } from "ynab-sync-st-george-au";
 import commander from "commander";
 
+enum AccountType {
+  Debit = "Debit",
+  Credit = "Credit",
+}
+
 export type StGeorgeTransactionExportParams = {
   accessNumber: string;
   password: string;
@@ -14,6 +19,7 @@ export type StGeorgeTransactionExportParams = {
   startDate?: Date;
   endDate?: Date;
   importIdTemplate?: string;
+  accountType: AccountType;
   downloadDirectory?: string;
   debug: boolean;
   ynabApiKey: string;
@@ -76,9 +82,13 @@ export const exportTransactions = async (
     getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
     getAmount: (input: any) => {
       if (input.Debit) {
-        return input.Debit;
+        return (
+          input.Debit * (params.accountType === AccountType.Debit ? -1 : 1)
+        );
       } else {
-        return input.Credit * -1;
+        return (
+          input.Credit * (params.accountType === AccountType.Credit ? -1 : 1)
+        );
       }
     },
     getMemo: (input: any) => undefined,
@@ -168,6 +178,12 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
       "--import-id-template <import-id-template>",
       "Template to use when constructing the import id. Properties available are {id}, {date}, {amount} and {memo}. Defaults to {id}.",
       "{date}-{amount}-{payee}"
+    )
+    .option<AccountType>(
+      "--account-type",
+      "Whether the account is a debit or credit account, changing how debit and credit amounts are handled. Typically transactional/offset accounts would be debit, and home loan accounts would be credit.",
+      (value: string) => (<any>AccountType)[value],
+      AccountType.Debit
     )
     .option(
       "--download-directory <download-directory>",
