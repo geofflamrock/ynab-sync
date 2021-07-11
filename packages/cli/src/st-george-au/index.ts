@@ -1,18 +1,15 @@
-import { format, isValid, parseISO, subDays } from "date-fns";
+import { format, isValid, parseISO, subDays, parse } from "date-fns";
 import { getUserLocale } from "../util";
-import {
-  ITransactionImporter,
-  ITransactionParser,
-  OfxTransactionParser,
-  YnabTransactionImporter,
-} from "ynab-sync-core";
-import { WestpacTransactionExporter } from "ynab-sync-westpac-au";
+import { CsvTransactionParser, YnabTransactionImporter } from "ynab-sync-core";
+import { StGeorgeTransactionExporter } from "ynab-sync-st-george-au";
 import commander from "commander";
 
-export type WestpacTransactionExportParams = {
-  westpacUsername: string;
-  westpacPassword: string;
-  westpacAccountName: string;
+export type StGeorgeTransactionExportParams = {
+  accessNumber: string;
+  password: string;
+  securityNumber: number;
+  bsbNumber: string;
+  accountNumber: string;
   numberOfDaysToSync: number;
   startDate?: Date;
   endDate?: Date;
@@ -25,9 +22,9 @@ export type WestpacTransactionExportParams = {
 };
 
 export const exportTransactions = async (
-  params: WestpacTransactionExportParams
+  params: StGeorgeTransactionExportParams
 ) => {
-  let endDate = undefined;
+  let endDate = new Date();
 
   if (params.endDate !== undefined) {
     endDate = params.endDate;
@@ -39,12 +36,12 @@ export const exportTransactions = async (
     startDate = params.startDate;
   }
 
-  const exporter = new WestpacTransactionExporter();
+  const exporter = new StGeorgeTransactionExporter();
 
   const locale = await getUserLocale();
 
   console.log(
-    `Exporting Westpac transactions with date range of '${format(
+    `Exporting St George transactions with date range of '${format(
       startDate,
       "P",
       {
@@ -56,9 +53,11 @@ export const exportTransactions = async (
   );
 
   const output = await exporter.export({
-    username: params.westpacUsername,
-    password: params.westpacPassword,
-    accountName: params.westpacAccountName,
+    accessNumber: params.accessNumber,
+    password: params.password,
+    securityNumber: params.securityNumber,
+    bsbNumber: params.bsbNumber,
+    accountNumber: params.accountNumber,
     startDate: startDate,
     endDate: endDate,
     downloadDirectory: params.downloadDirectory,
@@ -69,18 +68,28 @@ export const exportTransactions = async (
 
   console.log(`Parsing transactions from '${output.filePath}'`);
 
-  const parser: ITransactionParser = new OfxTransactionParser({
+  const parser = new CsvTransactionParser();
+
+  const transactions = parser.parse(params.ynabAccountId, output.filePath, {
     importIdTemplate: params.importIdTemplate,
     debug: params.debug,
+    getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
+    getAmount: (input: any) => {
+      if (input.Debit) {
+        return input.Debit;
+      } else {
+        return input.Credit * -1;
+      }
+    },
+    getMemo: (input: any) => undefined,
+    getPayee: (input: any) => input.Description,
   });
-
-  const transactions = parser.parse(params.ynabAccountId, output.filePath);
 
   console.log(
     `Parsed ${transactions.length} transactions from '${output.filePath}'`
   );
 
-  const importer: ITransactionImporter = new YnabTransactionImporter({
+  const importer = new YnabTransactionImporter({
     credentials: {
       apiKey: params.ynabApiKey,
     },
@@ -100,20 +109,28 @@ export const exportTransactions = async (
   );
 };
 
-export const createWestpacAuSyncCommand = (): commander.Command => {
-  return new commander.Command("westpac-au")
-    .description("Sync Westpac Australia transactions to YNAB")
+export const createStGeorgeAuSyncCommand = (): commander.Command => {
+  return new commander.Command("st-george-au")
+    .description("Sync St George Australia transactions to YNAB")
     .requiredOption(
-      "--westpac-username <username>",
-      "Westpac online banking username"
+      "--access-number <access-number>",
+      "St George customer access number"
     )
     .requiredOption(
-      "--westpac-password <password>",
-      "Westpac online banking password"
+      "--password <password>",
+      "St George online banking password"
     )
     .requiredOption(
-      "--westpac-account-name  <account-name>",
-      "Name of Westpac account to sync from"
+      "--security-number <security-number>",
+      "St George security number"
+    )
+    .requiredOption(
+      "--bsb-number  <bsb-number>",
+      "BSB number of St George account to sync from"
+    )
+    .requiredOption(
+      "--account-number <account-number>",
+      "BSB number of St George account to sync from"
     )
     .option<number>(
       "--number-of-days-to-sync <number-of-days-to-sync>",
@@ -150,7 +167,7 @@ export const createWestpacAuSyncCommand = (): commander.Command => {
     .option(
       "--import-id-template <import-id-template>",
       "Template to use when constructing the import id. Properties available are {id}, {date}, {amount} and {memo}. Defaults to {id}.",
-      "{id}"
+      "{date}-{amount}-{payee}"
     )
     .option(
       "--download-directory <download-directory>",
@@ -166,7 +183,7 @@ export const createWestpacAuSyncCommand = (): commander.Command => {
       "Id of YNAB account to import into"
     )
     .option("--debug", "Whether to run in debug mode", false)
-    .action(async (args: WestpacTransactionExportParams) => {
+    .action(async (args: StGeorgeTransactionExportParams) => {
       await exportTransactions(args);
     });
 };

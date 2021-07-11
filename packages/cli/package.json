@@ -4,7 +4,8 @@
   "description": "Command line interface for running YNAB syncs",
   "scripts": {
     "build": "tsc",
-    "pkg": "pkg ."
+    "pkg": "pkg . --out-path ./bin/cli",
+    "ci:pkg": "pkg ."
   },
   "author": "Geoff Lamrock",
   "license": "ISC",
@@ -13,6 +14,7 @@
     "date-fns": "^2.22.1",
     "os-locale": "^5.0.0",
     "ynab-sync-core": "workspace:^0.1.1",
+    "ynab-sync-st-george-au": "workspace:^0.0.0",
     "ynab-sync-westpac-au": "workspace:^0.1.4"
   },
   "devDependencies": {
