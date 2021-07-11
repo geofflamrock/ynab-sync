@@ -16,12 +16,9 @@
   },
   "dependencies": {
     "westpac-au-scraper": "^0.0.1-alpha.16",
-    "cli-progress": "^3.9.0",
     "date-fns": "^2.21.3",
     "lodash": "^4.17.21",
-    "pretty-bytes": "^5.6.0",
     "puppeteer": "^9.1.1",
-    "ynab": "^1.25.0",
     "ynab-sync-core": "workspace:^0.1.0",
     "ynab-sync-puppeteer": "workspace:^0.0.1"
   }

@@ -1,30 +1,29 @@
 import fs from "fs";
 import { TransactionDetail, SaveTransaction } from "ynab";
-import { ITransactionParser } from "./ITransactionParser";
 import format from "string-template";
 import parse from "csv-parse/lib/sync";
+import { formatISO } from "date-fns";
 
 export type CsvTransactionParserOptions = {
   importIdTemplate?: string;
   debug?: boolean;
+  getDate: (input: any) => Date;
+  getAmount: (input: any) => number;
+  getPayee: (input: any) => string;
+  getMemo: (input: any) => string | undefined;
 };
 
-export class CsvTransactionParser implements ITransactionParser {
-  private options: CsvTransactionParserOptions;
-  private defaultImportIdTemplate: string = "{date}-{memo}-{amount}";
+export class CsvTransactionParser {
+  private defaultImportIdTemplate: string = "{date}-{amount}-{payee}";
 
-  constructor(options: CsvTransactionParserOptions) {
-    this.options = {
-      importIdTemplate: options?.importIdTemplate,
-      debug: options?.debug || false,
-    };
-  }
-
-  parse(accountId: string, filePath: string): TransactionDetail[] {
+  parse(
+    accountId: string,
+    filePath: string,
+    options: CsvTransactionParserOptions
+  ): TransactionDetail[] {
     const transactions: TransactionDetail[] = [];
 
-    if (this.options.debug)
-      console.log(`Reading transactions from '${filePath}`);
+    if (options.debug) console.log(`Reading transactions from '${filePath}`);
 
     const csvRawData = fs.readFileSync(filePath, "utf8");
     const csvParsed = parse(csvRawData, {
@@ -33,17 +32,15 @@ export class CsvTransactionParser implements ITransactionParser {
     });
 
     for (let txn of csvParsed) {
-      const dateISO = `${txn.Date.substr(6, 4)}-${txn.Date.substr(
-        3,
-        2
-      )}-${txn.Date.substr(0, 2)}`;
-      let amountMilliunits = 0;
-      if (txn.Debit) {
-        amountMilliunits = Math.round(txn.Debit * 1000);
-      } else {
-        amountMilliunits = Math.round(txn.Credit * 1000);
-      }
-      const memo = txn.Description;
+      const dateISO = formatISO(options.getDate(txn), {
+        representation: "date",
+      });
+      const amount = options.getAmount(txn);
+      const payee = options.getPayee(txn);
+      const memo = options.getMemo(txn);
+      const amountMilliunits = Math.round(amount * 1000);
+
+      if (amount === 0) continue;
 
       const transaction: TransactionDetail = {
         id: "",
@@ -52,9 +49,10 @@ export class CsvTransactionParser implements ITransactionParser {
         approved: false,
         date: dateISO,
         amount: amountMilliunits,
-        payee_name: memo,
+        payee_name: payee,
         deleted: false,
         account_name: "",
+        memo: memo,
         subtransactions: [],
       };
 
@@ -62,17 +60,20 @@ export class CsvTransactionParser implements ITransactionParser {
         date: dateISO,
         amount: amountMilliunits,
         memo: memo,
+        payee: payee,
       };
 
-      const importId = format(
-        this.options.importIdTemplate || this.defaultImportIdTemplate,
+      let importId = format(
+        options.importIdTemplate || this.defaultImportIdTemplate,
         importIdTemplateParameters
       );
 
-      if (this.options.debug) {
+      if (importId.length > 36) importId = importId.slice(0, 36);
+
+      if (options.debug) {
         console.log(
           `Created import id '${importId}' from template '${
-            this.options.importIdTemplate || this.defaultImportIdTemplate
+            options.importIdTemplate || this.defaultImportIdTemplate
           }' and parameters`,
           importIdTemplateParameters
         );
@@ -80,7 +81,7 @@ export class CsvTransactionParser implements ITransactionParser {
 
       transaction.import_id = importId;
 
-      if (this.options.debug) {
+      if (options.debug) {
         console.log("Parsed transaction", transaction);
       }
 

@@ -1,11 +1,6 @@
-import { format, isValid, parseISO, subDays } from "date-fns";
+import { format, isValid, parseISO, subDays, parse } from "date-fns";
 import { getUserLocale } from "../util";
-import {
-  ITransactionImporter,
-  ITransactionParser,
-  CsvTransactionParser,
-  YnabTransactionImporter,
-} from "ynab-sync-core";
+import { CsvTransactionParser, YnabTransactionImporter } from "ynab-sync-core";
 import { StGeorgeTransactionExporter } from "ynab-sync-st-george-au";
 import commander from "commander";
 
@@ -29,7 +24,7 @@ export type StGeorgeTransactionExportParams = {
 export const exportTransactions = async (
   params: StGeorgeTransactionExportParams
 ) => {
-  let endDate = undefined;
+  let endDate = new Date();
 
   if (params.endDate !== undefined) {
     endDate = params.endDate;
@@ -73,18 +68,28 @@ export const exportTransactions = async (
 
   console.log(`Parsing transactions from '${output.filePath}'`);
 
-  const parser: ITransactionParser = new CsvTransactionParser({
+  const parser = new CsvTransactionParser();
+
+  const transactions = parser.parse(params.ynabAccountId, output.filePath, {
     importIdTemplate: params.importIdTemplate,
     debug: params.debug,
+    getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
+    getAmount: (input: any) => {
+      if (input.Debit) {
+        return input.Debit;
+      } else {
+        return input.Credit * -1;
+      }
+    },
+    getMemo: (input: any) => undefined,
+    getPayee: (input: any) => input.Description,
   });
-
-  const transactions = parser.parse(params.ynabAccountId, output.filePath);
 
   console.log(
     `Parsed ${transactions.length} transactions from '${output.filePath}'`
   );
 
-  const importer: ITransactionImporter = new YnabTransactionImporter({
+  const importer = new YnabTransactionImporter({
     credentials: {
       apiKey: params.ynabApiKey,
     },
@@ -108,23 +113,23 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
   return new commander.Command("st-george-au")
     .description("Sync St George Australia transactions to YNAB")
     .requiredOption(
-      "--st-george-access-number <st-george-access-number>",
+      "--access-number <access-number>",
       "St George customer access number"
     )
     .requiredOption(
-      "--st-george-password <st-george-password>",
+      "--password <password>",
       "St George online banking password"
     )
     .requiredOption(
-      "--st-george-security-number <st-george-security-number>",
+      "--security-number <security-number>",
       "St George security number"
     )
     .requiredOption(
-      "--st-george-account-bsb  <account-bsb>",
+      "--bsb-number  <bsb-number>",
       "BSB number of St George account to sync from"
     )
     .requiredOption(
-      "--st-george-account-number  <account-number>",
+      "--account-number <account-number>",
       "BSB number of St George account to sync from"
     )
     .option<number>(
@@ -162,7 +167,7 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
     .option(
       "--import-id-template <import-id-template>",
       "Template to use when constructing the import id. Properties available are {id}, {date}, {amount} and {memo}. Defaults to {id}.",
-      "{date}-{memo}-{amount}"
+      "{date}-{amount}-{payee}"
     )
     .option(
       "--download-directory <download-directory>",

@@ -11,7 +11,6 @@ import { createBrowser } from "ynab-sync-puppeteer";
 
 export enum ExportFormat {
   Csv,
-  Qif,
 }
 
 function getFileExtension(exportFormat: ExportFormat): string {
@@ -28,27 +27,6 @@ function getFileExtension(exportFormat: ExportFormat): string {
 type LoginOptions = {
   navigationTimeoutInMs: number;
 };
-
-// async function getLoginError(page: Page): Promise<string | undefined> {
-//   const alert = await page.$(".alert.alert-error .alert-icon");
-
-//   if (alert !== null) {
-//     const alertMessage: string = (
-//       await page.evaluate((element) => element.textContent, alert)
-//     ).trim();
-//     if (
-//       alertMessage.startsWith(
-//         "The details entered don't match those on our system"
-//       )
-//     )
-//       return "The details entered don't match those on our system";
-//     else {
-//       return alertMessage;
-//     }
-//   }
-
-//   return undefined;
-// }
 
 async function login(
   page: Page,
@@ -86,7 +64,7 @@ async function login(
   }
 }
 
-export const exportTransactions = async (
+async function exportTransactions(
   page: Page,
   accountBsb: string,
   accountNumber: string,
@@ -101,7 +79,7 @@ export const exportTransactions = async (
     debug: false,
     downloadTimeoutInMs: 300000,
   }
-): Promise<string> => {
+): Promise<string> {
   await page.goto(
     "https://ibanking.stgeorge.com.au/ibank/viewAccountPortfolio.html"
   );
@@ -109,8 +87,6 @@ export const exportTransactions = async (
   const bsbNumberElements = await page.$$(
     "#acctSummaryList > li > dl.account-number-details > dt.bsb-number + dd"
   );
-
-  console.log(bsbNumberElements.length);
 
   const bsbNumbers = await Promise.all(
     bsbNumberElements.map(async (el) =>
@@ -120,12 +96,12 @@ export const exportTransactions = async (
     )
   );
 
-  console.log(bsbNumbers);
+  if (options.debug)
+    console.log(`Found ${bsbNumbers.length} bsb numbers`, bsbNumbers);
 
   const accountNumberElements = await page.$$(
     "#acctSummaryList > li > dl.account-number-details > dt.account-number + dd"
   );
-  console.log(accountNumberElements.length);
 
   const accountNumbers = await Promise.all(
     accountNumberElements.map(async (el) =>
@@ -136,7 +112,11 @@ export const exportTransactions = async (
     )
   );
 
-  console.log(accountNumbers);
+  if (options.debug)
+    console.log(
+      `Found ${accountNumbers.length} account numbers`,
+      accountNumbers
+    );
 
   type Account = {
     bsbNumber: string;
@@ -151,13 +131,17 @@ export const exportTransactions = async (
     });
   }
 
-  console.log(accounts);
+  if (options.debug) console.log(`Found ${accounts.length} accounts`, accounts);
 
   const accountIndex: number = accounts.findIndex(
     (a) => a.bsbNumber === accountBsb && a.accountNumber === accountNumber
   );
 
-  console.log(accountIndex);
+  if (accountIndex < 0) {
+    throw new Error(
+      `Could not find account with bsb '${accountBsb}' and number '${accountNumber}'`
+    );
+  }
 
   await page.goto(
     `https://ibanking.stgeorge.com.au/ibank/accountDetails.action?index=${accountIndex}`
@@ -232,100 +216,7 @@ export const exportTransactions = async (
   }
 
   return transactionsFile;
-
-  // return "test.txt";
-
-  // if (startDate !== undefined) {
-  //   const startDateFormatted = format(startDate, "dd/MM/yyyy");
-
-  //   if (options.debug)
-  //     console.log(`Setting start date '${startDateFormatted}'`);
-
-  //   await page.click("#DateRange_StartDate", { clickCount: 3 });
-  //   await page.type("#DateRange_StartDate", startDateFormatted);
-  // }
-
-  // if (endDate !== undefined) {
-  //   const endDateFormatted = format(endDate, "dd/MM/yyyy");
-
-  //   if (options.debug) console.log(`Setting end date '${endDateFormatted}'`);
-
-  //   await page.click("#DateRange_EndDate", { clickCount: 3 });
-  //   await page.type("#DateRange_EndDate", endDateFormatted);
-  // }
-
-  // if (options.debug) console.log(`Selecting account '${accountName}'`);
-
-  // await page.type("#Accounts_1", accountName);
-  // await page.waitForTimeout(2000);
-  // await page.waitForSelector(".autosuggest-suggestions:first-child");
-  // await page.click(".autosuggest-suggestions:first-child");
-
-  // const fileTypeSelector = getFileTypeSelector(exportFormat);
-
-  // if (options.debug)
-  //   console.log(`Setting export format '${ExportFormat[exportFormat]}'`);
-
-  // await page.waitForTimeout(2000);
-  // await page.waitForSelector(fileTypeSelector);
-  // await page.click(fileTypeSelector);
-
-  // let downloadDirectory = options.downloadDirectory;
-
-  // if (downloadDirectory === undefined) {
-  //   const tempDir = tmp.dirSync();
-  //   downloadDirectory = tempDir.name;
-  // } else {
-  //   fs.mkdirSync(path.resolve(downloadDirectory));
-  // }
-
-  // if (options.debug)
-  //   console.log(`Exporting transactions to '${downloadDirectory}'`);
-
-  // const client = await page.target().createCDPSession();
-  // await client.send("Page.setDownloadBehavior", {
-  //   behavior: "allow",
-  //   downloadPath: downloadDirectory,
-  // });
-  // await page.click(".btn-actions > .btn.export-link");
-
-  // let transactionsFile = "";
-
-  // const downloadTimeoutTime = addMilliseconds(
-  //   new Date(),
-  //   options.downloadTimeoutInMs || 300000 // 5 minutes
-  // );
-
-  // while (true) {
-  //   if (options.debug)
-  //     console.log(`Checking for downloaded file in '${downloadDirectory}'`);
-
-  //   const downloadDirFiles = fs.readdirSync(downloadDirectory, {
-  //     withFileTypes: true,
-  //   });
-
-  //   if (downloadDirFiles.length > 0) {
-  //     downloadDirFiles.forEach((file) => {
-  //       if (
-  //         file.isFile() &&
-  //         path.extname(file.name).toLowerCase() ==
-  //           getFileExtension(exportFormat).toLowerCase()
-  //       )
-  //         transactionsFile = path.join(downloadDirectory || "", file.name);
-  //     });
-
-  //     break;
-  //   }
-
-  //   if (new Date() > downloadTimeoutTime) {
-  //     throw new Error("Transaction file download has timed out");
-  //   }
-
-  //   await page.waitForTimeout(1000);
-  // }
-
-  // return transactionsFile;
-};
+}
 
 export type StGeorgeTransactionExportInputs = {
   accessNumber: string;
@@ -339,13 +230,7 @@ export type StGeorgeTransactionExportInputs = {
   debug?: boolean;
 };
 
-export class StGeorgeTransactionExporter
-  implements
-    ITransactionExporter<
-      StGeorgeTransactionExportInputs,
-      FileTransactionExportOutput
-    >
-{
+export class StGeorgeTransactionExporter {
   async export(
     inputs: StGeorgeTransactionExportInputs
   ): Promise<FileTransactionExportOutput> {
