@@ -1,5 +1,11 @@
 # ynab-sync-core
 
+## 0.2.1
+
+### Patch Changes
+
+- 2e5345f: Fixes issue with import where payee was more than 100 characters
+
 ## 0.2.0
 
 ### Minor Changes
