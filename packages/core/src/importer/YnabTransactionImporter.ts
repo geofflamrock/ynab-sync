@@ -14,6 +14,19 @@ export type YnabTransactionImporterOptions = {
   debug?: boolean;
 };
 
+function ensureValidTransactionsForApi(transactions: TransactionDetail[]) {
+  return transactions.map((t) => {
+    fixTransactionDetailForApi(t);
+    return t;
+  });
+}
+
+function fixTransactionDetailForApi(transaction: TransactionDetail) {
+  if (transaction.payee_name && transaction.payee_name.length > 100) {
+    transaction.payee_name = transaction.payee_name.substring(0, 100);
+  }
+}
+
 export class YnabTransactionImporter implements ITransactionImporter {
   private options: YnabTransactionImporterOptions;
 
@@ -74,7 +87,7 @@ export class YnabTransactionImporter implements ITransactionImporter {
 
       const createResponse = await ynabAPI.transactions.createTransactions(
         budgetId,
-        { transactions: transactionsToCreate }
+        { transactions: ensureValidTransactionsForApi(transactionsToCreate) }
       );
 
       if (this.options.debug)
@@ -94,7 +107,7 @@ export class YnabTransactionImporter implements ITransactionImporter {
 
       const updateResponse = await ynabAPI.transactions.updateTransactions(
         budgetId,
-        { transactions: transactionsToUpdate }
+        { transactions: ensureValidTransactionsForApi(transactionsToUpdate) }
       );
 
       if (this.options.debug)
