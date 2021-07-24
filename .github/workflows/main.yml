@@ -20,10 +20,22 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Get branch names
+        id: branch_names
+        uses: tj-actions/branch-names@v4.5
+
+      - name: Replace invalid branch characters
+        uses: mad9000/actions-find-and-replace-string@2
+        id: extract_branch
+        with:
+          source: ${{steps.branch_names.outputs.current_branch}}
+          find: "/"
+          replace: "-"
+
       - id: version
         uses: paulhatch/semantic-version@v4.0.2
         with:
-          format: "${major}.${minor}.${patch}-ci${increment}"
+          format: "${major}.${minor}.${patch}-${{steps.extract_branch.outputs.value}}${increment}"
           tag_prefix: ""
 
   package:
@@ -125,7 +137,7 @@ jobs:
         run: dotnet restore ./nuget
 
       - name: Pack
-        run: dotnet pack ./nuget -p:PackageVersion=${{ needs.version.output.version }} --no-build --no-restore --output ./dist --configuration Release
+        run: dotnet pack ./nuget -p:PackageVersion=${{ needs.version.outputs.version }} --no-build --no-restore --output ./dist --configuration Release
 
       - name: Push
         run: dotnet nuget push ./dist/*.nupkg --api-key ${{secrets.GITHUB_TOKEN}}
