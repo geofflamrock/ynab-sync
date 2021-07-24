@@ -31,56 +31,58 @@ export class OfxTransactionParser implements ITransactionParser {
     const ofxTransactions =
       ofxParsed.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.BANKTRANLIST.STMTTRN;
 
-    for (let txn of ofxTransactions) {
-      const id = txn.FITID;
-      const dateISO = `${txn.DTPOSTED.substr(0, 4)}-${txn.DTPOSTED.substr(
-        4,
-        2
-      )}-${txn.DTPOSTED.substr(6, 2)}`;
-      const amountMilliunits = Math.round(txn.TRNAMT * 1000);
-      const memo = txn.MEMO;
+    if (Array.isArray(ofxTransactions)) {
+      for (let txn of ofxTransactions) {
+        const id = txn.FITID;
+        const dateISO = `${txn.DTPOSTED.substr(0, 4)}-${txn.DTPOSTED.substr(
+          4,
+          2
+        )}-${txn.DTPOSTED.substr(6, 2)}`;
+        const amountMilliunits = Math.round(txn.TRNAMT * 1000);
+        const memo = txn.MEMO;
 
-      const transaction: TransactionDetail = {
-        id: "",
-        account_id: accountId,
-        cleared: SaveTransaction.ClearedEnum.Cleared,
-        approved: false,
-        date: dateISO,
-        amount: amountMilliunits,
-        payee_name: memo,
-        deleted: false,
-        account_name: "",
-        subtransactions: [],
-      };
+        const transaction: TransactionDetail = {
+          id: "",
+          account_id: accountId,
+          cleared: SaveTransaction.ClearedEnum.Cleared,
+          approved: false,
+          date: dateISO,
+          amount: amountMilliunits,
+          payee_name: memo,
+          deleted: false,
+          account_name: "",
+          subtransactions: [],
+        };
 
-      const importIdTemplateParameters = {
-        id: id,
-        date: dateISO,
-        amount: amountMilliunits,
-        memo: memo,
-      };
+        const importIdTemplateParameters = {
+          id: id,
+          date: dateISO,
+          amount: amountMilliunits,
+          memo: memo,
+        };
 
-      const importId = format(
-        this.options.importIdTemplate || this.defaultImportIdTemplate,
-        importIdTemplateParameters
-      );
-
-      if (this.options.debug) {
-        console.log(
-          `Created import id '${importId}' from template '${
-            this.options.importIdTemplate || this.defaultImportIdTemplate
-          }' and parameters`,
+        const importId = format(
+          this.options.importIdTemplate || this.defaultImportIdTemplate,
           importIdTemplateParameters
         );
+
+        if (this.options.debug) {
+          console.log(
+            `Created import id '${importId}' from template '${
+              this.options.importIdTemplate || this.defaultImportIdTemplate
+            }' and parameters`,
+            importIdTemplateParameters
+          );
+        }
+
+        transaction.import_id = importId;
+
+        if (this.options.debug) {
+          console.log("Parsed transaction", transaction);
+        }
+
+        transactions.push(transaction);
       }
-
-      transaction.import_id = importId;
-
-      if (this.options.debug) {
-        console.log("Parsed transaction", transaction);
-      }
-
-      transactions.push(transaction);
     }
 
     return transactions;
