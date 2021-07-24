@@ -23,11 +23,11 @@ jobs:
       - id: version
         uses: paulhatch/semantic-version@v4.0.2
         with:
-          format: "${major}.${minor}.${patch}-prerelease${increment}"
+          format: "${major}.${minor}.${patch}-ci${increment}"
           tag_prefix: ""
 
   package:
-    name: "${{ matrix.os}}: Create and upload cli executable"
+    name: "${{ matrix.os}}: Build, test and publish cli"
     needs: version
 
     strategy:
