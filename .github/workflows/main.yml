@@ -24,6 +24,7 @@ jobs:
         uses: paulhatch/semantic-version@v4.0.2
         with:
           format: "${major}.${minor}.${patch}-prerelease${increment}"
+          tag_prefix: ""
 
   package:
     name: "${{ matrix.os}}: Create and upload cli executable"
