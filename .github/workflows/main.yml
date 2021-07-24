@@ -80,6 +80,12 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Build
+        run: pnpm run build
+
+      - name: Test
+        run: pnpm run test
+
       - name: Create CLI Package
         run: "pnpm run ci:pkg -- -- --target ${{ matrix.target }} --output ./bin/cli/${{ matrix.binary-name }}"
 
