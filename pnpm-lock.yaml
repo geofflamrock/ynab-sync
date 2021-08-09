@@ -141,14 +141,14 @@ importers:
       puppeteer: ^9.1.1
       tslib: ^2.2.0
       typescript: ^4.2.4
-      westpac-au-scraper: ^0.0.1-alpha.16
+      westpac-au-scraper: ^0.0.1-alpha.17
       ynab-sync-core: workspace:^0.2.0
       ynab-sync-puppeteer: workspace:^0.0.1
     dependencies:
       date-fns: 2.22.1
       lodash: 4.17.21
       puppeteer: 9.1.1
-      westpac-au-scraper: 0.0.1-alpha.16
+      westpac-au-scraper: 0.0.1-alpha.17
       ynab-sync-core: link:../core
       ynab-sync-puppeteer: link:../puppeteer
     devDependencies:
@@ -3734,8 +3734,8 @@ packages:
       defaults: 1.0.3
     dev: true
 
-  /westpac-au-scraper/0.0.1-alpha.16:
-    resolution: {integrity: sha512-odvIKI7QbMLLepos/vaLMNW55ZqK8PftVS2KjEmh9QTyY8TL2wn6f5jGivtyxCvyxGuJxyQev0FAe6mOA8rOJw==}
+  /westpac-au-scraper/0.0.1-alpha.17:
+    resolution: {integrity: sha512-k1nkp+tQXtSyJbDsCzQOEdWZEwGqhYpT9WV8mif3gMOT7lSZxIEUG+aZpnfdw6NHWzhJ1sEM8tBJ2U6UIx7ONA==}
     engines: {node: '>=10'}
     dependencies:
       '@types/tmp': 0.2.0
