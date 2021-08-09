@@ -65,6 +65,11 @@ export const exportTransactions = async (
     debug: params.debug,
   });
 
+  if (output === undefined) {
+    console.log("No transactions found to export");
+    return;
+  }
+
   console.log(`Transactions exported successfully to '${output.filePath}'`);
 
   console.log(`Parsing transactions from '${output.filePath}'`);

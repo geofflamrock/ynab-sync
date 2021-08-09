@@ -19,12 +19,12 @@ export class WestpacTransactionExporter
   implements
     ITransactionExporter<
       WestpacTransactionExportInputs,
-      FileTransactionExportOutput
+      FileTransactionExportOutput | undefined
     >
 {
   async export(
     inputs: WestpacTransactionExportInputs
-  ): Promise<FileTransactionExportOutput> {
+  ): Promise<FileTransactionExportOutput | undefined> {
     const browser = await createBrowser();
     const page = await browser.newPage();
 
@@ -40,6 +40,8 @@ export class WestpacTransactionExporter
         downloadDirectory: inputs.downloadDirectory,
       }
     );
+
+    if (filePath === undefined) return undefined;
 
     return {
       filePath: filePath,
