@@ -1,5 +1,6 @@
 ---
 "ynab-sync-core": patch
+"ynab-sync-westpac-au": patch
 ---
 
-Fixes issue where no transactions in ofx file causes error
+Fixes issues where no exported transactions causes errors
