@@ -1,4 +1,5 @@
-import { exportTransactions, login } from "westpac-au-scraper";
+import { exportTransactions } from "./exportTransactions";
+import { login } from "./login";
 import {
   FileTransactionExportOutput,
   ITransactionExporter,
