@@ -147,11 +147,11 @@ export const exportTransactions = async (
   await page.click(".btn-actions > .btn.export-link");
   await page.waitForTimeout(2000);
 
-  // const exportAlert = await getExportTransactionsError(page);
+  const exportAlert = await getExportTransactionsError(page);
 
-  // if (exportAlert !== undefined) {
-  //   throw new Error(exportAlert);
-  // }
+  if (exportAlert !== undefined) {
+    if (options.debug) console.log("Export alert", exportAlert);
+  }
 
   if (!(await doesExportContainData(page))) {
     if (options.debug) console.log(`Transaction export contains no data`);
