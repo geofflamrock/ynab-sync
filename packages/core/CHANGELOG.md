@@ -1,5 +1,11 @@
 # ynab-sync-core
 
+## 0.2.2
+
+### Patch Changes
+
+- dc5d525: Fixes issues where no exported transactions causes errors
+
 ## 0.2.1
 
 ### Patch Changes
