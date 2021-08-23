@@ -109,6 +109,7 @@ importers:
     specifiers:
       '@types/cli-progress': ^3.9.1
       '@types/lodash': ^4.14.170
+      '@types/tmp': ^0.2.1
       date-fns: ^2.21.3
       lodash: ^4.17.21
       puppeteer: ^9.1.1
@@ -129,6 +130,7 @@ importers:
     devDependencies:
       '@types/cli-progress': 3.9.1
       '@types/lodash': 4.14.170
+      '@types/tmp': 0.2.1
       tslib: 2.3.0
       typescript: 4.3.4
 
@@ -136,24 +138,26 @@ importers:
     specifiers:
       '@types/cli-progress': ^3.9.1
       '@types/lodash': ^4.14.170
+      '@types/tmp': ^0.2.1
       date-fns: ^2.21.3
       lodash: ^4.17.21
       puppeteer: ^9.1.1
+      tmp: ^0.2.1
       tslib: ^2.2.0
       typescript: ^4.2.4
-      westpac-au-scraper: ^0.0.1-alpha.16
       ynab-sync-core: workspace:^0.2.0
       ynab-sync-puppeteer: workspace:^0.0.1
     dependencies:
       date-fns: 2.22.1
       lodash: 4.17.21
       puppeteer: 9.1.1
-      westpac-au-scraper: 0.0.1-alpha.16
+      tmp: 0.2.1
       ynab-sync-core: link:../core
       ynab-sync-puppeteer: link:../puppeteer
     devDependencies:
       '@types/cli-progress': 3.9.1
       '@types/lodash': 4.14.170
+      '@types/tmp': 0.2.1
       tslib: 2.3.0
       typescript: 4.3.4
 
@@ -492,9 +496,9 @@ packages:
     resolution: {integrity: sha1-NjsnPJtFZwXjER41cekkj2R066Q=}
     dev: true
 
-  /@types/tmp/0.2.0:
-    resolution: {integrity: sha512-flgpHJjntpBAdJD43ShRosQvNC0ME97DCfGvZEDlAThQmnerRXrLbX6YgzRBQCZTthET9eAWFAMaYP0m0Y4HzQ==}
-    dev: false
+  /@types/tmp/0.2.1:
+    resolution: {integrity: sha512-7cTXwKP/HLOPVgjg+YhBdQ7bMiobGMuoBmrGmqwIWJv8elC6t1DfVc/mn4fD9UE1IjhwmhaQ5pGVXkmXbH0rhg==}
+    dev: true
 
   /@types/yauzl/2.9.1:
     resolution: {integrity: sha512-A1b8SU4D10uoPjwb0lnHmmu8wZhR9d+9o2PKBQT2jU5YPTKsxac6M2qGAdY7VcL+dHHhARVUDmeg0rOrcd9EjA==}
@@ -3733,20 +3737,6 @@ packages:
     dependencies:
       defaults: 1.0.3
     dev: true
-
-  /westpac-au-scraper/0.0.1-alpha.16:
-    resolution: {integrity: sha512-odvIKI7QbMLLepos/vaLMNW55ZqK8PftVS2KjEmh9QTyY8TL2wn6f5jGivtyxCvyxGuJxyQev0FAe6mOA8rOJw==}
-    engines: {node: '>=10'}
-    dependencies:
-      '@types/tmp': 0.2.0
-      date-fns: 2.22.1
-      puppeteer: 9.1.1
-      tmp: 0.2.1
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-    dev: false
 
   /whatwg-fetch/3.6.2:
     resolution: {integrity: sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==}

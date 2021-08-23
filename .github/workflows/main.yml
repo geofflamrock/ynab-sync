@@ -8,10 +8,39 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
-    name: "${{ matrix.os}}: Build, lint and test"
+  version:
+    name: Determine version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
-    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get branch names
+        id: branch_names
+        uses: tj-actions/branch-names@v4.5
+
+      - name: Replace invalid branch characters
+        uses: mad9000/actions-find-and-replace-string@2
+        id: extract_branch
+        with:
+          source: ${{steps.branch_names.outputs.current_branch}}
+          find: "/"
+          replace: "-"
+
+      - id: version
+        uses: paulhatch/semantic-version@v4.0.2
+        with:
+          format: "${major}.${minor}.${patch}-${{steps.extract_branch.outputs.value}}.${increment}"
+          tag_prefix: ""
+
+  package:
+    name: "${{ matrix.os}}: Build, test and publish cli"
+    needs: version
 
     strategy:
       matrix:
@@ -22,24 +51,32 @@ jobs:
             os: Linux
             platform: ubuntu-latest
             target: node14-linux-x64
-            binary-name: ynab-sync-linux-x64
+            artifact-name: linux.x64
+            binary-name: ynab-sync
+            asset-name: ynab-sync-linux-x64
           - node-version: 14
             os: MacOS
             platform: macos-latest
             target: node14-macos-x64
-            binary-name: ynab-sync-macos-x64
+            artifact-name: macos.x64
+            binary-name: ynab-sync
+            asset-name: ynab-sync-macos-x64
           - node-version: 14
             os: Windows
             platform: windows-latest
             target: node14-win-x64
-            binary-name: ynab-sync-win-x64.exe
+            artifact-name: win.x64
+            binary-name: ynab-sync.exe
+            asset-name: ynab-sync-win-x64.exe
+
+    runs-on: ${{ matrix.platform }}
 
     steps:
-      - name: Checkout repo
+      - name: checkout
         uses: actions/checkout@v2
 
-      - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: setup node
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -47,7 +84,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.platform }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install pnpm
         run: curl -f https://get.pnpm.io/v6.js | node - add --global pnpm@6
@@ -58,7 +95,7 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Tests
+      - name: Test
         run: pnpm run test
 
       - name: Create CLI Package
@@ -67,8 +104,45 @@ jobs:
       - name: Publish CLI Package
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.binary-name }}
+          name: ${{ matrix.artifact-name }}
           path: packages/cli/bin/cli/${{ matrix.binary-name }}
+
+  nuget:
+    name: Create NuGet Package
+    runs-on: ubuntu-latest
+    needs:
+      - package
+      - version
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Create content directory
+        run: mkdir ./content
+
+      - uses: actions/download-artifact@v2
+        with:
+          path: ./content
+
+      - name: Setup .NET Core SDK 5.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+          source-url: https://nuget.pkg.github.com/geofflamrock/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Restore
+        run: dotnet restore ./nuget
+
+      - name: Pack
+        run: dotnet pack ./nuget -p:PackageVersion=${{ needs.version.outputs.version }} --no-build --no-restore --output ./dist --configuration Release
+
+      - name: Push
+        run: dotnet nuget push ./dist/*.nupkg --api-key ${{secrets.GITHUB_TOKEN}}
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
 env:
   CI: true

@@ -28,8 +28,12 @@ export class OfxTransactionParser implements ITransactionParser {
 
     const ofxRawData = fs.readFileSync(filePath, "utf8");
     const ofxParsed = ofx.parse(ofxRawData);
-    const ofxTransactions =
+    let ofxTransactions =
       ofxParsed.OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.BANKTRANLIST.STMTTRN;
+
+    if (!Array.isArray(ofxTransactions)) {
+      ofxTransactions = [ofxTransactions];
+    }
 
     for (let txn of ofxTransactions) {
       const id = txn.FITID;
