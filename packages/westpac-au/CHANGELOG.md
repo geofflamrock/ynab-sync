@@ -1,5 +1,13 @@
 # ynab-sync-westpac-au
 
+## 0.1.6
+
+### Patch Changes
+
+- dc5d525: Fixes issues where no exported transactions causes errors
+- Updated dependencies [dc5d525]
+  - ynab-sync-core@0.2.2
+
 ## 0.1.5
 
 ### Patch Changes

@@ -145,7 +145,7 @@ importers:
       tmp: ^0.2.1
       tslib: ^2.2.0
       typescript: ^4.2.4
-      ynab-sync-core: workspace:^0.2.0
+      ynab-sync-core: workspace:^0.2.2
       ynab-sync-puppeteer: workspace:^0.0.1
     dependencies:
       date-fns: 2.22.1
