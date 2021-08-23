@@ -109,6 +109,7 @@ importers:
     specifiers:
       '@types/cli-progress': ^3.9.1
       '@types/lodash': ^4.14.170
+      '@types/tmp': ^0.2.1
       date-fns: ^2.21.3
       lodash: ^4.17.21
       puppeteer: ^9.1.1
@@ -129,6 +130,7 @@ importers:
     devDependencies:
       '@types/cli-progress': 3.9.1
       '@types/lodash': 4.14.170
+      '@types/tmp': 0.2.1
       tslib: 2.3.0
       typescript: 4.3.4
 
@@ -136,6 +138,7 @@ importers:
     specifiers:
       '@types/cli-progress': ^3.9.1
       '@types/lodash': ^4.14.170
+      '@types/tmp': ^0.2.1
       date-fns: ^2.21.3
       lodash: ^4.17.21
       puppeteer: ^9.1.1
@@ -154,6 +157,7 @@ importers:
     devDependencies:
       '@types/cli-progress': 3.9.1
       '@types/lodash': 4.14.170
+      '@types/tmp': 0.2.1
       tslib: 2.3.0
       typescript: 4.3.4
 
@@ -490,6 +494,10 @@ packages:
 
   /@types/string-template/1.0.2:
     resolution: {integrity: sha1-NjsnPJtFZwXjER41cekkj2R066Q=}
+    dev: true
+
+  /@types/tmp/0.2.1:
+    resolution: {integrity: sha512-7cTXwKP/HLOPVgjg+YhBdQ7bMiobGMuoBmrGmqwIWJv8elC6t1DfVc/mn4fD9UE1IjhwmhaQ5pGVXkmXbH0rhg==}
     dev: true
 
   /@types/yauzl/2.9.1:

@@ -11,6 +11,7 @@
   "devDependencies": {
     "@types/cli-progress": "^3.9.1",
     "@types/lodash": "^4.14.170",
+    "@types/tmp": "^0.2.1",
     "tslib": "^2.2.0",
     "typescript": "^4.2.4"
   },
@@ -18,8 +19,8 @@
     "date-fns": "^2.21.3",
     "lodash": "^4.17.21",
     "puppeteer": "^9.1.1",
+    "tmp": "^0.2.1",
     "ynab-sync-core": "workspace:^0.2.0",
-    "ynab-sync-puppeteer": "workspace:^0.0.1",
-    "tmp": "^0.2.1"
+    "ynab-sync-puppeteer": "workspace:^0.0.1"
   }
 }
