@@ -15,7 +15,6 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "westpac-au-scraper": "^0.0.1-alpha.17",
     "date-fns": "^2.21.3",
     "lodash": "^4.17.21",
     "puppeteer": "^9.1.1",
