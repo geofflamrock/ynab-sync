@@ -33,7 +33,9 @@ function getFileExtension(exportFormat: ExportFormat): string {
 async function getExportTransactionsAlert(
   page: Page
 ): Promise<string | undefined> {
-  const alert = await page.$(".alert.alert-error .alert-icon");
+  const alert = await page.$(
+    "#alertManagerArea .alert.alert-error .alert-icon"
+  );
 
   if (alert !== null) {
     const alertMessage: string = (
