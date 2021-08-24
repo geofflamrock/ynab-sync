@@ -152,7 +152,7 @@ export const exportTransactions = async (
   const exportAlert = await getExportTransactionsError(page);
 
   if (exportAlert !== undefined) {
-    throw new Error(expo);
+    throw new Error(exportAlert);
   }
 
   if (!(await doesExportContainData(page))) {
