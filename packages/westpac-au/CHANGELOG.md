@@ -1,5 +1,11 @@
 # ynab-sync-westpac-au
 
+## 0.1.7
+
+### Patch Changes
+
+- 808b05a: Fixes issue with valid exports failing due to alert detection
+
 ## 0.1.6
 
 ### Patch Changes
