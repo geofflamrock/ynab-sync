@@ -25,6 +25,7 @@ function getFileExtension(exportFormat: ExportFormat): string {
 }
 
 type LoginOptions = {
+  debug: boolean;
   navigationTimeoutInMs: number;
 };
 
@@ -34,6 +35,7 @@ async function login(
   password: string,
   securityNumber: number,
   options: LoginOptions = {
+    debug: false,
     navigationTimeoutInMs: 2000,
   }
 ): Promise<void> {
@@ -52,6 +54,9 @@ async function login(
 
     if (!timeoutError) {
       throw e;
+    } else {
+      if (options.debug)
+        console.log("A timeout error has occurred attempting to login");
     }
   }
 
@@ -241,7 +246,11 @@ export class StGeorgeTransactionExporter {
       page,
       inputs.accessNumber,
       inputs.password,
-      inputs.securityNumber
+      inputs.securityNumber,
+      {
+        debug: inputs.debug || false,
+        navigationTimeoutInMs: 2000,
+      }
     );
     const filePath = await exportTransactions(
       page,
