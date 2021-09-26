@@ -42,8 +42,8 @@ importers:
       tslib: ^2.3.0
       typescript: ^4.3.4
       ynab-sync-core: workspace:^0.2.0
-      ynab-sync-st-george-au: workspace:^0.0.1
-      ynab-sync-westpac-au: workspace:^0.1.5
+      ynab-sync-st-george-au: workspace:^0.1.0
+      ynab-sync-westpac-au: workspace:^0.2.0
     dependencies:
       commander: 7.2.0
       date-fns: 2.22.1

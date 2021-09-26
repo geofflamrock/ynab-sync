@@ -1,5 +1,17 @@
 # ynab-sync-cli
 
+## 0.1.0
+
+### Minor Changes
+
+- df30a04: Adds configurable login timeout
+
+### Patch Changes
+
+- Updated dependencies [df30a04]
+  - ynab-sync-st-george-au@0.1.0
+  - ynab-sync-westpac-au@0.2.0
+
 ## 0.0.5
 
 ### Patch Changes
