@@ -69,7 +69,7 @@ export const exportTransactions = async (
     endDate: endDate,
     downloadDirectory: params.downloadDirectory,
     debug: params.debug,
-    loginTimeout: params.loginTimeout,
+    loginTimeoutInMs: params.loginTimeout,
   });
 
   console.log(`Transactions exported successfully to '${output.filePath}'`);
@@ -205,7 +205,7 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
       "--login-timeout <login-timeout>",
       "Timeout when logging in to St George online banking (ms)",
       (value: string) => parseInt(value),
-      2000
+      5000
     )
     .action(async (args: StGeorgeTransactionExportParams) => {
       await exportTransactions(args);

@@ -14,6 +14,7 @@ export type WestpacTransactionExportInputs = {
   endDate?: Date;
   downloadDirectory?: string;
   debug?: boolean;
+  loginTimeoutInMs?: number;
 };
 
 export class WestpacTransactionExporter
@@ -29,7 +30,11 @@ export class WestpacTransactionExporter
     const browser = await createBrowser();
     const page = await browser.newPage();
 
-    await login(page, inputs.username, inputs.password);
+    await login(page, inputs.username, inputs.password, {
+      debug: inputs.debug || false,
+      loginTimeoutInMs: inputs.loginTimeoutInMs || 2000,
+    });
+
     const filePath = await exportTransactions(
       page,
       inputs.accountName,
