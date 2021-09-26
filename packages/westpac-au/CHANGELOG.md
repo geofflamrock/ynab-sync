@@ -1,5 +1,11 @@
 # ynab-sync-westpac-au
 
+## 0.2.0
+
+### Minor Changes
+
+- df30a04: Adds configurable login timeout
+
 ## 0.1.7
 
 ### Patch Changes
