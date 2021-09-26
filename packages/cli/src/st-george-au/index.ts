@@ -25,6 +25,7 @@ export type StGeorgeTransactionExportParams = {
   ynabApiKey: string;
   ynabBudgetId: string;
   ynabAccountId: string;
+  loginTimeout?: number;
 };
 
 export const exportTransactions = async (
@@ -68,6 +69,7 @@ export const exportTransactions = async (
     endDate: endDate,
     downloadDirectory: params.downloadDirectory,
     debug: params.debug,
+    loginTimeoutInMs: params.loginTimeout,
   });
 
   console.log(`Transactions exported successfully to '${output.filePath}'`);
@@ -199,6 +201,12 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
       "Id of YNAB account to import into"
     )
     .option("--debug", "Whether to run in debug mode", false)
+    .option<number>(
+      "--login-timeout <login-timeout>",
+      "Timeout when logging in to St George online banking (ms)",
+      (value: string) => parseInt(value),
+      5000
+    )
     .action(async (args: StGeorgeTransactionExportParams) => {
       await exportTransactions(args);
     });

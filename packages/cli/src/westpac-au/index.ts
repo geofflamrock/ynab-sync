@@ -22,6 +22,7 @@ export type WestpacTransactionExportParams = {
   ynabApiKey: string;
   ynabBudgetId: string;
   ynabAccountId: string;
+  loginTimeout?: number;
 };
 
 export const exportTransactions = async (
@@ -63,6 +64,7 @@ export const exportTransactions = async (
     endDate: endDate,
     downloadDirectory: params.downloadDirectory,
     debug: params.debug,
+    loginTimeoutInMs: params.loginTimeout,
   });
 
   if (output === undefined) {
@@ -171,6 +173,12 @@ export const createWestpacAuSyncCommand = (): commander.Command => {
       "Id of YNAB account to import into"
     )
     .option("--debug", "Whether to run in debug mode", false)
+    .option<number>(
+      "--login-timeout <login-timeout>",
+      "Timeout when logging in to Westpac online banking (ms)",
+      (value: string) => parseInt(value),
+      2000
+    )
     .action(async (args: WestpacTransactionExportParams) => {
       await exportTransactions(args);
     });

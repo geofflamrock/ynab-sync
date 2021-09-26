@@ -25,7 +25,8 @@ function getFileExtension(exportFormat: ExportFormat): string {
 }
 
 type LoginOptions = {
-  navigationTimeoutInMs: number;
+  debug: boolean;
+  loginTimeoutInMs: number;
 };
 
 async function login(
@@ -34,7 +35,8 @@ async function login(
   password: string,
   securityNumber: number,
   options: LoginOptions = {
-    navigationTimeoutInMs: 2000,
+    debug: false,
+    loginTimeoutInMs: 5000,
   }
 ): Promise<void> {
   await page.goto("https://ibanking.stgeorge.com.au/ibank/loginPage.action");
@@ -45,13 +47,16 @@ async function login(
   try {
     await Promise.all([
       page.click("#logonButton"),
-      page.waitForNavigation({ timeout: options.navigationTimeoutInMs }),
+      page.waitForNavigation({ timeout: options.loginTimeoutInMs }),
     ]);
   } catch (e) {
     let timeoutError: TimeoutError = e;
 
     if (!timeoutError) {
       throw e;
+    } else {
+      if (options.debug)
+        console.log("A timeout error has occurred attempting to login");
     }
   }
 
@@ -228,6 +233,7 @@ export type StGeorgeTransactionExportInputs = {
   endDate?: Date;
   downloadDirectory?: string;
   debug?: boolean;
+  loginTimeoutInMs?: number;
 };
 
 export class StGeorgeTransactionExporter {
@@ -241,7 +247,11 @@ export class StGeorgeTransactionExporter {
       page,
       inputs.accessNumber,
       inputs.password,
-      inputs.securityNumber
+      inputs.securityNumber,
+      {
+        debug: inputs.debug || false,
+        loginTimeoutInMs: inputs.loginTimeoutInMs || 5000,
+      }
     );
     const filePath = await exportTransactions(
       page,
