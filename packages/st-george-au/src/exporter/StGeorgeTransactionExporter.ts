@@ -233,6 +233,7 @@ export type StGeorgeTransactionExportInputs = {
   endDate?: Date;
   downloadDirectory?: string;
   debug?: boolean;
+  loginTimeout?: number;
 };
 
 export class StGeorgeTransactionExporter {
@@ -249,7 +250,7 @@ export class StGeorgeTransactionExporter {
       inputs.securityNumber,
       {
         debug: inputs.debug || false,
-        navigationTimeoutInMs: 2000,
+        navigationTimeoutInMs: inputs.loginTimeout || 2000,
       }
     );
     const filePath = await exportTransactions(
