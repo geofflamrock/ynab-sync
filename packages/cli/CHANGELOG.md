@@ -1,5 +1,14 @@
 # ynab-sync-cli
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [8f1fcd6]
+  - ynab-sync-core@0.3.0
+  - ynab-sync-st-george-au@0.2.0
+  - ynab-sync-westpac-au@0.3.0
+
 ## 0.1.0
 
 ### Minor Changes
