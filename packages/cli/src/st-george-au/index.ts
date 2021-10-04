@@ -6,6 +6,25 @@ import {
 } from "ynab-sync-st-george-au";
 import commander from "commander";
 
+type StGeorgeTransactionSyncCommandArgs = {
+  accessNumber: string;
+  password: string;
+  securityNumber: number;
+  bsbNumber: string;
+  accountNumber: string;
+  numberOfDaysToSync: number;
+  startDate?: Date;
+  endDate?: Date;
+  importIdTemplate?: string;
+  accountType: AccountType;
+  downloadDirectory?: string;
+  debug: boolean;
+  ynabApiKey: string;
+  ynabBudgetId: string;
+  ynabAccountId: string;
+  loginTimeout?: number;
+};
+
 export const createStGeorgeAuSyncCommand = (): commander.Command => {
   return new commander.Command("st-george-au")
     .description("Sync St George Australia transactions to YNAB")
@@ -92,7 +111,34 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
       (value: string) => parseInt(value),
       5000
     )
-    .action(async (args: StGeorgeTransactionSyncParams) => {
-      await syncTransactions(args);
+    .action(async (args: StGeorgeTransactionSyncCommandArgs) => {
+      await syncTransactions({
+        stGeorgeCredentials: {
+          accessNumber: args.accessNumber,
+          password: args.password,
+          securityNumber: args.securityNumber,
+        },
+        stGeorgeAccount: {
+          bsbNumber: args.bsbNumber,
+          accountNumber: args.accountNumber,
+          accountType: args.accountType,
+        },
+        ynabCredentials: {
+          apiKey: args.ynabApiKey,
+        },
+        ynabAccount: {
+          budgetId: args.ynabBudgetId,
+          accountId: args.ynabAccountId,
+        },
+        options: {
+          debug: args.debug,
+          numberOfDaysToSync: args.numberOfDaysToSync,
+          downloadDirectory: args.downloadDirectory,
+          endDate: args.endDate,
+          importIdTemplate: args.importIdTemplate,
+          loginTimeoutInMs: args.loginTimeout,
+          startDate: args.startDate,
+        },
+      });
     });
 };

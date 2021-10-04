@@ -1,22 +1,39 @@
 import { format, subDays } from "date-fns";
-import { getUserLocale, importTransactions, parseOfx } from "ynab-sync-core";
+import {
+  getUserLocale,
+  importTransactions,
+  parseOfx,
+  YnabAccount,
+  YnabCredentials,
+} from "ynab-sync-core";
 import { createBrowser } from "ynab-sync-puppeteer";
 import { exportTransactions, login } from "../export";
 
-export type WestpacTransactionSyncParams = {
-  westpacUsername: string;
-  westpacPassword: string;
-  westpacAccountName: string;
+type WestpacCredentials = {
+  username: string;
+  password: string;
+};
+
+type WestpacAccount = {
+  accountName: string;
+};
+
+type WestpacSyncOptions = {
   numberOfDaysToSync: number;
   startDate?: Date;
   endDate?: Date;
   importIdTemplate?: string;
   downloadDirectory?: string;
   debug: boolean;
-  ynabApiKey: string;
-  ynabBudgetId: string;
-  ynabAccountId: string;
-  loginTimeout?: number;
+  loginTimeoutInMs?: number;
+};
+
+export type WestpacTransactionSyncParams = {
+  westpacCredentials: WestpacCredentials;
+  westpacAccount: WestpacAccount;
+  ynabCredentials: YnabCredentials;
+  ynabAccount: YnabAccount;
+  options: WestpacSyncOptions;
 };
 
 export const syncTransactions = async (
@@ -24,14 +41,17 @@ export const syncTransactions = async (
 ) => {
   let endDate = undefined;
 
-  if (params.endDate !== undefined) {
-    endDate = params.endDate;
+  if (params.options.endDate !== undefined) {
+    endDate = params.options.endDate;
   }
 
-  let startDate = subDays(endDate ?? new Date(), params.numberOfDaysToSync);
+  let startDate = subDays(
+    endDate ?? new Date(),
+    params.options.numberOfDaysToSync
+  );
 
-  if (params.startDate !== undefined) {
-    startDate = params.startDate;
+  if (params.options.startDate !== undefined) {
+    startDate = params.options.startDate;
   }
 
   const locale = await getUserLocale();
@@ -51,20 +71,25 @@ export const syncTransactions = async (
   const browser = await createBrowser();
   const page = await browser.newPage();
 
-  await login(page, params.westpacUsername, params.westpacPassword, {
-    debug: params.debug || false,
-    loginTimeoutInMs: params.loginTimeout || 2000,
-  });
+  await login(
+    page,
+    params.westpacCredentials.username,
+    params.westpacCredentials.password,
+    {
+      debug: params.options.debug || false,
+      loginTimeoutInMs: params.options.loginTimeoutInMs || 2000,
+    }
+  );
 
   const outputFilePath = await exportTransactions(
     page,
-    params.westpacAccountName,
-    params.startDate,
-    params.endDate,
+    params.westpacAccount.accountName,
+    params.options.startDate,
+    params.options.endDate,
     undefined,
     {
-      debug: params.debug || false,
-      downloadDirectory: params.downloadDirectory,
+      debug: params.options.debug || false,
+      downloadDirectory: params.options.downloadDirectory,
     }
   );
 
@@ -77,9 +102,9 @@ export const syncTransactions = async (
 
   console.log(`Parsing transactions from '${outputFilePath}'`);
 
-  const transactions = parseOfx(params.ynabAccountId, outputFilePath, {
-    importIdTemplate: params.importIdTemplate,
-    debug: params.debug,
+  const transactions = parseOfx(params.ynabAccount.accountId, outputFilePath, {
+    importIdTemplate: params.options.importIdTemplate,
+    debug: params.options.debug,
   });
 
   console.log(
@@ -89,14 +114,11 @@ export const syncTransactions = async (
   console.log(`Importing ${transactions.length} transactions into YNAB`);
 
   const importResults = await importTransactions(
-    {
-      apiKey: params.ynabApiKey,
-    },
-    params.ynabBudgetId,
-    params.ynabAccountId,
+    params.ynabCredentials,
+    params.ynabAccount,
     transactions,
     {
-      debug: params.debug,
+      debug: params.options.debug,
     }
   );
 

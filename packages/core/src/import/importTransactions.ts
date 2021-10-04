@@ -5,6 +5,11 @@ export type YnabCredentials = {
   apiKey: string;
 };
 
+export type YnabAccount = {
+  budgetId: string;
+  accountId: string;
+};
+
 function ensureValidTransactionsForApi(transactions: TransactionDetail[]) {
   return transactions.map((t) => {
     fixTransactionDetailForApi(t);
@@ -26,8 +31,7 @@ export type TransactionImportResults = {
 
 export async function importTransactions(
   credentials: YnabCredentials,
-  budgetId: string,
-  accountId: string,
+  account: YnabAccount,
   transactions: TransactionDetail[],
   options: {
     debug?: boolean;
@@ -38,8 +42,8 @@ export async function importTransactions(
   const minDate = minBy(transactions, "date");
   const existingTransactions =
     await ynabAPI.transactions.getTransactionsByAccount(
-      budgetId,
-      accountId,
+      account.budgetId,
+      account.accountId,
       minDate?.date
     );
 
@@ -75,12 +79,12 @@ export async function importTransactions(
   if (transactionsToCreate && transactionsToCreate.length) {
     if (options.debug)
       console.log(
-        `Creating ${transactionsToCreate.length} transactions in budget '${budgetId}'`,
+        `Creating ${transactionsToCreate.length} transactions in budget '${account.budgetId}', account '${account.accountId}`,
         transactionsToCreate
       );
 
     const createResponse = await ynabAPI.transactions.createTransactions(
-      budgetId,
+      account.budgetId,
       { transactions: ensureValidTransactionsForApi(transactionsToCreate) }
     );
 
@@ -95,12 +99,12 @@ export async function importTransactions(
   if (transactionsToUpdate && transactionsToUpdate.length) {
     if (options.debug)
       console.log(
-        `Updating ${transactionsToUpdate.length} transactions in budget '${budgetId}'`,
+        `Updating ${transactionsToUpdate.length} transactions in budget '${account.budgetId}', account '${account.accountId}'`,
         transactionsToUpdate
       );
 
     const updateResponse = await ynabAPI.transactions.updateTransactions(
-      budgetId,
+      account.budgetId,
       { transactions: ensureValidTransactionsForApi(transactionsToUpdate) }
     );
 

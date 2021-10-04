@@ -1,7 +1,13 @@
 import { format, parse, subDays } from "date-fns";
 import { exportTransactions } from "../export/exportTransactions";
 import { login } from "../export/login";
-import { getUserLocale, importTransactions, parseCsv } from "ynab-sync-core";
+import {
+  getUserLocale,
+  importTransactions,
+  parseCsv,
+  YnabCredentials,
+  YnabAccount,
+} from "ynab-sync-core";
 import { createBrowser } from "ynab-sync-puppeteer";
 
 export enum AccountType {
@@ -9,23 +15,34 @@ export enum AccountType {
   Credit = "Credit",
 }
 
-export type StGeorgeTransactionSyncParams = {
+type StGeorgeCredentials = {
   accessNumber: string;
   password: string;
   securityNumber: number;
+};
+
+type StGeorgeAccount = {
   bsbNumber: string;
   accountNumber: string;
+  accountType: AccountType;
+};
+
+type StGeorgeSyncOptions = {
   numberOfDaysToSync: number;
   startDate?: Date;
   endDate?: Date;
   importIdTemplate?: string;
-  accountType: AccountType;
   downloadDirectory?: string;
   debug: boolean;
-  ynabApiKey: string;
-  ynabBudgetId: string;
-  ynabAccountId: string;
-  loginTimeout?: number;
+  loginTimeoutInMs?: number;
+};
+
+export type StGeorgeTransactionSyncParams = {
+  stGeorgeCredentials: StGeorgeCredentials;
+  stGeorgeAccount: StGeorgeAccount;
+  ynabCredentials: YnabCredentials;
+  ynabAccount: YnabAccount;
+  options: StGeorgeSyncOptions;
 };
 
 export const syncTransactions = async (
@@ -33,14 +50,17 @@ export const syncTransactions = async (
 ) => {
   let endDate = new Date();
 
-  if (params.endDate !== undefined) {
-    endDate = params.endDate;
+  if (params.options.endDate !== undefined) {
+    endDate = params.options.endDate;
   }
 
-  let startDate = subDays(endDate ?? new Date(), params.numberOfDaysToSync);
+  let startDate = subDays(
+    endDate ?? new Date(),
+    params.options.numberOfDaysToSync
+  );
 
-  if (params.startDate !== undefined) {
-    startDate = params.startDate;
+  if (params.options.startDate !== undefined) {
+    startDate = params.options.startDate;
   }
 
   const browser = await createBrowser();
@@ -61,25 +81,25 @@ export const syncTransactions = async (
 
   await login(
     page,
-    params.accessNumber,
-    params.password,
-    params.securityNumber,
+    params.stGeorgeCredentials.accessNumber,
+    params.stGeorgeCredentials.password,
+    params.stGeorgeCredentials.securityNumber,
     {
-      debug: params.debug || false,
-      loginTimeoutInMs: params.loginTimeout || 5000,
+      debug: params.options.debug || false,
+      loginTimeoutInMs: params.options.loginTimeoutInMs || 5000,
     }
   );
 
   const outputFilePath = await exportTransactions(
     page,
-    params.bsbNumber,
-    params.accountNumber,
+    params.stGeorgeAccount.bsbNumber,
+    params.stGeorgeAccount.accountNumber,
     startDate,
     endDate,
     undefined,
     {
-      downloadDirectory: params.downloadDirectory,
-      debug: params.debug,
+      downloadDirectory: params.options.downloadDirectory,
+      debug: params.options.debug,
     }
   );
 
@@ -87,18 +107,20 @@ export const syncTransactions = async (
 
   console.log(`Parsing transactions from '${outputFilePath}'`);
 
-  const transactions = parseCsv(params.ynabAccountId, outputFilePath, {
-    importIdTemplate: params.importIdTemplate,
-    debug: params.debug,
+  const transactions = parseCsv(params.ynabAccount.accountId, outputFilePath, {
+    importIdTemplate: params.options.importIdTemplate,
+    debug: params.options.debug,
     getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
     getAmount: (input: any) => {
       if (input.Debit) {
         return (
-          input.Debit * (params.accountType === AccountType.Debit ? -1 : 1)
+          input.Debit *
+          (params.stGeorgeAccount.accountType === AccountType.Debit ? -1 : 1)
         );
       } else {
         return (
-          input.Credit * (params.accountType === AccountType.Credit ? -1 : 1)
+          input.Credit *
+          (params.stGeorgeAccount.accountType === AccountType.Credit ? -1 : 1)
         );
       }
     },
@@ -113,14 +135,11 @@ export const syncTransactions = async (
   console.log(`Importing ${transactions.length} transactions into YNAB`);
 
   const importResults = await importTransactions(
-    {
-      apiKey: params.ynabApiKey,
-    },
-    params.ynabBudgetId,
-    params.ynabAccountId,
+    params.ynabCredentials,
+    params.ynabAccount,
     transactions,
     {
-      debug: params.debug,
+      debug: params.options.debug,
     }
   );
 

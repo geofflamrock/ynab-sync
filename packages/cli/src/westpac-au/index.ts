@@ -5,6 +5,22 @@ import {
 } from "ynab-sync-westpac-au";
 import commander from "commander";
 
+type WestpacTransactionSyncCommandArgs = {
+  westpacUsername: string;
+  westpacPassword: string;
+  westpacAccountName: string;
+  numberOfDaysToSync: number;
+  startDate?: Date;
+  endDate?: Date;
+  importIdTemplate?: string;
+  downloadDirectory?: string;
+  debug: boolean;
+  ynabApiKey: string;
+  ynabBudgetId: string;
+  ynabAccountId: string;
+  loginTimeout?: number;
+};
+
 export const createWestpacAuSyncCommand = (): commander.Command => {
   return new commander.Command("westpac-au")
     .description("Sync Westpac Australia transactions to YNAB")
@@ -77,7 +93,31 @@ export const createWestpacAuSyncCommand = (): commander.Command => {
       (value: string) => parseInt(value),
       2000
     )
-    .action(async (args: WestpacTransactionSyncParams) => {
-      await syncTransactions(args);
+    .action(async (args: WestpacTransactionSyncCommandArgs) => {
+      await syncTransactions({
+        westpacCredentials: {
+          username: args.westpacUsername,
+          password: args.westpacPassword,
+        },
+        westpacAccount: {
+          accountName: args.westpacAccountName,
+        },
+        ynabCredentials: {
+          apiKey: args.ynabApiKey,
+        },
+        ynabAccount: {
+          budgetId: args.ynabBudgetId,
+          accountId: args.ynabAccountId,
+        },
+        options: {
+          debug: args.debug,
+          numberOfDaysToSync: args.numberOfDaysToSync,
+          downloadDirectory: args.downloadDirectory,
+          endDate: args.endDate,
+          importIdTemplate: args.importIdTemplate,
+          loginTimeoutInMs: args.loginTimeout,
+          startDate: args.startDate,
+        },
+      });
     });
 };
