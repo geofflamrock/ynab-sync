@@ -1,5 +1,16 @@
 # ynab-sync-westpac-au
 
+## 0.3.0
+
+### Minor Changes
+
+- 8f1fcd6: Refactor to remove interfaces and expose functions instead
+
+### Patch Changes
+
+- Updated dependencies [8f1fcd6]
+  - ynab-sync-core@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes
