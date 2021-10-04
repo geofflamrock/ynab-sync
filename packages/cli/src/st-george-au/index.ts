@@ -1,15 +1,12 @@
-import { format, isValid, parseISO, subDays, parse } from "date-fns";
-import { getUserLocale } from "../util";
-import { CsvTransactionParser, YnabTransactionImporter } from "ynab-sync-core";
-import { StGeorgeTransactionExporter } from "ynab-sync-st-george-au";
+import { isValid, parseISO } from "date-fns";
+import {
+  AccountType,
+  StGeorgeTransactionSyncParams,
+  syncTransactions,
+} from "ynab-sync-st-george-au";
 import commander from "commander";
 
-enum AccountType {
-  Debit = "Debit",
-  Credit = "Credit",
-}
-
-export type StGeorgeTransactionExportParams = {
+type StGeorgeTransactionSyncCommandArgs = {
   accessNumber: string;
   password: string;
   securityNumber: number;
@@ -26,99 +23,6 @@ export type StGeorgeTransactionExportParams = {
   ynabBudgetId: string;
   ynabAccountId: string;
   loginTimeout?: number;
-};
-
-export const exportTransactions = async (
-  params: StGeorgeTransactionExportParams
-) => {
-  let endDate = new Date();
-
-  if (params.endDate !== undefined) {
-    endDate = params.endDate;
-  }
-
-  let startDate = subDays(endDate ?? new Date(), params.numberOfDaysToSync);
-
-  if (params.startDate !== undefined) {
-    startDate = params.startDate;
-  }
-
-  const exporter = new StGeorgeTransactionExporter();
-
-  const locale = await getUserLocale();
-
-  console.log(
-    `Exporting St George transactions with date range of '${format(
-      startDate,
-      "P",
-      {
-        locale: locale,
-      }
-    )}' to '${format(endDate ?? new Date(), "P", {
-      locale: locale,
-    })}'`
-  );
-
-  const output = await exporter.export({
-    accessNumber: params.accessNumber,
-    password: params.password,
-    securityNumber: params.securityNumber,
-    bsbNumber: params.bsbNumber,
-    accountNumber: params.accountNumber,
-    startDate: startDate,
-    endDate: endDate,
-    downloadDirectory: params.downloadDirectory,
-    debug: params.debug,
-    loginTimeoutInMs: params.loginTimeout,
-  });
-
-  console.log(`Transactions exported successfully to '${output.filePath}'`);
-
-  console.log(`Parsing transactions from '${output.filePath}'`);
-
-  const parser = new CsvTransactionParser();
-
-  const transactions = parser.parse(params.ynabAccountId, output.filePath, {
-    importIdTemplate: params.importIdTemplate,
-    debug: params.debug,
-    getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
-    getAmount: (input: any) => {
-      if (input.Debit) {
-        return (
-          input.Debit * (params.accountType === AccountType.Debit ? -1 : 1)
-        );
-      } else {
-        return (
-          input.Credit * (params.accountType === AccountType.Credit ? -1 : 1)
-        );
-      }
-    },
-    getMemo: (input: any) => undefined,
-    getPayee: (input: any) => input.Description,
-  });
-
-  console.log(
-    `Parsed ${transactions.length} transactions from '${output.filePath}'`
-  );
-
-  const importer = new YnabTransactionImporter({
-    credentials: {
-      apiKey: params.ynabApiKey,
-    },
-    debug: params.debug,
-  });
-
-  console.log(`Importing ${transactions.length} transactions into YNAB`);
-
-  const importResults = await importer.import(
-    params.ynabBudgetId,
-    params.ynabAccountId,
-    transactions
-  );
-
-  console.log(
-    `Imported ${transactions.length} transactions into YNAB successfully: ${importResults.transactionsCreated.length} created, ${importResults.transactionsUpdated.length} updated, ${importResults.transactionsUnchanged.length} not changed`
-  );
 };
 
 export const createStGeorgeAuSyncCommand = (): commander.Command => {
@@ -207,7 +111,34 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
       (value: string) => parseInt(value),
       5000
     )
-    .action(async (args: StGeorgeTransactionExportParams) => {
-      await exportTransactions(args);
+    .action(async (args: StGeorgeTransactionSyncCommandArgs) => {
+      await syncTransactions({
+        stGeorgeCredentials: {
+          accessNumber: args.accessNumber,
+          password: args.password,
+          securityNumber: args.securityNumber,
+        },
+        stGeorgeAccount: {
+          bsbNumber: args.bsbNumber,
+          accountNumber: args.accountNumber,
+          accountType: args.accountType,
+        },
+        ynabCredentials: {
+          apiKey: args.ynabApiKey,
+        },
+        ynabAccount: {
+          budgetId: args.ynabBudgetId,
+          accountId: args.ynabAccountId,
+        },
+        options: {
+          debug: args.debug,
+          numberOfDaysToSync: args.numberOfDaysToSync,
+          downloadDirectory: args.downloadDirectory,
+          endDate: args.endDate,
+          importIdTemplate: args.importIdTemplate,
+          loginTimeoutInMs: args.loginTimeout,
+          startDate: args.startDate,
+        },
+      });
     });
 };

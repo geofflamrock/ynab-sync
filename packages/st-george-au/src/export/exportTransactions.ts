@@ -1,17 +1,8 @@
-import { Page, TimeoutError } from "puppeteer";
+import { Page } from "puppeteer";
 import { format, addMilliseconds } from "date-fns";
 import path from "path";
 import tmp from "tmp";
 import fs from "fs";
-import {
-  FileTransactionExportOutput,
-  ITransactionExporter,
-} from "ynab-sync-core";
-import { createBrowser } from "ynab-sync-puppeteer";
-
-export enum ExportFormat {
-  Csv,
-}
 
 function getFileExtension(exportFormat: ExportFormat): string {
   switch (exportFormat) {
@@ -24,52 +15,11 @@ function getFileExtension(exportFormat: ExportFormat): string {
   }
 }
 
-type LoginOptions = {
-  debug: boolean;
-  loginTimeoutInMs: number;
-};
-
-async function login(
-  page: Page,
-  accessNumber: string,
-  password: string,
-  securityNumber: number,
-  options: LoginOptions = {
-    debug: false,
-    loginTimeoutInMs: 5000,
-  }
-): Promise<void> {
-  await page.goto("https://ibanking.stgeorge.com.au/ibank/loginPage.action");
-
-  await page.type("#access-number", accessNumber);
-  await page.type("#securityNumber", securityNumber.toString());
-  await page.type("#internet-password", password);
-  try {
-    await Promise.all([
-      page.click("#logonButton"),
-      page.waitForNavigation({ timeout: options.loginTimeoutInMs }),
-    ]);
-  } catch (e) {
-    let timeoutError: TimeoutError = e;
-
-    if (!timeoutError) {
-      throw e;
-    } else {
-      if (options.debug)
-        console.log("A timeout error has occurred attempting to login");
-    }
-  }
-
-  const url = page.url();
-
-  if (
-    url !== "https://ibanking.stgeorge.com.au/ibank/viewAccountPortfolio.html"
-  ) {
-    throw new Error("An unknown login error has occurred"); // temp
-  }
+enum ExportFormat {
+  Csv,
 }
 
-async function exportTransactions(
+export async function exportTransactions(
   page: Page,
   bsbNumber: string,
   accountNumber: string,
@@ -84,7 +34,7 @@ async function exportTransactions(
     debug: false,
     downloadTimeoutInMs: 300000,
   }
-): Promise<string> {
+): Promise<string | undefined> {
   await page.goto(
     "https://ibanking.stgeorge.com.au/ibank/viewAccountPortfolio.html"
   );
@@ -185,7 +135,7 @@ async function exportTransactions(
   });
   await page.click("#transHistExport");
 
-  let transactionsFile = "";
+  let transactionsFile: string | undefined = undefined;
 
   const downloadTimeoutTime = addMilliseconds(
     new Date(),
@@ -202,15 +152,22 @@ async function exportTransactions(
 
     if (downloadDirFiles.length > 0) {
       downloadDirFiles.forEach((file) => {
+        if (options.debug)
+          console.log(`Checking downloaded file '${file.name}'`);
+
         if (
           file.isFile() &&
           path.extname(file.name).toLowerCase() ==
             getFileExtension(exportFormat).toLowerCase()
-        )
+        ) {
+          if (options.debug)
+            console.log(`Found transactions file '${file.name}'`);
+
           transactionsFile = path.join(downloadDirectory || "", file.name);
+        }
       });
 
-      break;
+      if (transactionsFile) break;
     }
 
     if (new Date() > downloadTimeoutTime) {
@@ -221,53 +178,4 @@ async function exportTransactions(
   }
 
   return transactionsFile;
-}
-
-export type StGeorgeTransactionExportInputs = {
-  accessNumber: string;
-  password: string;
-  securityNumber: number;
-  bsbNumber: string;
-  accountNumber: string;
-  startDate?: Date;
-  endDate?: Date;
-  downloadDirectory?: string;
-  debug?: boolean;
-  loginTimeoutInMs?: number;
-};
-
-export class StGeorgeTransactionExporter {
-  async export(
-    inputs: StGeorgeTransactionExportInputs
-  ): Promise<FileTransactionExportOutput> {
-    const browser = await createBrowser();
-    const page = await browser.newPage();
-
-    await login(
-      page,
-      inputs.accessNumber,
-      inputs.password,
-      inputs.securityNumber,
-      {
-        debug: inputs.debug || false,
-        loginTimeoutInMs: inputs.loginTimeoutInMs || 5000,
-      }
-    );
-    const filePath = await exportTransactions(
-      page,
-      inputs.bsbNumber,
-      inputs.accountNumber,
-      inputs.startDate,
-      inputs.endDate,
-      undefined,
-      {
-        debug: inputs.debug || false,
-        downloadDirectory: inputs.downloadDirectory,
-      }
-    );
-
-    return {
-      filePath: filePath,
-    };
-  }
 }
