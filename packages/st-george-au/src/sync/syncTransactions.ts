@@ -103,6 +103,11 @@ export const syncTransactions = async (
     }
   );
 
+  if (outputFilePath === undefined) {
+    console.log("No transactions found to export");
+    return;
+  }
+
   console.log(`Transactions exported successfully to '${outputFilePath}'`);
 
   console.log(`Parsing transactions from '${outputFilePath}'`);

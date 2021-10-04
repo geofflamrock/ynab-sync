@@ -34,7 +34,7 @@ export async function exportTransactions(
     debug: false,
     downloadTimeoutInMs: 300000,
   }
-): Promise<string> {
+): Promise<string | undefined> {
   await page.goto(
     "https://ibanking.stgeorge.com.au/ibank/viewAccountPortfolio.html"
   );
@@ -135,7 +135,7 @@ export async function exportTransactions(
   });
   await page.click("#transHistExport");
 
-  let transactionsFile = "";
+  let transactionsFile: string | undefined = undefined;
 
   const downloadTimeoutTime = addMilliseconds(
     new Date(),
@@ -152,15 +152,22 @@ export async function exportTransactions(
 
     if (downloadDirFiles.length > 0) {
       downloadDirFiles.forEach((file) => {
+        if (options.debug)
+          console.log(`Checking downloaded file '${file.name}'`);
+
         if (
           file.isFile() &&
           path.extname(file.name).toLowerCase() ==
             getFileExtension(exportFormat).toLowerCase()
-        )
+        ) {
+          if (options.debug)
+            console.log(`Found transactions file '${file.name}'`);
+
           transactionsFile = path.join(downloadDirectory || "", file.name);
+        }
       });
 
-      break;
+      if (transactionsFile) break;
     }
 
     if (new Date() > downloadTimeoutTime) {
