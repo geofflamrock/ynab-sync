@@ -1,111 +1,9 @@
-import { format, isValid, parseISO, subDays } from "date-fns";
-import { getUserLocale } from "../util";
+import { isValid, parseISO } from "date-fns";
 import {
-  ITransactionImporter,
-  ITransactionParser,
-  OfxTransactionParser,
-  YnabTransactionImporter,
-} from "ynab-sync-core";
-import { WestpacTransactionExporter } from "ynab-sync-westpac-au";
+  WestpacTransactionSyncParams,
+  syncTransactions,
+} from "ynab-sync-westpac-au";
 import commander from "commander";
-
-export type WestpacTransactionExportParams = {
-  westpacUsername: string;
-  westpacPassword: string;
-  westpacAccountName: string;
-  numberOfDaysToSync: number;
-  startDate?: Date;
-  endDate?: Date;
-  importIdTemplate?: string;
-  downloadDirectory?: string;
-  debug: boolean;
-  ynabApiKey: string;
-  ynabBudgetId: string;
-  ynabAccountId: string;
-  loginTimeout?: number;
-};
-
-export const exportTransactions = async (
-  params: WestpacTransactionExportParams
-) => {
-  let endDate = undefined;
-
-  if (params.endDate !== undefined) {
-    endDate = params.endDate;
-  }
-
-  let startDate = subDays(endDate ?? new Date(), params.numberOfDaysToSync);
-
-  if (params.startDate !== undefined) {
-    startDate = params.startDate;
-  }
-
-  const exporter = new WestpacTransactionExporter();
-
-  const locale = await getUserLocale();
-
-  console.log(
-    `Exporting Westpac transactions with date range of '${format(
-      startDate,
-      "P",
-      {
-        locale: locale,
-      }
-    )}' to '${format(endDate ?? new Date(), "P", {
-      locale: locale,
-    })}'`
-  );
-
-  const output = await exporter.export({
-    username: params.westpacUsername,
-    password: params.westpacPassword,
-    accountName: params.westpacAccountName,
-    startDate: startDate,
-    endDate: endDate,
-    downloadDirectory: params.downloadDirectory,
-    debug: params.debug,
-    loginTimeoutInMs: params.loginTimeout,
-  });
-
-  if (output === undefined) {
-    console.log("No transactions found to export");
-    return;
-  }
-
-  console.log(`Transactions exported successfully to '${output.filePath}'`);
-
-  console.log(`Parsing transactions from '${output.filePath}'`);
-
-  const parser: ITransactionParser = new OfxTransactionParser({
-    importIdTemplate: params.importIdTemplate,
-    debug: params.debug,
-  });
-
-  const transactions = parser.parse(params.ynabAccountId, output.filePath);
-
-  console.log(
-    `Parsed ${transactions.length} transactions from '${output.filePath}'`
-  );
-
-  const importer: ITransactionImporter = new YnabTransactionImporter({
-    credentials: {
-      apiKey: params.ynabApiKey,
-    },
-    debug: params.debug,
-  });
-
-  console.log(`Importing ${transactions.length} transactions into YNAB`);
-
-  const importResults = await importer.import(
-    params.ynabBudgetId,
-    params.ynabAccountId,
-    transactions
-  );
-
-  console.log(
-    `Imported ${transactions.length} transactions into YNAB successfully: ${importResults.transactionsCreated.length} created, ${importResults.transactionsUpdated.length} updated, ${importResults.transactionsUnchanged.length} not changed`
-  );
-};
 
 export const createWestpacAuSyncCommand = (): commander.Command => {
   return new commander.Command("westpac-au")
@@ -179,7 +77,7 @@ export const createWestpacAuSyncCommand = (): commander.Command => {
       (value: string) => parseInt(value),
       2000
     )
-    .action(async (args: WestpacTransactionExportParams) => {
-      await exportTransactions(args);
+    .action(async (args: WestpacTransactionSyncParams) => {
+      await syncTransactions(args);
     });
 };
