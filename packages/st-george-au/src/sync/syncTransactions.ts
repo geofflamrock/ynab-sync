@@ -10,6 +10,7 @@ import {
   YnabAccount,
 } from "ynab-sync-core";
 import { createBrowser } from "ynab-sync-puppeteer";
+import path from "path";
 
 export enum AccountType {
   Debit = "Debit",
@@ -36,6 +37,7 @@ type StGeorgeSyncOptions = {
   downloadDirectory?: string;
   logger: Logger;
   loginTimeoutInMs?: number;
+  toolsDirectory?: string;
 };
 
 export type StGeorgeTransactionSyncParams = {
@@ -64,7 +66,12 @@ export const syncTransactions = async (
     startDate = params.options.startDate;
   }
 
-  const browser = await createBrowser();
+  const chromiumDownloadDirectory =
+    params.options.toolsDirectory !== undefined
+      ? path.join(params.options.toolsDirectory, ".chromium")
+      : undefined;
+
+  const browser = await createBrowser(chromiumDownloadDirectory);
   const page = await browser.newPage();
   const locale = await getUserLocale();
 

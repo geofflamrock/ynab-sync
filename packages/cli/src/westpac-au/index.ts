@@ -19,6 +19,7 @@ type WestpacTransactionSyncCommandArgs = {
   ynabBudgetId: string;
   ynabAccountId: string;
   loginTimeout?: number;
+  toolsDirectory?: string;
 };
 
 export const createWestpacAuSyncCommand = (): commander.Command => {
@@ -93,6 +94,10 @@ export const createWestpacAuSyncCommand = (): commander.Command => {
       (value: string) => parseInt(value),
       2000
     )
+    .option(
+      "--tools-directory <tools-directory>",
+      "Directory to use when downloading tools to use during sync"
+    )
     .action(async (args: WestpacTransactionSyncCommandArgs) => {
       await syncTransactions({
         westpacCredentials: {
@@ -117,6 +122,7 @@ export const createWestpacAuSyncCommand = (): commander.Command => {
           importIdTemplate: args.importIdTemplate,
           loginTimeoutInMs: args.loginTimeout,
           startDate: args.startDate,
+          toolsDirectory: args.toolsDirectory,
         },
       });
     });

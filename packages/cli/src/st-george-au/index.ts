@@ -20,6 +20,7 @@ type StGeorgeTransactionSyncCommandArgs = {
   ynabBudgetId: string;
   ynabAccountId: string;
   loginTimeout?: number;
+  toolsDirectory?: string;
 };
 
 export const createStGeorgeAuSyncCommand = (): commander.Command => {
@@ -108,6 +109,10 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
       (value: string) => parseInt(value),
       5000
     )
+    .option(
+      "--tools-directory <tools-directory>",
+      "Directory to use when downloading tools to use during sync"
+    )
     .action(async (args: StGeorgeTransactionSyncCommandArgs) => {
       await syncTransactions({
         stGeorgeCredentials: {
@@ -137,6 +142,7 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
           logger: createConsoleLogger(
             args.debug ? LogLevel.Debug : LogLevel.Info
           ),
+          toolsDirectory: args.toolsDirectory,
         },
       });
     });

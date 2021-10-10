@@ -5,8 +5,11 @@ import os from "os";
 import prettyBytes from "pretty-bytes";
 import cliProgress from "cli-progress";
 
-export async function createBrowser(): Promise<puppeteer.Browser> {
-  const chromiumDownloadDirectory = `${os.homedir()}/.chromium`;
+export async function createBrowser(
+  downloadDirectory?: string
+): Promise<puppeteer.Browser> {
+  const chromiumDownloadDirectory =
+    downloadDirectory ?? `${os.homedir()}/.chromium`;
 
   if (!fs.existsSync(chromiumDownloadDirectory))
     fs.mkdirSync(chromiumDownloadDirectory);
