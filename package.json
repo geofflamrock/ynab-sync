@@ -47,5 +47,10 @@
   },
   "directories": {
     "doc": "docs"
+  },
+  "pnpm": {
+    "overrides": {
+      "ing-au-login@2>puppeteer": "^9.1.1"
+    }
   }
 }

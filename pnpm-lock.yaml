@@ -1,5 +1,8 @@
 lockfileVersion: 5.3
 
+overrides:
+  ing-au-login@2>puppeteer: ^9.1.1
+
 importers:
 
   .:
@@ -41,9 +44,9 @@ importers:
       pkg: ^5.3.0
       tslib: ^2.3.0
       typescript: ^4.3.4
-      ynab-sync-core: workspace:^0.3.0
-      ynab-sync-st-george-au: workspace:^0.2.0
-      ynab-sync-westpac-au: workspace:^0.3.0
+      ynab-sync-core: 0.3.0
+      ynab-sync-st-george-au: 0.2.0
+      ynab-sync-westpac-au: 0.3.0
     dependencies:
       commander: 7.2.0
       date-fns: 2.22.1
@@ -86,6 +89,35 @@ importers:
       tslib: 2.3.0
       typescript: 4.3.4
 
+  packages/ing-direct-au:
+    specifiers:
+      '@types/cli-progress': ^3.9.1
+      '@types/lodash': ^4.14.170
+      '@types/tmp': ^0.2.1
+      date-fns: ^2.21.3
+      ing-au-login: ^2.0.5
+      lodash: ^4.17.21
+      puppeteer: ^9.1.1
+      tmp: ^0.2.1
+      tslib: ^2.2.0
+      typescript: ^4.2.4
+      ynab-sync-core: 0.3.0
+      ynab-sync-puppeteer: 0.0.1
+    dependencies:
+      date-fns: 2.22.1
+      ing-au-login: 2.0.5
+      lodash: 4.17.21
+      puppeteer: 9.1.1
+      tmp: 0.2.1
+      ynab-sync-core: link:../core
+      ynab-sync-puppeteer: link:../puppeteer
+    devDependencies:
+      '@types/cli-progress': 3.9.1
+      '@types/lodash': 4.14.170
+      '@types/tmp': 0.2.1
+      tslib: 2.3.0
+      typescript: 4.3.4
+
   packages/puppeteer:
     specifiers:
       '@types/cli-progress': ^3.9.1
@@ -119,8 +151,8 @@ importers:
       tslib: ^2.2.0
       typescript: ^4.2.4
       ynab: ^1.25.0
-      ynab-sync-core: workspace:^0.3.0
-      ynab-sync-puppeteer: workspace:^0.0.1
+      ynab-sync-core: 0.3.0
+      ynab-sync-puppeteer: 0.0.1
     dependencies:
       date-fns: 2.22.1
       lodash: 4.17.21
@@ -147,8 +179,8 @@ importers:
       tmp: ^0.2.1
       tslib: ^2.2.0
       typescript: ^4.2.4
-      ynab-sync-core: workspace:^0.3.0
-      ynab-sync-puppeteer: workspace:^0.0.1
+      ynab-sync-core: 0.3.0
+      ynab-sync-puppeteer: 0.0.1
     dependencies:
       date-fns: 2.22.1
       lodash: 4.17.21
@@ -489,6 +521,12 @@ packages:
   /@types/normalize-package-data/2.4.0:
     resolution: {integrity: sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==}
     dev: true
+
+  /@types/puppeteer/2.1.6:
+    resolution: {integrity: sha512-6+BPcokDgLouVh2gtYZB2coG/hhVenm4FcBEEHaNYvg+IZ/6tiRiyONHefEDo23CLSPyujgsA5AxMDoZccRrpQ==}
+    dependencies:
+      '@types/node': 15.12.4
+    dev: false
 
   /@types/semver/6.2.2:
     resolution: {integrity: sha512-RxAwYt4rGwK5GyoRwuP0jT6ZHAVTdz2EqgsHmX0PYNjGsko+OeT4WFXXTs/lM3teJUJodM+SNtAL5/pXIJ61IQ==}
@@ -1936,6 +1974,15 @@ packages:
       once: 1.4.0
       wrappy: 1.0.2
 
+  /ing-au-login/2.0.5:
+    resolution: {integrity: sha512-jX9OvhMKsAcWFfKX+JTxYTTOKlbHHoNomtpDHMrIFimo6lvkuH4GSPGMmYJclkgYusn7iYyVePKfgip/YOlfAg==}
+    engines: {node: '>=10'}
+    dependencies:
+      '@types/puppeteer': 2.1.6
+      pixelmatch: 5.2.1
+      pngjs: 3.4.0
+    dev: false
+
   /inherits/2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
@@ -2843,6 +2890,13 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /pixelmatch/5.2.1:
+    resolution: {integrity: sha512-WjcAdYSnKrrdDdqTcVEY7aB7UhhwjYQKYhHiBXdJef0MOaQeYpUdQ+iVyBLa5YBKS8MPVPPMX7rpOByISLpeEQ==}
+    hasBin: true
+    dependencies:
+      pngjs: 4.0.1
+    dev: false
+
   /pkg-dir/2.0.0:
     resolution: {integrity: sha1-9tXREJ4Z1j7fQo4L1X4Sd3YVM0s=}
     engines: {node: '>=4'}
@@ -2905,6 +2959,16 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /pngjs/3.4.0:
+    resolution: {integrity: sha512-NCrCHhWmnQklfH4MtJMRjZ2a8c80qXeMlQMv2uVp9ISJMTt562SbGd6n2oq0PaPgKm7Z6pL9E2UlLIhC+SHL3w==}
+    engines: {node: '>=4.0.0'}
+    dev: false
+
+  /pngjs/4.0.1:
+    resolution: {integrity: sha512-rf5+2/ioHeQxR6IxuYNYGFytUyG3lma/WW1nsmjeHlWwtb2aByla6dkVc8pmJ9nplzkTA0q2xx7mMWrOTqT4Gg==}
+    engines: {node: '>=8.0.0'}
+    dev: false
 
   /portable-fetch/3.0.0:
     resolution: {integrity: sha1-PL9KptvFpXNLQcBBnJJzMTv9mtg=}

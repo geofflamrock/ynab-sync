@@ -1,12 +1,12 @@
 {
-  "version": "0.3.0",
+  "version": "0.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --declaration"
   },
-  "name": "ynab-sync-westpac-au",
+  "name": "ynab-sync-ing-direct-au",
   "author": "Geoff Lamrock",
   "devDependencies": {
     "@types/cli-progress": "^3.9.1",
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "date-fns": "^2.21.3",
+    "ing-au-login": "^2.0.5",
     "lodash": "^4.17.21",
     "puppeteer": "^9.1.1",
     "tmp": "^0.2.1",
