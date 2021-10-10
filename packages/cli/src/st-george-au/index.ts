@@ -1,9 +1,6 @@
 import { isValid, parseISO } from "date-fns";
-import {
-  AccountType,
-  StGeorgeTransactionSyncParams,
-  syncTransactions,
-} from "ynab-sync-st-george-au";
+import { AccountType, syncTransactions } from "ynab-sync-st-george-au";
+import { createConsoleLogger, LogLevel } from "ynab-sync-core";
 import commander from "commander";
 
 type StGeorgeTransactionSyncCommandArgs = {
@@ -131,13 +128,15 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
           accountId: args.ynabAccountId,
         },
         options: {
-          debug: args.debug,
           numberOfDaysToSync: args.numberOfDaysToSync,
           downloadDirectory: args.downloadDirectory,
           endDate: args.endDate,
           importIdTemplate: args.importIdTemplate,
           loginTimeoutInMs: args.loginTimeout,
           startDate: args.startDate,
+          logger: createConsoleLogger(
+            args.debug ? LogLevel.Debug : LogLevel.Info
+          ),
         },
       });
     });

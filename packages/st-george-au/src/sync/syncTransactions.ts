@@ -4,6 +4,7 @@ import { login } from "../export/login";
 import {
   getUserLocale,
   importTransactions,
+  Logger,
   parseCsv,
   YnabCredentials,
   YnabAccount,
@@ -33,7 +34,7 @@ type StGeorgeSyncOptions = {
   endDate?: Date;
   importIdTemplate?: string;
   downloadDirectory?: string;
-  debug: boolean;
+  logger: Logger;
   loginTimeoutInMs?: number;
 };
 
@@ -84,8 +85,8 @@ export const syncTransactions = async (
     params.stGeorgeCredentials.accessNumber,
     params.stGeorgeCredentials.password,
     params.stGeorgeCredentials.securityNumber,
+    params.options.logger,
     {
-      debug: params.options.debug || false,
       loginTimeoutInMs: params.options.loginTimeoutInMs || 5000,
     }
   );
@@ -99,7 +100,7 @@ export const syncTransactions = async (
     undefined,
     {
       downloadDirectory: params.options.downloadDirectory,
-      debug: params.options.debug,
+      debug: false,
     }
   );
 
@@ -114,7 +115,7 @@ export const syncTransactions = async (
 
   const transactions = parseCsv(params.ynabAccount.accountId, outputFilePath, {
     importIdTemplate: params.options.importIdTemplate,
-    debug: params.options.debug,
+    debug: false,
     getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
     getAmount: (input: any) => {
       if (input.Debit) {
@@ -144,7 +145,7 @@ export const syncTransactions = async (
     params.ynabAccount,
     transactions,
     {
-      debug: params.options.debug,
+      debug: false,
     }
   );
 

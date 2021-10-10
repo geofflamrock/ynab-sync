@@ -1,7 +1,7 @@
 import { Page, TimeoutError } from "puppeteer";
+import { Logger } from "ynab-sync-core";
 
 export type LoginOptions = {
-  debug: boolean;
   loginTimeoutInMs: number;
 };
 
@@ -10,8 +10,8 @@ export async function login(
   accessNumber: string,
   password: string,
   securityNumber: number,
+  logger: Logger,
   options: LoginOptions = {
-    debug: false,
     loginTimeoutInMs: 5000,
   }
 ): Promise<void> {
@@ -31,8 +31,7 @@ export async function login(
     if (!timeoutError) {
       throw e;
     } else {
-      if (options.debug)
-        console.log("A timeout error has occurred attempting to login");
+      console.log("A timeout error has occurred attempting to login");
     }
   }
 
