@@ -1,4 +1,5 @@
 import { format, subDays } from "date-fns";
+import path from "path";
 import {
   getUserLocale,
   importTransactions,
@@ -26,6 +27,7 @@ type WestpacSyncOptions = {
   downloadDirectory?: string;
   debug: boolean;
   loginTimeoutInMs?: number;
+  toolsDirectory?: string;
 };
 
 export type WestpacTransactionSyncParams = {
@@ -68,7 +70,12 @@ export const syncTransactions = async (
     })}'`
   );
 
-  const browser = await createBrowser();
+  const chromiumDownloadDirectory =
+    params.options.toolsDirectory !== undefined
+      ? path.join(params.options.toolsDirectory, ".chromium")
+      : undefined;
+
+  const browser = await createBrowser(chromiumDownloadDirectory);
   const page = await browser.newPage();
 
   await login(
