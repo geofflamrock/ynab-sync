@@ -63,6 +63,7 @@ export async function createBrowser(
   }
 
   return await puppeteer.launch({
+    headless: false,
     executablePath: downloadedRevisionInfo.executablePath,
   });
 }

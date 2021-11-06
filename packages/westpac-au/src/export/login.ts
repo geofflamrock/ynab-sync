@@ -55,6 +55,10 @@ export async function login(
     "https://banking.westpac.com.au/wbc/banking/handler?TAM_OP=login&segment=personal&logout=false"
   );
 
+  console.log(await page.browser().version());
+  console.log(page.url());
+  await page.screenshot({ path: "login.png" });
+
   await page.waitForSelector("#fakeusername");
 
   await page.type("#fakeusername", username);
