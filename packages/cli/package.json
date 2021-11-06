@@ -14,6 +14,7 @@
     "date-fns": "^2.22.1",
     "os-locale": "^5.0.0",
     "ynab-sync-core": "0.3.0",
+    "ynab-sync-ing-direct-au": "0.0.0",
     "ynab-sync-st-george-au": "0.2.0",
     "ynab-sync-westpac-au": "0.3.0"
   },

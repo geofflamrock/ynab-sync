@@ -45,6 +45,7 @@ importers:
       tslib: ^2.3.0
       typescript: ^4.3.4
       ynab-sync-core: 0.3.0
+      ynab-sync-ing-direct-au: 0.0.0
       ynab-sync-st-george-au: 0.2.0
       ynab-sync-westpac-au: 0.3.0
     dependencies:
@@ -52,6 +53,7 @@ importers:
       date-fns: 2.22.1
       os-locale: 5.0.0
       ynab-sync-core: link:../core
+      ynab-sync-ing-direct-au: link:../ing-direct-au
       ynab-sync-st-george-au: link:../st-george-au
       ynab-sync-westpac-au: link:../westpac-au
     devDependencies:
@@ -93,10 +95,13 @@ importers:
     specifiers:
       '@types/cli-progress': ^3.9.1
       '@types/lodash': ^4.14.170
+      '@types/pixelmatch': ^5.2.4
+      '@types/pngjs': ^6.0.1
       '@types/tmp': ^0.2.1
       date-fns: ^2.21.3
-      ing-au-login: ^2.0.5
       lodash: ^4.17.21
+      pixelmatch: ^5.2.1
+      pngjs: ^6.0.0
       puppeteer: ^9.1.1
       tmp: ^0.2.1
       tslib: ^2.2.0
@@ -105,8 +110,9 @@ importers:
       ynab-sync-puppeteer: 0.0.1
     dependencies:
       date-fns: 2.22.1
-      ing-au-login: 2.0.5
       lodash: 4.17.21
+      pixelmatch: 5.2.1
+      pngjs: 6.0.0
       puppeteer: 9.1.1
       tmp: 0.2.1
       ynab-sync-core: link:../core
@@ -114,6 +120,8 @@ importers:
     devDependencies:
       '@types/cli-progress': 3.9.1
       '@types/lodash': 4.14.170
+      '@types/pixelmatch': 5.2.4
+      '@types/pngjs': 6.0.1
       '@types/tmp': 0.2.1
       tslib: 2.3.0
       typescript: 4.3.4
@@ -522,11 +530,17 @@ packages:
     resolution: {integrity: sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==}
     dev: true
 
-  /@types/puppeteer/2.1.6:
-    resolution: {integrity: sha512-6+BPcokDgLouVh2gtYZB2coG/hhVenm4FcBEEHaNYvg+IZ/6tiRiyONHefEDo23CLSPyujgsA5AxMDoZccRrpQ==}
+  /@types/pixelmatch/5.2.4:
+    resolution: {integrity: sha512-HDaSHIAv9kwpMN7zlmwfTv6gax0PiporJOipcrGsVNF3Ba+kryOZc0Pio5pn6NhisgWr7TaajlPEKTbTAypIBQ==}
     dependencies:
       '@types/node': 15.12.4
-    dev: false
+    dev: true
+
+  /@types/pngjs/6.0.1:
+    resolution: {integrity: sha512-J39njbdW1U/6YyVXvC9+1iflZghP8jgRf2ndYghdJb5xL49LYDB+1EuAxfbuJ2IBbWIL3AjHPQhgaTxT3YaYeg==}
+    dependencies:
+      '@types/node': 15.12.4
+    dev: true
 
   /@types/semver/6.2.2:
     resolution: {integrity: sha512-RxAwYt4rGwK5GyoRwuP0jT6ZHAVTdz2EqgsHmX0PYNjGsko+OeT4WFXXTs/lM3teJUJodM+SNtAL5/pXIJ61IQ==}
@@ -1974,15 +1988,6 @@ packages:
       once: 1.4.0
       wrappy: 1.0.2
 
-  /ing-au-login/2.0.5:
-    resolution: {integrity: sha512-jX9OvhMKsAcWFfKX+JTxYTTOKlbHHoNomtpDHMrIFimo6lvkuH4GSPGMmYJclkgYusn7iYyVePKfgip/YOlfAg==}
-    engines: {node: '>=10'}
-    dependencies:
-      '@types/puppeteer': 2.1.6
-      pixelmatch: 5.2.1
-      pngjs: 3.4.0
-    dev: false
-
   /inherits/2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
@@ -2960,14 +2965,14 @@ packages:
       - supports-color
     dev: true
 
-  /pngjs/3.4.0:
-    resolution: {integrity: sha512-NCrCHhWmnQklfH4MtJMRjZ2a8c80qXeMlQMv2uVp9ISJMTt562SbGd6n2oq0PaPgKm7Z6pL9E2UlLIhC+SHL3w==}
-    engines: {node: '>=4.0.0'}
-    dev: false
-
   /pngjs/4.0.1:
     resolution: {integrity: sha512-rf5+2/ioHeQxR6IxuYNYGFytUyG3lma/WW1nsmjeHlWwtb2aByla6dkVc8pmJ9nplzkTA0q2xx7mMWrOTqT4Gg==}
     engines: {node: '>=8.0.0'}
+    dev: false
+
+  /pngjs/6.0.0:
+    resolution: {integrity: sha512-TRzzuFRRmEoSW/p1KVAmiOgPco2Irlah+bGFCeNfJXxxYGwSw7YwAOAcd7X28K/m5bjBWKsC29KyoMfHbypayg==}
+    engines: {node: '>=12.13.0'}
     dev: false
 
   /portable-fetch/3.0.0:

@@ -2,14 +2,8 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "baseUrl": "src",
-    "outDir": "dist",
+    "outDir": "dist"
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "src/indexold.ts"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
