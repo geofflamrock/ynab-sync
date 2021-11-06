@@ -1,5 +1,16 @@
 # ynab-sync-st-george-au
 
+## 0.3.0
+
+### Minor Changes
+
+- 91638ca: Adds support for download tools to a custom directory
+
+### Patch Changes
+
+- Updated dependencies [91638ca]
+  - ynab-sync-puppeteer@0.1.0
+
 ## 0.2.0
 
 ### Minor Changes
