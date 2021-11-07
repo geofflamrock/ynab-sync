@@ -1,0 +1,35 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Create and publish package
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["**/*.md"]
+  workflow_dispatch:
+
+jobs:
+  create_versioning_pr:
+    name: Publish pre-release package
+    if: ${{ github.ref == 'refs/heads/main' && !startsWith(github.event.commits[0].message, 'Version Packages') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.20.3
+          run_install: true
+
+      - name: Create versioning PR
+        uses: changesets/action@master
+        with:
+          version: pnpm run ci:version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
