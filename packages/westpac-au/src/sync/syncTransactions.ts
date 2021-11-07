@@ -91,8 +91,8 @@ export const syncTransactions = async (
   const outputFilePath = await exportTransactions(
     page,
     params.westpacAccount.accountName,
-    params.options.startDate,
-    params.options.endDate,
+    startDate,
+    endDate,
     undefined,
     {
       debug: params.options.debug || false,
