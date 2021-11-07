@@ -8,14 +8,14 @@
   "scripts": {
     "build": "pnpm run build --filter \"{packages}\"",
     "changeset": "changeset",
+    "ci:pkg": "pnpm run build && pnpm ci:pkg -r",
+    "ci:publish": "pnpm run build && pnpm changeset publish",
     "ci:version": "pnpm run changeset version && pnpm install --frozen-lockfile=false",
     "lint:fix": "eslint . --fix",
     "lint": "eslint .",
     "outdated": "pnpm outdated --filter \"{packages}\"",
     "pkg": "pnpm run build && pnpm pkg -r",
-    "ci:pkg": "pnpm run build && pnpm ci:pkg -r",
     "preinstall": "npx only-allow pnpm",
-    "publish": "pnpm run build && pnpm publish -r --access public",
     "test": "pnpm run test --filter \"{packages}\""
   },
   "repository": {
