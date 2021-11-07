@@ -51,6 +51,13 @@ export async function login(
     loginTimeoutInMs: 2000,
   }
 ): Promise<void> {
+  // Westpac attempts to detect browser compatibility by checking the user agent and redirects to an error page if it's not compatible.
+  // When running in headless mode the user agent string contains "HeadlessChrome" which Westpac detects as incompatible,
+  // so we'll replace the user agent string with a compatible one.
+  await page.setUserAgent(
+    (await page.browser().userAgent()).replace("HeadlessChrome", "Chrome")
+  );
+
   await page.goto(
     "https://banking.westpac.com.au/wbc/banking/handler?TAM_OP=login&segment=personal&logout=false"
   );
