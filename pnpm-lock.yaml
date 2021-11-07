@@ -41,9 +41,9 @@ importers:
       pkg: ^5.3.0
       tslib: ^2.3.0
       typescript: ^4.3.4
-      ynab-sync-core: workspace:^0.3.0
-      ynab-sync-st-george-au: workspace:^0.3.0
-      ynab-sync-westpac-au: workspace:^0.4.0
+      ynab-sync-core: 0.3.0
+      ynab-sync-st-george-au: 0.3.0
+      ynab-sync-westpac-au: 0.4.0
     dependencies:
       commander: 7.2.0
       date-fns: 2.22.1
@@ -119,8 +119,8 @@ importers:
       tslib: ^2.2.0
       typescript: ^4.2.4
       ynab: ^1.25.0
-      ynab-sync-core: workspace:^0.3.0
-      ynab-sync-puppeteer: workspace:^0.1.0
+      ynab-sync-core: 0.3.0
+      ynab-sync-puppeteer: 0.1.0
     dependencies:
       date-fns: 2.22.1
       lodash: 4.17.21
@@ -147,8 +147,8 @@ importers:
       tmp: ^0.2.1
       tslib: ^2.2.0
       typescript: ^4.2.4
-      ynab-sync-core: workspace:^0.3.0
-      ynab-sync-puppeteer: workspace:^0.1.0
+      ynab-sync-core: 0.3.0
+      ynab-sync-puppeteer: 0.1.0
     dependencies:
       date-fns: 2.22.1
       lodash: 4.17.21

@@ -21,7 +21,7 @@
     "puppeteer": "^9.1.1",
     "tmp": "^0.2.1",
     "ynab": "^1.25.0",
-    "ynab-sync-core": "workspace:^0.3.0",
-    "ynab-sync-puppeteer": "workspace:^0.1.0"
+    "ynab-sync-core": "0.3.0",
+    "ynab-sync-puppeteer": "0.1.0"
   }
 }
