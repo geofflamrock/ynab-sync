@@ -151,6 +151,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.20.3
+          run_install: true
+
       - name: Publish packages to npm
         uses: changesets/action@master
         with:
