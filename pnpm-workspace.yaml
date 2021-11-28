@@ -1,2 +1,4 @@
 packages:
   - "packages/**"
+  - "octopus/steps/**"
+  - "octopus/targets/**"

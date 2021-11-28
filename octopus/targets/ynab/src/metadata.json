@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "0.0.0",
+  "type": "deployment-target",
+  "id": "ynab-target",
+  "name": "YNAB deployment target",
+  "description": "YNAB Deployment Target",
+  "categories": ["Linux"],
+  "canRunOnDeploymentTarget": false,
+  "launcher": "node",
+  "releaseNotesUrl": "https://github.com/geofflamrock/ynab-sync/releases"
+}

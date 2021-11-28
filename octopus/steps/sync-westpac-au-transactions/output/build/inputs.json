@@ -1,0 +1,122 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "WestpacCredentials": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "object",
+                    "isSensitiveValue": true
+                }
+            },
+            "required": [
+                "username",
+                "password"
+            ]
+        },
+        "WestpacAccount": {
+            "type": "object",
+            "properties": {
+                "accountName": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "accountName"
+            ]
+        },
+        "WestpacSyncOptions": {
+            "type": "object",
+            "properties": {
+                "numberOfDaysToSync": {
+                    "type": "number"
+                },
+                "startDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "endDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "importIdTemplate": {
+                    "type": "string"
+                },
+                "downloadDirectory": {
+                    "type": "string"
+                },
+                "debug": {
+                    "type": "boolean"
+                },
+                "loginTimeoutInMs": {
+                    "type": "number"
+                },
+                "toolsDirectory": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "numberOfDaysToSync",
+                "debug"
+            ]
+        },
+        "YnabCredentials": {
+            "type": "object",
+            "properties": {
+                "apiKey": {
+                    "type": "object",
+                    "isSensitiveValue": true
+                }
+            },
+            "required": [
+                "apiKey"
+            ]
+        },
+        "YnabAccount": {
+            "type": "object",
+            "properties": {
+                "budgetId": {
+                    "type": "string"
+                },
+                "accountId": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "budgetId",
+                "accountId"
+            ]
+        },
+        "SyncWestpacAuTransactionsInputs": {
+            "type": "object",
+            "properties": {
+                "westpacCredentials": {
+                    "$ref": "#/definitions/WestpacCredentials"
+                },
+                "westpacAccount": {
+                    "$ref": "#/definitions/WestpacAccount"
+                },
+                "ynabCredentials": {
+                    "$ref": "#/definitions/YnabCredentials"
+                },
+                "ynabAccount": {
+                    "$ref": "#/definitions/YnabAccount"
+                },
+                "options": {
+                    "$ref": "#/definitions/WestpacSyncOptions"
+                }
+            },
+            "required": [
+                "westpacCredentials",
+                "westpacAccount",
+                "ynabCredentials",
+                "ynabAccount",
+                "options"
+            ],
+            "isRoot": true
+        }
+    }
+}

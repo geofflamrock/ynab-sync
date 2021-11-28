@@ -1,0 +1,76 @@
+{
+  "name": "ynab-target-octopus",
+  "version": "0.0.0",
+  "main": "dist/inputs.js",
+  "scripts": {
+    "step-package": "step-package-cli",
+    "local:publish": "pnpm run step-package build -- -s ./src -p . -o ../../dist",
+    "ci:publish": "pnpm run step-package build -- -s ./src -p . -o ../../dist -t",
+    "build": "tsc --declaration",
+    "test": "jest --maxWorkers 1 --testTimeout 60000 --json --testPathIgnorePatterns \"dist\",\"node_modules\" --outputFile=./results.json"
+  },
+  "jest": {
+    "preset": "ts-jest/presets/js-with-ts",
+    "projects": [
+      {
+        "displayName": "test",
+        "transform": {
+          ".(ts)": "ts-jest"
+        },
+        "testEnvironment": "jsdom",
+        "testRegex": "__tests__/.*\\.(test|spec)\\.(ts)$",
+        "moduleDirectories": [
+          "<rootDir>/src/",
+          "node_modules"
+        ],
+        "moduleFileExtensions": [
+          "ts",
+          "js"
+        ],
+        "setupFilesAfterEnv": [
+          "jest-expect-message",
+          "jest-extended"
+        ],
+        "resetMocks": true
+      }
+    ]
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.16.0",
+    "@octopusdeploy/step-api": "1.0.0",
+    "@octopusdeploy/step-package-cli": "1.0.1",
+    "ynab-sync-westpac-au": "0.4.1",
+    "@types/jest": "^26.0.22",
+    "@types/node": "^14.14.39",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.24.0",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.3.5",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^26.6.3",
+    "jest-cli": "^26.6.3",
+    "jest-expect-message": "^1.0.2",
+    "jest-extended": "^0.11.5",
+    "jest-runner-eslint": "^0.10.0",
+    "prettier": "^2.2.1",
+    "ts-jest": "^26.5.4",
+    "typescript": "^4.2.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OctopusDeploy/step-package-template.git"
+  },
+  "author": "Octopus Deploy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OctopusDeploy/step-package-template/issues"
+  },
+  "homepage": "https://github.com/OctopusDeploy/step-package-template#readme",
+  "private": true
+}

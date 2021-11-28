@@ -1,4 +1,5 @@
 import * as locales from "date-fns/locale";
+import { Locale } from "date-fns";
 import osLocale from "os-locale";
 
 export async function getUserLocale(): Promise<Locale | undefined> {

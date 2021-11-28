@@ -1,0 +1,1 @@
+{"schemaVersion":"1.0.0","version":"0.0.0","type":"step","id":"ynab-sync-westpac-au","name":"Sync Westpac AU Transactions to YNAB","description":"Syncs transactions from an Westpac Australia account to YNAB","categories":["BuiltInStep"],"canRunOnDeploymentTarget":false,"launcher":"node","releaseNotesUrl":"https://github.com/geofflamrock/ynab-sync/releases"}
