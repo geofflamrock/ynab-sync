@@ -13,27 +13,27 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ["14"]
+        node-version: ["16"]
         os: ["Linux", "MacOS", "Windows"]
         include:
-          - node-version: 14
+          - node-version: 16
             os: Linux
             platform: ubuntu-latest
-            target: node14-linux-x64
+            target: node16-linux-x64
             artifact-name: linux.x64
             binary-name: ynab-sync
             asset-name: ynab-sync-linux-x64
-          - node-version: 14
+          - node-version: 16
             os: MacOS
             platform: macos-latest
-            target: node14-macos-x64
+            target: node16-macos-x64
             artifact-name: macos.x64
             binary-name: ynab-sync
             asset-name: ynab-sync-macos-x64
-          - node-version: 14
+          - node-version: 16
             os: Windows
             platform: windows-latest
-            target: node14-win-x64
+            target: node16-win-x64
             artifact-name: win.x64
             binary-name: ynab-sync.exe
             asset-name: ynab-sync-win-x64.exe
@@ -57,7 +57,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 6.20.3
+          version: 6.34.0
           run_install: true
 
       - name: Build
@@ -110,7 +110,7 @@ jobs:
         uses: paulhatch/semantic-version@v4.0.2
         with:
           format: "${{ steps.cli-version.outputs.version }}-${{ steps.extract_branch.outputs.value }}.${increment}"
-          tag_prefix: ""
+          tag_prefix: "ynab-sync-cli@"
 
       - name: Create content directory
         run: mkdir ./content
@@ -119,10 +119,10 @@ jobs:
         with:
           path: ./content
 
-      - name: Setup .NET Core SDK 5.0
+      - name: Setup .NET Core SDK 6.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
           source-url: https://nuget.pkg.github.com/geofflamrock/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -177,10 +177,10 @@ jobs:
         with:
           path: ./content
 
-      - name: Setup .NET Core SDK 5.0
+      - name: Setup .NET Core SDK 6.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
           source-url: https://nuget.pkg.github.com/geofflamrock/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
