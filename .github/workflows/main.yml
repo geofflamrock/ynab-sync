@@ -110,7 +110,7 @@ jobs:
         uses: paulhatch/semantic-version@v4.0.2
         with:
           format: "${{ steps.cli-version.outputs.version }}-${{ steps.extract_branch.outputs.value }}.${increment}"
-          tag_prefix: ""
+          tag_prefix: "ynab-sync-cli@"
 
       - name: Create content directory
         run: mkdir ./content
