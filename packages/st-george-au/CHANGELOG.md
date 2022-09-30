@@ -1,5 +1,11 @@
 # ynab-sync-st-george-au
 
+## 0.3.1
+
+### Patch Changes
+
+- 4fa0294: Fixes issue where the number of days to sync would not be selected properly
+
 ## 0.3.0
 
 ### Minor Changes
