@@ -119,10 +119,10 @@ jobs:
         with:
           path: ./content
 
-      - name: Setup .NET Core SDK 5.0
+      - name: Setup .NET Core SDK 6.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
           source-url: https://nuget.pkg.github.com/geofflamrock/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -177,10 +177,10 @@ jobs:
         with:
           path: ./content
 
-      - name: Setup .NET Core SDK 5.0
+      - name: Setup .NET Core SDK 6.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
           source-url: https://nuget.pkg.github.com/geofflamrock/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
