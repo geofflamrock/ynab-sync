@@ -1,5 +1,16 @@
 # ynab-sync-cli
 
+## 0.3.0
+
+### Minor Changes
+
+- 4fa0294: Update to use node 16
+
+### Patch Changes
+
+- Updated dependencies [4fa0294]
+  - ynab-sync-st-george-au@0.3.1
+
 ## 0.2.1
 
 ### Patch Changes
