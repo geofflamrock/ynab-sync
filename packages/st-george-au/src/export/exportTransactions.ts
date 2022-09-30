@@ -116,6 +116,14 @@ export async function exportTransactions(
     await page.type("#acctDetDateTo", endDateFormatted);
   }
 
+  if (options.debug) console.log("Clicking search button");
+
+  await page.click(
+    "#transaction-date-range > form > div > fieldset > ol > li.has-btn > span > input[type=button]"
+  );
+
+  await page.waitForTimeout(2000);
+
   let downloadDirectory = options.downloadDirectory;
 
   if (downloadDirectory === undefined) {
