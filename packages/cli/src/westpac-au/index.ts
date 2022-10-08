@@ -27,15 +27,18 @@ export const createWestpacAuSyncCommand = (): commander.Command => {
     .description("Sync Westpac Australia transactions to YNAB")
     .requiredOption(
       "--westpac-username <username>",
-      "Westpac online banking username"
+      "Westpac online banking username",
+      process.env.WESTPAC_USERNAME
     )
     .requiredOption(
       "--westpac-password <password>",
-      "Westpac online banking password"
+      "Westpac online banking password",
+      process.env.WESTPAC_PASSWORD
     )
     .requiredOption(
       "--westpac-account-name  <account-name>",
-      "Name of Westpac account to sync from"
+      "Name of Westpac account to sync from",
+      process.env.WESTPAC_ACCOUNT_NAME
     )
     .option<number>(
       "--number-of-days-to-sync <number-of-days-to-sync>",
@@ -78,14 +81,20 @@ export const createWestpacAuSyncCommand = (): commander.Command => {
       "--download-directory <download-directory>",
       "Directory to use when downloading transaction files"
     )
-    .requiredOption("--ynab-api-key <ynab-api-key>", "YNAB Api key")
+    .requiredOption(
+      "--ynab-api-key <ynab-api-key>",
+      "YNAB Api key",
+      process.env.YNAB_API_KEY
+    )
     .requiredOption(
       "--ynab-budget-id <ynab-budget-id>",
-      "Id of YNAB budget to import into"
+      "Id of YNAB budget to import into",
+      process.env.YNAB_BUDGET_ID
     )
     .requiredOption(
       "--ynab-account-id <ynab-account-id>",
-      "Id of YNAB account to import into"
+      "Id of YNAB account to import into",
+      process.env.YNAB_ACCOUNT_ID
     )
     .option("--debug", "Whether to run in debug mode", false)
     .option<number>(
