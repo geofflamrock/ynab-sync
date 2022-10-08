@@ -1,5 +1,11 @@
 # ynab-sync-cli
 
+## 0.4.0
+
+### Minor Changes
+
+- 30c2704: Adds support for reading sensitive cli options from env vars
+
 ## 0.3.0
 
 ### Minor Changes
