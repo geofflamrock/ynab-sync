@@ -31,23 +31,28 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
     .description("Sync St George Australia transactions to YNAB")
     .requiredOption(
       "--access-number <access-number>",
-      "St George customer access number"
+      "St George customer access number",
+      process.env.ST_GEORGE_ACCESS_NUMBER
     )
     .requiredOption(
       "--password <password>",
-      "St George online banking password"
+      "St George online banking password",
+      process.env.ST_GEORGE_PASSWORD
     )
     .requiredOption(
       "--security-number <security-number>",
-      "St George security number"
+      "St George security number",
+      process.env.ST_GEORGE_SECURITY_NUMBER
     )
     .requiredOption(
       "--bsb-number  <bsb-number>",
-      "BSB number of St George account to sync from"
+      "BSB number of St George account to sync from",
+      process.env.ST_GEORGE_BSB_NUMBER
     )
     .requiredOption(
       "--account-number <account-number>",
-      "BSB number of St George account to sync from"
+      "BSB number of St George account to sync from",
+      process.env.ST_GEORGE_ACCOUNT_NUMBER
     )
     .option<number>(
       "--number-of-days-to-sync <number-of-days-to-sync>",
@@ -90,20 +95,28 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
       "--account-type",
       "Whether the account is a debit or credit account, changing how debit and credit amounts are handled. Typically transactional/offset accounts would be debit, and home loan accounts would be credit.",
       (value: string) => (<any>AccountType)[value],
-      AccountType.Debit
+      process.env.ST_GEORGE_ACCOUNT_TYPE !== undefined
+        ? (<any>AccountType)[process.env.ST_GEORGE_ACCOUNT_TYPE]
+        : AccountType.Debit
     )
     .option(
       "--download-directory <download-directory>",
       "Directory to use when downloading transaction files"
     )
-    .requiredOption("--ynab-api-key <ynab-api-key>", "YNAB Api key")
+    .requiredOption(
+      "--ynab-api-key <ynab-api-key>",
+      "YNAB Api key",
+      process.env.YNAB_API_KEY
+    )
     .requiredOption(
       "--ynab-budget-id <ynab-budget-id>",
-      "Id of YNAB budget to import into"
+      "Id of YNAB budget to import into",
+      process.env.YNAB_BUDGET_ID
     )
     .requiredOption(
       "--ynab-account-id <ynab-account-id>",
-      "Id of YNAB account to import into"
+      "Id of YNAB account to import into",
+      process.env.YNAB_ACCOUNT_ID
     )
     .option("--debug", "Whether to run in debug mode", false)
     .option<number>(
