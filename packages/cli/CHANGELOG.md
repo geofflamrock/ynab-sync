@@ -1,5 +1,11 @@
 # ynab-sync-cli
 
+## 0.4.1
+
+### Patch Changes
+
+- 62793ee: Fixes issue where account type for St George accounts would not be parsed properly from env variables, resulting in every amount being treated as positive
+
 ## 0.4.0
 
 ### Minor Changes
