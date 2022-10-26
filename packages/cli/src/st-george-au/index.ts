@@ -16,7 +16,7 @@ type StGeorgeTransactionSyncCommandArgs = {
   startDate?: Date;
   endDate?: Date;
   importIdTemplate?: string;
-  accountType: AccountType;
+  accountType: string;
   downloadDirectory?: string;
   debug: boolean;
   ynabApiKey: string;
@@ -91,13 +91,10 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
       "Template to use when constructing the import id. Properties available are {id}, {date}, {amount} and {memo}. Defaults to {id}.",
       "{date}-{amount}-{payee}"
     )
-    .option<AccountType>(
-      "--account-type",
+    .option(
+      "--account-type <account-type>",
       "Whether the account is a debit or credit account, changing how debit and credit amounts are handled. Typically transactional/offset accounts would be debit, and home loan accounts would be credit.",
-      (value: string) => (<any>AccountType)[value],
-      process.env.ST_GEORGE_ACCOUNT_TYPE !== undefined
-        ? (<any>AccountType)[process.env.ST_GEORGE_ACCOUNT_TYPE]
-        : AccountType.Debit
+      process.env.ST_GEORGE_ACCOUNT_TYPE
     )
     .option(
       "--download-directory <download-directory>",
@@ -130,6 +127,18 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
       "Directory to use when downloading tools to use during sync"
     )
     .action(async (args: StGeorgeTransactionSyncCommandArgs) => {
+      let accountType: AccountType | undefined;
+
+      if (args.accountType.toLowerCase() === "debit")
+        accountType = AccountType.Debit;
+      else if (args.accountType.toLowerCase() === "credit")
+        accountType = AccountType.Credit;
+
+      if (accountType === undefined)
+        throw new Error(
+          `Account type must be one of 'Debit' or 'Credit', value provided was '${args.accountType}'`
+        );
+
       await syncTransactions({
         stGeorgeCredentials: {
           accessNumber: args.accessNumber,
@@ -139,7 +148,7 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
         stGeorgeAccount: {
           bsbNumber: args.bsbNumber,
           accountNumber: args.accountNumber,
-          accountType: args.accountType,
+          accountType,
         },
         ynabCredentials: {
           apiKey: args.ynabApiKey,
