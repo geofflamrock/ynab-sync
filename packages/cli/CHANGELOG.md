@@ -1,5 +1,12 @@
 # ynab-sync-cli
 
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies [ffc48f3]
+  - ynab-sync-st-george-au@0.3.2
+
 ## 0.4.1
 
 ### Patch Changes

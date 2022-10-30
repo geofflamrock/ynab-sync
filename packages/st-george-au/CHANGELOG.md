@@ -1,5 +1,11 @@
 # ynab-sync-st-george-au
 
+## 0.3.2
+
+### Patch Changes
+
+- ffc48f3: Removes use the accountType to modify debit/credit amounts as transaction exports have changed
+
 ## 0.3.1
 
 ### Patch Changes
