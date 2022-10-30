@@ -125,7 +125,7 @@ export const syncTransactions = async (
     getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
     getAmount: (input: any) => {
       if (input.Debit) {
-        return input.Debit;
+        return input.Debit * -1;
       } else {
         return input.Credit;
       }
