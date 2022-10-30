@@ -66,14 +66,14 @@ jobs:
       - name: Test
         run: pnpm run test
 
-      - name: Create CLI Package
-        run: "pnpm run ci:pkg -- -- --target ${{ matrix.target }} --output ./bin/cli/${{ matrix.binary-name }}"
+      # - name: Create CLI Package
+      #   run: "pnpm run ci:pkg -- -- --target ${{ matrix.target }} --output ./bin/cli/${{ matrix.binary-name }}"
 
       - name: Publish CLI Package
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.artifact-name }}
-          path: packages/cli/bin/cli/${{ matrix.binary-name }}
+          path: packages/cli/bin/*
 
   publish_pre_release:
     name: Publish pre-release packages
