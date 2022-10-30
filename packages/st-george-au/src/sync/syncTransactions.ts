@@ -125,15 +125,9 @@ export const syncTransactions = async (
     getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
     getAmount: (input: any) => {
       if (input.Debit) {
-        return (
-          input.Debit *
-          (params.stGeorgeAccount.accountType === AccountType.Debit ? -1 : 1)
-        );
+        return input.Debit;
       } else {
-        return (
-          input.Credit *
-          (params.stGeorgeAccount.accountType === AccountType.Credit ? -1 : 1)
-        );
+        return input.Credit;
       }
     },
     getMemo: (input: any) => undefined,
