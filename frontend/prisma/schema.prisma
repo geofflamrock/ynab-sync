@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model BankAccount {
+  id       Int       @id @default(autoincrement())
+  type     String
+  name     String
+  details  String
+  accounts Account[]
+}
+
+model BankCredential {
+  id      Int       @id @default(autoincrement())
+  type    String
+  name    String
+  details String
+  Account Account[]
+}
+
+model YnabBudget {
+  id       String        @id
+  name     String
+  accounts YnabAccount[]
+}
+
+model YnabAccount {
+  id       String     @id
+  budgetId String
+  budget   YnabBudget @relation(fields: [budgetId], references: [id])
+  name     String
+  accounts Account[]
+}
+
+model YnabCredential {
+  id       Int       @id @default(autoincrement())
+  apiKey   String
+  accounts Account[]
+}
+
+model Account {
+  id               Int            @id @default(autoincrement())
+  bankCredentialId Int
+  bankCredentials  BankCredential @relation(fields: [bankCredentialId], references: [id])
+  bankAccountId    Int
+  bankAccount      BankAccount    @relation(fields: [bankAccountId], references: [id])
+  ynabCredentialId Int
+  ynabCredentials  YnabCredential @relation(fields: [ynabCredentialId], references: [id])
+  ynabAccountId    String
+  ynabAccount      YnabAccount    @relation(fields: [ynabAccountId], references: [id])
+  syncStatus       String
+  lastSyncTime     DateTime?
+  history          Sync[]
+}
+
+model Sync {
+  id        Int      @id @default(autoincrement())
+  accountId Int
+  account   Account  @relation(fields: [accountId], references: [id])
+  date      DateTime
+  status    String
+}

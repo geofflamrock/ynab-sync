@@ -12,6 +12,7 @@
   "dependencies": {
     "commander": "^7.2.0",
     "date-fns": "^2.22.1",
+    "keyv": "^4.5.0",
     "os-locale": "^5.0.0",
     "ynab-sync-core": "0.3.0",
     "ynab-sync-st-george-au": "0.3.1",

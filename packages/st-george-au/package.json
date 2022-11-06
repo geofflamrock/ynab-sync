@@ -18,6 +18,7 @@
   "dependencies": {
     "date-fns": "^2.21.3",
     "lodash": "^4.17.21",
+    "keyv": "^4.5.0",
     "puppeteer": "^9.1.1",
     "tmp": "^0.2.1",
     "ynab": "^1.25.0",

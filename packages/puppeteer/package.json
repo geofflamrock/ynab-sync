@@ -18,6 +18,7 @@
     "cli-progress": "^3.9.0",
     "lodash": "^4.17.21",
     "pretty-bytes": "^5.6.0",
-    "puppeteer": "^9.1.1"
+    "puppeteer": "^9.1.1",
+    "keyv": "^4.5.0"
   }
 }

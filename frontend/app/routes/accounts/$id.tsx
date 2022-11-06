@@ -1,98 +1,100 @@
-import {
-  ArrowRightCircleIcon,
-  ChevronRightIcon,
-  CreditCardIcon,
-} from "@heroicons/react/24/outline";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import type { SyncDetail } from "~/api/api";
-import { syncDetails } from "~/api/api";
-import { BankLogo } from "~/components/bank/BankLogo";
-import { SyncStatusButton } from "~/components/sync/SyncStatusButton";
+import type { AccountDetail } from "~/api/api";
+import { getAccountDetail } from "~/api/api";
 import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
-import { YnabIcon } from "~/components/ynab/YnabIcon";
 import { format, formatDistanceToNow } from "date-fns";
 import { ContentHeader } from "~/components/layout/ContentHeader";
 import { Heading } from "~/components/primitive/Heading";
+import {
+  BankAccountSummary,
+  SyncDirectionIcon,
+  YnabAccountSummary,
+} from "~/components/accounts/AccountSummary";
+import { Paper } from "~/components/layout/Paper";
+import { SubHeading } from "~/components/primitive/SubHeading";
+import { useRefreshOnInterval } from "../../components/hooks/useRefreshOnInterval";
 
-export const loader: LoaderFunction = ({ params }) => {
+export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.id, "Id must be provided");
   const id = parseInt(params.id);
-  const sync = syncDetails.find((sync) => sync.id === id);
+  const sync = await getAccountDetail(id);
+
+  if (!sync) throw new Response("Not Found", { status: 404 });
 
   return json(sync);
 };
 
+type SummaryCardProps = {
+  key: string;
+  title: string | React.ReactNode;
+  subtitle?: string | React.ReactNode;
+};
+
+function SummaryCard({ key, title, subtitle }: SummaryCardProps) {
+  return (
+    <div
+      key={key}
+      className="flex flex-col items-center justify-center gap-4 rounded-lg bg-neutral-800 p-8"
+    >
+      <div className="text-2xl text-neutral-300">{title}</div>
+      {subtitle && <div className="text-md text-neutral-500">{subtitle}</div>}
+    </div>
+  );
+}
+
 export default function Sync() {
-  const sync = useLoaderData<SyncDetail>();
+  const sync = useLoaderData<AccountDetail>();
+  useRefreshOnInterval({ enabled: true, interval: 5000 });
   return (
     <div className="flex flex-col gap-4">
       <ContentHeader>
         <div className="flex w-full items-center gap-4">
-          <div>
+          <div className="hidden md:block">
             <Link to="/accounts">
               <Heading title="Accounts" />
             </Link>
           </div>
-          <ChevronRightIcon className="h-4 w-4 text-neutral-500" />
-          {/* <div> */}
-          <BankLogo bank={sync.bank} />
-          <div className="flex flex-col">
-            <div className="text-md">{sync.bank.accountName}</div>
-            <div className="flex text-sm text-neutral-500">
-              {sync.bank.bsbNumber} {sync.bank.accountNumber}
-            </div>
+          <ChevronRightIcon className="h-4 w-4 text-neutral-500 hidden md:block" />
+          <BankAccountSummary account={sync.bank} />
+          <SyncDirectionIcon />
+          <YnabAccountSummary account={sync.ynab} />
+          <div className="ml-auto md:ml-0">
+            <SyncStatusIcon status={sync.status} />
           </div>
-          <ArrowRightCircleIcon className="h-6 w-6 text-neutral-500" />
-          <YnabIcon />
-          <div className="flex flex-col">
-            <div className="text-md">{sync.ynab.accountName}</div>
-            <div className="flex text-sm text-neutral-500">
-              {sync.ynab.budgetName}
-            </div>
+          <div className="ml-auto hidden md:block">
+            <Form method="post" action="sync-now">
+              <button
+                className="rounded-md border-ynab border-2 text-ynab px-4 py-2"
+                type="submit"
+              >
+                Sync Now
+              </button>
+            </Form>
           </div>
-          <div className="ml-auto">
-            <SyncStatusButton status={sync.status} />
-          </div>
-          {/* </div> */}
         </div>
       </ContentHeader>
-      <div className="flex justify-evenly gap-4">
-        <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-ynab p-8 text-white">
-          <div className="text-4xl">412</div>
-          <div>Transactions synced</div>
-        </div>
-        <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-ynab p-8 text-white">
-          <div className="text-4xl">6 hours ago</div>
-          <div>Last sync</div>
-        </div>
-        <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-ynab p-8 text-white">
-          <div className="text-4xl">21st Oct 2022</div>
-          <div>Synced up to</div>
-        </div>
-      </div>
-      <div className="px-2 text-xl">History</div>
-      <div className="flex flex-col">
-        {sync.history.map((h) => (
-          <Link
-            to={`history/${h.id}`}
-            key={h.id}
-            className="flex items-center gap-4 rounded-lg py-2 px-2 hover:bg-neutral-100"
-          >
-            <SyncStatusIcon status={h.status} />
-            <div title={format(new Date(h.date), "Pp")}>
-              {formatDistanceToNow(new Date(h.date), { addSuffix: true })}
-            </div>
-            <div className="ml-auto flex gap-2 text-sm text-neutral-500">
-              <div>
-                {h.newRecordsCount} new, {h.updatedRecordsCount} updated,{" "}
-                {h.unchangedRecordsCount} not changed
+
+      <div className="container mx-auto">
+        <Paper>
+          <SubHeading title="History" />
+          <div className="flex flex-col">
+            {sync.history.map((h) => (
+              <div
+                key={h.id}
+                className="flex items-center gap-4 rounded-lg py-2 text-neutral-400"
+              >
+                <SyncStatusIcon status={h.status} />
+                <div title={format(new Date(h.date), "Pp")}>
+                  {formatDistanceToNow(new Date(h.date), { addSuffix: true })}
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            ))}
+          </div>
+        </Paper>
       </div>
       <div>
         <Outlet />

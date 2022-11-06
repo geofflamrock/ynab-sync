@@ -1,42 +1,43 @@
-import {
-  CreditCardIcon,
-  ArrowRightCircleIcon,
-  PlusCircleIcon,
-} from "@heroicons/react/24/outline";
 import { json } from "@remix-run/node";
-import { Link, NavLink, useLoaderData } from "@remix-run/react";
+import { NavLink, useLoaderData } from "@remix-run/react";
 import classnames from "classnames";
-import React from "react";
-import type { SyncDetail } from "~/api/api";
+import type { AccountDetail } from "~/api/api";
+import { getSyncDetails } from "~/api/api";
 import { syncDetails } from "~/api/api";
-import { BankLogo } from "~/components/bank/BankLogo";
+import {
+  AccountSummary,
+  BankAccountSummary,
+  SyncDirectionIcon,
+  YnabAccountSummary,
+} from "~/components/accounts/AccountSummary";
+import { useRefreshOnInterval } from "~/components/hooks/useRefreshOnInterval";
 import { Heading } from "~/components/primitive/Heading";
 import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
-import { YnabIcon } from "~/components/ynab/YnabIcon";
 import { ContentHeader } from "../../components/layout/ContentHeader";
 
-export function loader() {
-  return json(syncDetails);
+export async function loader() {
+  return json(await getSyncDetails());
 }
 
 export default function Accounts() {
-  const data = useLoaderData<Array<SyncDetail>>();
+  const data = useLoaderData<Array<AccountDetail>>();
+  useRefreshOnInterval({ enabled: true, interval: 10000 });
 
   return (
-    <div className="flex h-screen grow flex-col gap-2">
+    <div className="flex-col gap-2">
       {/* <div className="flex flex-col"> */}
       <ContentHeader>
         {/* <div className="flex items-center border-b-2 border-b-neutral-500 px-6 py-4"> */}
         <div className="flex w-full items-center">
           <Heading
             title="Accounts"
-            icon={<CreditCardIcon className="h-8 w-8" />}
+            // icon={<CreditCardIcon className="h-8 w-8" />}
           />
           <input
             type="text"
             placeholder="Search"
-            className="ml-auto rounded-full border border-neutral-200 bg-neutral-100 px-4 text-neutral-700 placeholder:text-neutral-400 hover:border-neutral-400 hover:placeholder:text-neutral-500 focus:border-neutral-400 focus:ring-0 focus:placeholder:text-neutral-500"
-          />
+            className="ml-auto flex rounded-full border-0 bg-neutral-800 hover:bg-neutral-700 focus:bg-neutral-700 px-4 text-neutral-400 placeholder:text-neutral-600 hover:placeholder:text-neutral-500 focus:ring-0 focus:placeholder:text-neutral-400"
+          ></input>
           {/* <button className="ml-auto rounded-full bg-ynab">
             <PlusCircleIcon className="h-6 w-6" />
             Add Account
@@ -52,30 +53,16 @@ export default function Accounts() {
               to={`/accounts/${d.id}`}
               className={({ isActive }) =>
                 classnames(
-                  "flex items-center gap-8 rounded-lg border border-transparent p-4 hover:border-neutral-200 hover:bg-white",
+                  "flex items-center gap-8 rounded-lg p-2 text-neutral-400 hover:bg-neutral-800",
                   { "bg-neutral-200": isActive }
                 )
               }
             >
-              <div className="flex w-64 items-center gap-4">
-                <BankLogo bank={d.bank} />
-                <div className="flex flex-col">
-                  <div>{d.bank.accountName}</div>
-                  <div className="text-sm text-neutral-500">
-                    {d.bank.bsbNumber} {d.bank.accountNumber}
-                  </div>
-                </div>
+              <div className="w-64">
+                <BankAccountSummary account={d.bank} />
               </div>
-              <ArrowRightCircleIcon className="h-6 w-6 text-neutral-500" />
-              <div className="flex items-center gap-4">
-                <YnabIcon />
-                <div className="flex flex-col">
-                  <div>{d.ynab.accountName}</div>
-                  <div className="text-sm text-neutral-500">
-                    {d.ynab.budgetName}
-                  </div>
-                </div>
-              </div>
+              <SyncDirectionIcon />
+              <YnabAccountSummary account={d.ynab} />
               <div className="ml-auto">
                 <SyncStatusIcon status={d.status} />
               </div>

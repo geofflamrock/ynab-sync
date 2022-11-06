@@ -1,12 +1,12 @@
 import classNames from "classnames";
 
-type HeadingProps = {
+type SubHeadingProps = {
   title: string;
   icon?: React.ReactNode;
   className?: string;
 };
 
-export function Heading({ title, icon, className }: HeadingProps) {
+export function SubHeading({ title, icon, className }: SubHeadingProps) {
   return (
     <div
       className={classNames(
@@ -15,7 +15,7 @@ export function Heading({ title, icon, className }: HeadingProps) {
       )}
     >
       {icon}
-      <div className="text-xl">{title}</div>
+      <div className="text-lg">{title}</div>
     </div>
   );
 }
