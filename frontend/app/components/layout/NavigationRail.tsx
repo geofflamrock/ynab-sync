@@ -38,7 +38,7 @@ const SidebarItem = ({ name, icon, to, className }: SidearItemProps) => (
 
 export function NavigationRail() {
   return (
-    <div className="flex h-full w-20 flex-col bg-neutral-800">
+    <div className="flex h-full w-20 flex-col bg-neutral-800 border-r border-r-neutral-700">
       {/* <SidebarItem
         to="/"
         icon={<YnabIcon className="h-6 w-6" />}
@@ -68,23 +68,23 @@ export function NavigationRail() {
 
 export function NavigationBar() {
   return (
-    <div className="flex w-full h-16 items-center justify-around bg-neutral-800">
+    <div className="flex w-full h-16 items-center justify-around bg-neutral-800 border-t border-t-neutral-700">
       {/* <SidebarItem
         to="/"
         icon={<YnabIcon className="h-6 w-6" />}
         className="mb-auto"
       /> */}
-      <SidebarItem to="/" icon={<HomeIcon className="h-6 w-6" />} name="Home" />
+      {/* <SidebarItem to="/" icon={<HomeIcon className="h-6 w-6" />} name="Home" /> */}
       <SidebarItem
         to="/accounts"
         icon={<CreditCardIcon className="h-6 w-6" />}
         name="Accounts"
       />
-      <SidebarItem
+      {/* <SidebarItem
         to="/credentials"
         icon={<KeyIcon className="h-6 w-6" />}
         name="Credentials"
-      />
+      /> */}
       <SidebarItem
         to="/settings"
         icon={<Cog6ToothIcon className="h-6 w-6" />}

@@ -45,8 +45,8 @@ export default function Accounts() {
         {/* </div> */}
       </ContentHeader>
       <div className="container mx-auto">
-        <Paper>
-          <div className="flex flex-col gap-6">
+        <Paper className="p-2">
+          <div className="flex flex-col gap-2">
             {data.map((d) => {
               return (
                 <NavLink
@@ -54,20 +54,20 @@ export default function Accounts() {
                   to={`/accounts/${d.id}`}
                   className={({ isActive }) =>
                     classnames(
-                      "flex items-center gap-8 rounded-lg text-neutral-400 hover:bg-neutral-800",
+                      "grid grid-cols-12 items-center gap-8 rounded-lg text-neutral-400 hover:bg-neutral-700 p-2",
                       { "bg-neutral-200": isActive }
                     )
                   }
                 >
-                  <div>
+                  <div className="xl:col-span-3 2xl:col-span-2 lg:col-span-4 col-span-5">
                     <BankAccountSummary account={d.bank} />
                   </div>
-                  <SyncDirectionIcon />
-                  <div className="flex-grow">
+                  <div className="flex gap-4 2xl:col-span-10 items-center xl:col-span-9 lg:col-span-8 col-span-7">
+                    <SyncDirectionIcon />
                     <YnabAccountSummary account={d.ynab} />
-                  </div>
-                  <div className="ml-auto">
-                    <SyncStatusIcon status={d.status} />
+                    <div className="ml-auto">
+                      <SyncStatusIcon status={d.status} />
+                    </div>
                   </div>
                 </NavLink>
               );

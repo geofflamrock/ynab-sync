@@ -1,8 +1,18 @@
+import classNames from "classnames";
 import React from "react";
 
-export function Paper({ children }: React.PropsWithChildren) {
+type PaperProps = React.PropsWithChildren & {
+  className?: string;
+};
+
+export function Paper({ children, className }: PaperProps) {
   return (
-    <div className="rounded-lg p-4 bg-neutral-800 text-neutral-400">
+    <div
+      className={classNames(
+        "rounded-lg p-4 bg-neutral-800 text-neutral-400",
+        className
+      )}
+    >
       {children}
     </div>
   );
