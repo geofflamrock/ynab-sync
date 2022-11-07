@@ -6,11 +6,12 @@
     "build:css": "pnpm run generate:css -- --minify",
     "build:remix": "remix build",
     "build:worker": "tsc ./worker/sync.ts --outDir ./worker/build",
-    "dev": "run-p \"dev:*\"",
-    "dev:css": "pnpm run generate:css -- --watch",
+    "dev": "pnpm run prisma:generate && run-p \"dev:*\"",
+    "dev:css": "pnpm run generate:css --watch",
     "dev:remix": "remix dev",
     "dev:worker": "pnpm run build:worker && node ./worker/build/worker/sync.js",
-    "generate:css": "pnpx tailwindcss -o ./app/tailwind.css",
+    "prisma:generate": "prisma generate",
+    "generate:css": "tailwindcss -o ./app/tailwind.css",
     "start": "remix-serve build"
   },
   "dependencies": {

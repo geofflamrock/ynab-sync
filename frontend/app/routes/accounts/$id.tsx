@@ -50,7 +50,7 @@ export default function Sync() {
   const sync = useLoaderData<AccountDetail>();
   useRefreshOnInterval({ enabled: true, interval: 5000 });
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col">
       <ContentHeader>
         <div className="flex w-full items-center gap-4">
           <div className="hidden md:block">
@@ -65,10 +65,10 @@ export default function Sync() {
           <div className="ml-auto md:ml-0">
             <SyncStatusIcon status={sync.status} />
           </div>
-          <div className="ml-auto hidden md:block">
+          <div className="ml-auto hidden md:flex flex-row gap-2">
             <Form method="post" action="sync-now">
               <button
-                className="rounded-md border-ynab border-2 text-ynab px-4 py-2"
+                className="rounded-full border-ynab border-2 text-ynab px-4 py-1 hover:text-white hover:bg-ynab"
                 type="submit"
               >
                 Sync Now

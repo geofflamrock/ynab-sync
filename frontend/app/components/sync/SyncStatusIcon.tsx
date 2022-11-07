@@ -3,6 +3,7 @@ import {
   ArrowPathIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
+  NoSymbolIcon,
   QueueListIcon,
 } from "@heroicons/react/24/outline";
 import type { SyncStatus } from "~/api/api";
@@ -14,7 +15,7 @@ export type SyncStatusIconProps = {
 export function SyncStatusIcon({ status }: SyncStatusIconProps) {
   switch (status) {
     case "notsynced":
-      return <ArrowPathIcon className="mt-0.5 h-8 w-8 text-neutral-400" />;
+      return <NoSymbolIcon className="mt-0.5 h-8 w-8 text-neutral-400" />;
 
     case "syncing":
       return (

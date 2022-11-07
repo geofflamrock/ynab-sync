@@ -3,14 +3,13 @@ import { NavLink, useLoaderData } from "@remix-run/react";
 import classnames from "classnames";
 import type { AccountDetail } from "~/api/api";
 import { getSyncDetails } from "~/api/api";
-import { syncDetails } from "~/api/api";
 import {
-  AccountSummary,
   BankAccountSummary,
   SyncDirectionIcon,
   YnabAccountSummary,
 } from "~/components/accounts/AccountSummary";
 import { useRefreshOnInterval } from "~/components/hooks/useRefreshOnInterval";
+import { Paper } from "~/components/layout/Paper";
 import { Heading } from "~/components/primitive/Heading";
 import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
 import { ContentHeader } from "../../components/layout/ContentHeader";
@@ -24,7 +23,7 @@ export default function Accounts() {
   useRefreshOnInterval({ enabled: true, interval: 10000 });
 
   return (
-    <div className="flex-col gap-2">
+    <div className="flex flex-col">
       {/* <div className="flex flex-col"> */}
       <ContentHeader>
         {/* <div className="flex items-center border-b-2 border-b-neutral-500 px-6 py-4"> */}
@@ -46,29 +45,35 @@ export default function Accounts() {
         {/* </div> */}
       </ContentHeader>
       <div className="container mx-auto">
-        {data.map((d) => {
-          return (
-            <NavLink
-              key={d.id}
-              to={`/accounts/${d.id}`}
-              className={({ isActive }) =>
-                classnames(
-                  "flex items-center gap-8 rounded-lg p-2 text-neutral-400 hover:bg-neutral-800",
-                  { "bg-neutral-200": isActive }
-                )
-              }
-            >
-              <div className="w-64">
-                <BankAccountSummary account={d.bank} />
-              </div>
-              <SyncDirectionIcon />
-              <YnabAccountSummary account={d.ynab} />
-              <div className="ml-auto">
-                <SyncStatusIcon status={d.status} />
-              </div>
-            </NavLink>
-          );
-        })}
+        <Paper>
+          <div className="flex flex-col gap-6">
+            {data.map((d) => {
+              return (
+                <NavLink
+                  key={d.id}
+                  to={`/accounts/${d.id}`}
+                  className={({ isActive }) =>
+                    classnames(
+                      "flex items-center gap-8 rounded-lg text-neutral-400 hover:bg-neutral-800",
+                      { "bg-neutral-200": isActive }
+                    )
+                  }
+                >
+                  <div>
+                    <BankAccountSummary account={d.bank} />
+                  </div>
+                  <SyncDirectionIcon />
+                  <div className="flex-grow">
+                    <YnabAccountSummary account={d.ynab} />
+                  </div>
+                  <div className="ml-auto">
+                    <SyncStatusIcon status={d.status} />
+                  </div>
+                </NavLink>
+              );
+            })}
+          </div>
+        </Paper>
       </div>
       {/* </div> */}
       {/* <Link
