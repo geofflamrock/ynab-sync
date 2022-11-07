@@ -1,4 +1,5 @@
 import {
+  Bars3Icon,
   Cog6ToothIcon,
   CogIcon,
   CreditCardIcon,
@@ -44,6 +45,7 @@ export function NavigationRail() {
         className="mb-auto"
       /> */}
       {/* <SidebarItem to="/" icon={<HomeIcon className="h-6 w-6" />} name="Home" /> */}
+      <SidebarItem to="/" icon={<Bars3Icon className="h-6 w-6" />} />
       <SidebarItem
         to="/accounts"
         icon={<CreditCardIcon className="h-6 w-6" />}

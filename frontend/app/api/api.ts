@@ -227,6 +227,15 @@ export const syncNow = async (id: number) => {
     },
   });
 
+  await prisma.account.update({
+    where: {
+      id: account.id,
+    },
+    data: {
+      syncStatus: "queued",
+    },
+  });
+
   // if (account.bankAccount.type === "westpac") {
   //   const credentials: WestpacCredentials = JSON.parse(
   //     account.bankCredentials.details
