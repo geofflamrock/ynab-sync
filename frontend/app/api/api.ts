@@ -4,18 +4,17 @@ import type {
   Sync,
   YnabAccount,
   YnabBudget,
-  YnabCredential,
 } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
-import { sub } from "date-fns";
 import { orderBy } from "lodash";
-import { syncTransactions } from "ynab-sync-westpac-au";
 
 export type WestpacSyncDetail = {
   type: "westpac";
   accountName: string;
   bsbNumber: string;
   accountNumber: string;
+  credentialsId: number;
+  credentialsName: string;
 };
 
 export type StGeorgeSyncDetail = {
@@ -23,15 +22,18 @@ export type StGeorgeSyncDetail = {
   accountName: string;
   bsbNumber: string;
   accountNumber: string;
+  credentialsId: number;
+  credentialsName: string;
 };
 
-export type SupportedBanks = WestpacSyncDetail | StGeorgeSyncDetail;
+export type BankDetails = WestpacSyncDetail | StGeorgeSyncDetail;
 
-export type SyncYnabDetail = {
+export type YnabDetails = {
   budgetId: string;
   budgetName: string;
   accountId: string;
   accountName: string;
+  credentialsId: number;
 };
 
 export type SyncStatus =
@@ -52,8 +54,8 @@ export type SyncDetail = {
 
 export type AccountDetail = {
   id: number;
-  bank: SupportedBanks;
-  ynab: SyncYnabDetail;
+  bank: BankDetails;
+  ynab: YnabDetails;
   status: SyncStatus;
   lastSyncTime?: Date;
   history: Array<SyncDetail>;
@@ -70,9 +72,20 @@ export const getAccountDetail = async (
     },
     include: {
       bankAccount: true,
+      bankCredentials: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
       ynabAccount: {
         include: {
           budget: true,
+        },
+      },
+      ynabCredentials: {
+        select: {
+          id: true,
         },
       },
       history: {
@@ -103,23 +116,33 @@ type StGeorgeBankAccountDetails = {
 const getAccountDetailFromAccount = (
   account: Account & {
     bankAccount: BankAccount;
+    bankCredentials: {
+      id: number;
+      name: string;
+    };
     ynabAccount: YnabAccount & {
       budget: YnabBudget;
+    };
+    ynabCredentials: {
+      id: number;
     };
     history: Sync[];
   }
 ): AccountDetail => {
-  let bankAccount: SupportedBanks | undefined = undefined;
+  let bankAccount: BankDetails | undefined = undefined;
 
   if (account.bankAccount.type === "westpac") {
     const details: WestpacBankAccountDetails = JSON.parse(
       account.bankAccount.details
     );
+
     bankAccount = {
       type: "westpac",
       accountName: account.bankAccount.name,
       accountNumber: details.accountNumber,
       bsbNumber: details.bsbNumber,
+      credentialsId: account.bankCredentials.id,
+      credentialsName: account.bankCredentials.name,
     };
   } else if (account.bankAccount.type === "stgeorge") {
     const details: StGeorgeBankAccountDetails = JSON.parse(
@@ -130,17 +153,20 @@ const getAccountDetailFromAccount = (
       accountName: account.bankAccount.name,
       accountNumber: details.accountNumber,
       bsbNumber: details.bsbNumber,
+      credentialsId: account.bankCredentials.id,
+      credentialsName: account.bankCredentials.name,
     };
   }
 
   if (bankAccount === undefined)
     throw new Error(`Unknown bank account type '${account.bankAccount.type}'`);
 
-  let ynabAccount: SyncYnabDetail = {
+  let ynabAccount: YnabDetails = {
     accountId: account.ynabAccount.id,
     accountName: account.ynabAccount.name,
     budgetId: account.ynabAccount.budgetId,
     budgetName: account.ynabAccount.budget.name,
+    credentialsId: account.ynabCredentials.id,
   };
 
   return {
@@ -186,9 +212,20 @@ export const getSyncDetails = async (): Promise<Array<AccountDetail>> => {
   const accounts = await prisma.account.findMany({
     include: {
       bankAccount: true,
+      bankCredentials: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
       ynabAccount: {
         include: {
           budget: true,
+        },
+      },
+      ynabCredentials: {
+        select: {
+          id: true,
         },
       },
       history: true,

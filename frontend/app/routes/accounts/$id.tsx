@@ -1,6 +1,7 @@
 import {
   ArrowPathIcon,
   ChevronRightIcon,
+  KeyIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
 import type { LoaderFunction } from "@remix-run/node";
@@ -91,7 +92,7 @@ export default function Sync() {
           <div className="flex">
             <SubHeading title="Details" />
           </div>
-          <div className="grid grid-cols-4">
+          <div className="grid grid-cols-5">
             <div className="flex flex-row gap-4 items-center">
               <BankLogo bank={sync.bank} />
               <div className="flex flex-col">
@@ -111,8 +112,15 @@ export default function Sync() {
               <span>{sync.bank.accountNumber}</span>
               <span className="text-sm text-neutral-500">Account Number</span>
             </div>
+            <div className="flex flex-col">
+              <div className="flex flex-row gap-2 items-center">
+                <KeyIcon className="w-6 h-6" />
+                <span>{sync.bank.credentialsName}</span>
+              </div>
+              <span className="text-sm text-neutral-500">Credentials</span>
+            </div>
           </div>
-          <div className="grid grid-cols-4">
+          <div className="grid grid-cols-5">
             <div className="flex flex-row gap-4 items-center">
               <YnabIcon />
               <div className="flex flex-col">
@@ -123,6 +131,13 @@ export default function Sync() {
             <div className="flex flex-col">
               <span>{sync.ynab.accountName}</span>
               <span className="text-sm text-neutral-500">Account</span>
+            </div>
+            <div className="flex flex-col">
+              <div className="flex flex-row gap-2 items-center">
+                <KeyIcon className="w-6 h-6" />
+                <span>********</span>
+              </div>
+              <span className="text-sm text-neutral-500">Credentials</span>
             </div>
           </div>
         </Paper>

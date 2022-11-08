@@ -1,10 +1,10 @@
 import React from "react";
-import type { SupportedBanks } from "~/api/api";
+import type { BankDetails } from "~/api/api";
 import { StGeorgeLogo } from "./StGeorgeLogo";
 import { WestpacLogo } from "./WestpacLogo";
 
 type BankLogoProps = {
-  bank: SupportedBanks;
+  bank: BankDetails;
 };
 
 export function BankLogo({ bank }: BankLogoProps) {

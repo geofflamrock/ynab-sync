@@ -80,11 +80,11 @@ export function NavigationBar() {
         icon={<CreditCardIcon className="h-6 w-6" />}
         name="Accounts"
       />
-      {/* <SidebarItem
+      <SidebarItem
         to="/credentials"
         icon={<KeyIcon className="h-6 w-6" />}
         name="Credentials"
-      /> */}
+      />
       <SidebarItem
         to="/settings"
         icon={<Cog6ToothIcon className="h-6 w-6" />}

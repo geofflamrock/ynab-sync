@@ -1,8 +1,8 @@
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import type {
-  SupportedBanks as BankAccounts,
+  BankDetails as BankAccounts,
   AccountDetail,
-  SyncYnabDetail,
+  YnabDetails,
 } from "~/api/api";
 import { BankLogo } from "../bank/BankLogo";
 import { SyncStatusIcon } from "../sync/SyncStatusIcon";
@@ -29,7 +29,7 @@ export function BankAccountSummary({
 export function YnabAccountSummary({
   account: ynabAccount,
 }: {
-  account: SyncYnabDetail;
+  account: YnabDetails;
 }) {
   return (
     <div className="flex items-center gap-4">

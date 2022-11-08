@@ -1,8 +1,8 @@
 import React from "react";
-import type { SupportedBanks } from "~/api/api";
+import type { BankDetails } from "~/api/api";
 
 type BankTitleProps = {
-  bank: SupportedBanks;
+  bank: BankDetails;
 };
 
 export function BankTitle({ bank }: BankTitleProps) {
