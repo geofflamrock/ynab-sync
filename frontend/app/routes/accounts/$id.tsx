@@ -68,10 +68,10 @@ export default function Sync() {
           <div className="ml-auto hidden md:flex flex-row gap-2">
             <Form method="post" action="sync-now">
               <button
-                className="rounded-full border-ynab border-2 text-ynab px-4 py-2 hover:text-white hover:bg-ynab flex gap-2 items-center"
+                className="rounded-full border-ynab border-2 text-ynab pl-3 pr-4 py-2 hover:text-white hover:bg-ynab flex gap-2 items-center"
                 type="submit"
               >
-                <ArrowPathIcon className="h-4 w-4" />
+                <ArrowPathIcon className="h-6 w-6" />
                 <span>Sync Now</span>
               </button>
             </Form>
