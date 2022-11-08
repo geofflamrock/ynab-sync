@@ -1,4 +1,8 @@
-import { ArrowPathIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowPathIcon,
+  ChevronRightIcon,
+  PencilIcon,
+} from "@heroicons/react/24/outline";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
@@ -17,6 +21,9 @@ import {
 import { Paper } from "~/components/layout/Paper";
 import { SubHeading } from "~/components/primitive/SubHeading";
 import { useRefreshOnInterval } from "../../components/hooks/useRefreshOnInterval";
+import { BankLogo } from "~/components/bank/BankLogo";
+import { BankTitle } from "~/components/bank/BankTitle";
+import { YnabIcon } from "~/components/ynab/YnabIcon";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.id, "Id must be provided");
@@ -72,14 +79,53 @@ export default function Sync() {
                 type="submit"
               >
                 <ArrowPathIcon className="h-6 w-6" />
-                <span>Sync Now</span>
+                <span>Sync now</span>
               </button>
             </Form>
           </div>
         </div>
       </ContentHeader>
 
-      <div className="container mx-auto">
+      <div className="container mx-auto gap-4 flex flex-col">
+        <Paper className="flex flex-col gap-6">
+          <div className="flex">
+            <SubHeading title="Details" />
+          </div>
+          <div className="grid grid-cols-4">
+            <div className="flex flex-row gap-4 items-center">
+              <BankLogo bank={sync.bank} />
+              <div className="flex flex-col">
+                <BankTitle bank={sync.bank} />
+                <span className="text-sm text-neutral-500">Bank</span>
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <span>{sync.bank.accountName}</span>
+              <span className="text-sm text-neutral-500">Account Name</span>
+            </div>
+            <div className="flex flex-col">
+              <span>{sync.bank.bsbNumber}</span>
+              <span className="text-sm text-neutral-500">BSB Number</span>
+            </div>
+            <div className="flex flex-col">
+              <span>{sync.bank.accountNumber}</span>
+              <span className="text-sm text-neutral-500">Account Number</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-4">
+            <div className="flex flex-row gap-4 items-center">
+              <YnabIcon />
+              <div className="flex flex-col">
+                <span>{sync.ynab.budgetName}</span>
+                <span className="text-sm text-neutral-500">Budget</span>
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <span>{sync.ynab.accountName}</span>
+              <span className="text-sm text-neutral-500">Account</span>
+            </div>
+          </div>
+        </Paper>
         <Paper>
           <SubHeading title="History" />
           <div className="flex flex-col">

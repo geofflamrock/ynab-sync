@@ -23,13 +23,13 @@ const SidebarItem = ({ name, icon, to, className }: SidearItemProps) => (
     to={to}
     className={({ isActive }) =>
       classnames(
-        "group flex flex-col items-center gap-1 py-4 text-white",
+        "group flex flex-col items-center gap-1 py-4 text-neutral-300",
         { active: isActive },
         className
       )
     }
   >
-    <div className="rounded-full py-1 px-4 group-hover:bg-neutral-700 group-[.active]:bg-ynab">
+    <div className="rounded-full py-1 px-4 group-hover:bg-neutral-700 group-[.active]:bg-ynab group-[.active]:text-white">
       {icon}
     </div>
     {name && <span className="text-xs">{name}</span>}
@@ -51,11 +51,11 @@ export function NavigationRail() {
         icon={<CreditCardIcon className="h-6 w-6" />}
         name="Accounts"
       />
-      {/* <SidebarItem
+      <SidebarItem
         to="/credentials"
         icon={<KeyIcon className="h-6 w-6" />}
         name="Credentials"
-      /> */}
+      />
       <SidebarItem
         className="mt-auto"
         to="/settings"
