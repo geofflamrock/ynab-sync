@@ -50,7 +50,7 @@ export default function Accounts() {
                   to={`/accounts/${d.id}`}
                   className={({ isActive }) =>
                     classnames(
-                      "grid grid-cols-12 items-center gap-8 first:rounded-t-lg last:rounded-b-lg text-neutral-400 hover:bg-neutral-700 p-4",
+                      "grid grid-cols-12 items-center gap-8 rounded-lg text-neutral-400 hover:bg-neutral-700 p-4",
                       { "bg-neutral-200": isActive }
                     )
                   }
