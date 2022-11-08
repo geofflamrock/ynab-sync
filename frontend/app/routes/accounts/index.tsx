@@ -1,3 +1,4 @@
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
 import classnames from "classnames";
@@ -24,29 +25,24 @@ export default function Accounts() {
 
   return (
     <div className="flex flex-col">
-      {/* <div className="flex flex-col"> */}
       <ContentHeader>
-        {/* <div className="flex items-center border-b-2 border-b-neutral-500 px-6 py-4"> */}
         <div className="flex w-full items-center">
-          <Heading
-            title="Accounts"
-            // icon={<CreditCardIcon className="h-8 w-8" />}
-          />
-          <input
-            type="text"
-            placeholder="Search"
-            className="ml-auto flex rounded-full border-0 bg-neutral-800 hover:bg-neutral-700 focus:bg-neutral-700 px-4 text-neutral-400 placeholder:text-neutral-600 hover:placeholder:text-neutral-500 focus:ring-0 focus:placeholder:text-neutral-400"
-          ></input>
-          {/* <button className="ml-auto rounded-full bg-ynab">
-            <PlusCircleIcon className="h-6 w-6" />
-            Add Account
-          </button> */}
+          <Heading title="Accounts" />
+          <div className="ml-auto relative text-neutral-400">
+            <div className="h-10 w-10 flex items-center justify-center pointer-events-none absolute">
+              <MagnifyingGlassIcon className="h-5 w-5 stroke-neutral-600" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search accounts"
+              className="h-10 pl-10 text-sm hover:bg-neutral-700 bg-neutral-800 rounded-full border-0 focus:bg-neutral-700 px-4 text-neutral-400 placeholder:text-neutral-600 hover:placeholder:text-neutral-500 focus:ring-0 focus:placeholder:text-neutral-400"
+            />
+          </div>
         </div>
-        {/* </div> */}
       </ContentHeader>
       <div className="container mx-auto">
-        <Paper className="p-2">
-          <div className="flex flex-col gap-2">
+        <Paper className="p-0">
+          <div className="flex flex-col ">
             {data.map((d) => {
               return (
                 <NavLink
@@ -54,7 +50,7 @@ export default function Accounts() {
                   to={`/accounts/${d.id}`}
                   className={({ isActive }) =>
                     classnames(
-                      "grid grid-cols-12 items-center gap-8 rounded-lg text-neutral-400 hover:bg-neutral-700 p-2",
+                      "grid grid-cols-12 items-center gap-8 first:rounded-t-lg last:rounded-b-lg text-neutral-400 hover:bg-neutral-700 p-4",
                       { "bg-neutral-200": isActive }
                     )
                   }

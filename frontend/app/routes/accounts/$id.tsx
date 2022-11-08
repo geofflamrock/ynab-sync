@@ -1,4 +1,4 @@
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, Outlet, useLoaderData } from "@remix-run/react";
@@ -68,10 +68,11 @@ export default function Sync() {
           <div className="ml-auto hidden md:flex flex-row gap-2">
             <Form method="post" action="sync-now">
               <button
-                className="rounded-full border-ynab border-2 text-ynab px-4 py-1 hover:text-white hover:bg-ynab"
+                className="rounded-full border-ynab border-2 text-ynab px-4 py-2 hover:text-white hover:bg-ynab flex gap-2 items-center"
                 type="submit"
               >
-                Sync Now
+                <ArrowPathIcon className="h-4 w-4" />
+                <span>Sync Now</span>
               </button>
             </Form>
           </div>
