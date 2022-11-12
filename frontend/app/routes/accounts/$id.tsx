@@ -79,71 +79,83 @@ export default function Sync() {
           </div>
         </div>
       </ContentHeader>
-      <div className="container mx-auto gap-4 grid grid-cols-2">
+      <div className="container mx-auto gap-4 grid grid-cols-1 lg:grid-cols-2">
         <Paper className="flex flex-col gap-4">
           <SubHeading title="Bank" />
-          <div className="flex flex-row gap-4">
-            <div className="mt-2">
+          <div className="grid grid-cols-12 gap-4">
+            <div className="mt-2 col-span-1">
               <BankLogo bank={sync.bank} />
             </div>
-            <div className="grid grid-cols-2 gap-4 w-full">
-              <div className="flex flex-row gap-4 items-center">
-                <div className="flex flex-col gap-1">
-                  <BankTitle bank={sync.bank} />
-                  <span className="text-sm text-neutral-500">Bank</span>
+            <div className="col-span-11">
+              <div className="grid grid-cols-2 gap-4 w-full">
+                <div className="flex flex-row gap-4 items-center">
+                  <div className="flex flex-col gap-1">
+                    <BankTitle bank={sync.bank} />
+                    <span className="text-sm text-neutral-500">Bank</span>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span>{sync.bank.accountName}</span>
-                <span className="text-sm text-neutral-500">Account Name</span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span>{sync.bank.bsbNumber}</span>
-                <span className="text-sm text-neutral-500">BSB Number</span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span>{sync.bank.accountNumber}</span>
-                <span className="text-sm text-neutral-500">Account Number</span>
+                <div className="flex flex-col gap-1">
+                  <span>{sync.bank.accountName}</span>
+                  <span className="text-sm text-neutral-500">Account Name</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span>{sync.bank.bsbNumber}</span>
+                  <span className="text-sm text-neutral-500">BSB Number</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span>{sync.bank.accountNumber}</span>
+                  <span className="text-sm text-neutral-500">
+                    Account Number
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-          <div className="flex flex-row gap-4">
-            <KeyIcon className="w-8 h-8 mt-2" />
-            <div className="grid grid-cols-2 gap-4 w-full">
-              <div className="flex flex-col gap-1">
-                <span>6******4</span>
-                <span className="text-sm text-neutral-500">Username</span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span>********</span>
-                <span className="text-sm text-neutral-500">Password</span>
+          <div className="grid grid-cols-12 gap-4">
+            <KeyIcon className="w-8 h-8 mt-2 col-span-1" />
+            <div className="col-span-11">
+              <div className="grid grid-cols-2 gap-4 w-full">
+                <div className="flex flex-col gap-1">
+                  <span>65******</span>
+                  <span className="text-sm text-neutral-500">Username</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span>********</span>
+                  <span className="text-sm text-neutral-500">Password</span>
+                </div>
               </div>
             </div>
           </div>
         </Paper>
         <Paper className="flex flex-col gap-4">
           <SubHeading title="YNAB" />
-          <div className="flex flex-row gap-4">
-            <div className="grid grid-cols-2 w-full">
-              <div className="flex flex-row gap-4 items-center">
-                <YnabIcon />
-                <div className="flex flex-col gap-1">
-                  <span>{sync.ynab.budgetName}</span>
-                  <span className="text-sm text-neutral-500">Budget</span>
+          <div className="grid grid-cols-12 gap-4">
+            <div className="mt-2 col-span-1">
+              <YnabIcon />
+            </div>
+            <div className="col-span-11">
+              <div className="grid grid-cols-2 gap-4 w-full">
+                <div className="flex flex-row gap-4 items-center">
+                  <div className="flex flex-col gap-1">
+                    <span>{sync.ynab.budgetName}</span>
+                    <span className="text-sm text-neutral-500">Budget</span>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span>{sync.ynab.accountName}</span>
-                <span className="text-sm text-neutral-500">Account</span>
+                <div className="flex flex-col gap-1">
+                  <span>{sync.ynab.accountName}</span>
+                  <span className="text-sm text-neutral-500">Account</span>
+                </div>
               </div>
             </div>
           </div>
-          <div className="flex flex-row gap-4">
-            <KeyIcon className="w-8 h-8 mt-2" />
-            <div className="grid grid-cols-2 w-full">
-              <div className="flex flex-col gap-1">
-                <span>014d********</span>
-                <span className="text-sm text-neutral-500">API Key</span>
+          <div className="grid grid-cols-12 gap-4">
+            <KeyIcon className="w-8 h-8 mt-2 col-span-1" />
+            <div className="col-span-11">
+              <div className="grid grid-cols-2 gap-4 w-full">
+                <div className="flex flex-col gap-1">
+                  <span>014d********</span>
+                  <span className="text-sm text-neutral-500">API Key</span>
+                </div>
               </div>
             </div>
           </div>
