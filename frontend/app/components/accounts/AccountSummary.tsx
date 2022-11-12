@@ -1,4 +1,7 @@
-import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightCircleIcon,
+  ArrowRightIcon,
+} from "@heroicons/react/24/outline";
 import type {
   BankDetails as BankAccounts,
   AccountDetail,
@@ -43,7 +46,7 @@ export function YnabAccountSummary({
 }
 
 export function SyncDirectionIcon() {
-  return <ArrowRightCircleIcon className="h-6 w-6 text-neutral-500" />;
+  return <ArrowRightIcon className="h-4 w-4 text-neutral-500" />;
 }
 
 export function AccountSummary({

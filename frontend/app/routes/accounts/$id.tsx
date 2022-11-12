@@ -25,6 +25,7 @@ import { useRefreshOnInterval } from "../../components/hooks/useRefreshOnInterva
 import { BankLogo } from "~/components/bank/BankLogo";
 import { BankTitle } from "~/components/bank/BankTitle";
 import { YnabIcon } from "~/components/ynab/YnabIcon";
+import { SyncNowButton } from "~/components/sync/SyncNowButton";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.id, "Id must be provided");
@@ -74,73 +75,81 @@ export default function Sync() {
             <SyncStatusIcon status={sync.status} />
           </div>
           <div className="ml-auto hidden md:flex flex-row gap-2">
-            <Form method="post" action="sync-now">
-              <button
-                className="rounded-full border-ynab border-2 text-ynab pl-3 pr-4 py-2 hover:text-white hover:bg-ynab flex gap-2 items-center"
-                type="submit"
-              >
-                <ArrowPathIcon className="h-6 w-6" />
-                <span>Sync now</span>
-              </button>
-            </Form>
+            <SyncNowButton accountId={sync.id} />
           </div>
         </div>
       </ContentHeader>
-
-      <div className="container mx-auto gap-4 flex flex-col">
-        <Paper className="flex flex-col gap-6">
-          <div className="flex">
-            <SubHeading title="Details" />
-          </div>
-          <div className="grid grid-cols-5">
-            <div className="flex flex-row gap-4 items-center">
+      <div className="container mx-auto gap-4 grid grid-cols-2">
+        <Paper className="flex flex-col gap-4">
+          <SubHeading title="Bank" />
+          <div className="flex flex-row gap-4">
+            <div className="mt-2">
               <BankLogo bank={sync.bank} />
-              <div className="flex flex-col">
-                <BankTitle bank={sync.bank} />
-                <span className="text-sm text-neutral-500">Bank</span>
+            </div>
+            <div className="grid grid-cols-2 gap-4 w-full">
+              <div className="flex flex-row gap-4 items-center">
+                <div className="flex flex-col gap-1">
+                  <BankTitle bank={sync.bank} />
+                  <span className="text-sm text-neutral-500">Bank</span>
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col">
-              <span>{sync.bank.accountName}</span>
-              <span className="text-sm text-neutral-500">Account Name</span>
-            </div>
-            <div className="flex flex-col">
-              <span>{sync.bank.bsbNumber}</span>
-              <span className="text-sm text-neutral-500">BSB Number</span>
-            </div>
-            <div className="flex flex-col">
-              <span>{sync.bank.accountNumber}</span>
-              <span className="text-sm text-neutral-500">Account Number</span>
-            </div>
-            <div className="flex flex-col">
-              <div className="flex flex-row gap-2 items-center">
-                <KeyIcon className="w-6 h-6" />
-                <span>{sync.bank.credentialsName}</span>
+              <div className="flex flex-col gap-1">
+                <span>{sync.bank.accountName}</span>
+                <span className="text-sm text-neutral-500">Account Name</span>
               </div>
-              <span className="text-sm text-neutral-500">Credentials</span>
+              <div className="flex flex-col gap-1">
+                <span>{sync.bank.bsbNumber}</span>
+                <span className="text-sm text-neutral-500">BSB Number</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span>{sync.bank.accountNumber}</span>
+                <span className="text-sm text-neutral-500">Account Number</span>
+              </div>
             </div>
           </div>
-          <div className="grid grid-cols-5">
-            <div className="flex flex-row gap-4 items-center">
-              <YnabIcon />
-              <div className="flex flex-col">
-                <span>{sync.ynab.budgetName}</span>
-                <span className="text-sm text-neutral-500">Budget</span>
+          <div className="flex flex-row gap-4">
+            <KeyIcon className="w-8 h-8 mt-2" />
+            <div className="grid grid-cols-2 gap-4 w-full">
+              <div className="flex flex-col gap-1">
+                <span>6******4</span>
+                <span className="text-sm text-neutral-500">Username</span>
               </div>
-            </div>
-            <div className="flex flex-col">
-              <span>{sync.ynab.accountName}</span>
-              <span className="text-sm text-neutral-500">Account</span>
-            </div>
-            <div className="flex flex-col">
-              <div className="flex flex-row gap-2 items-center">
-                <KeyIcon className="w-6 h-6" />
+              <div className="flex flex-col gap-1">
                 <span>********</span>
+                <span className="text-sm text-neutral-500">Password</span>
               </div>
-              <span className="text-sm text-neutral-500">Credentials</span>
             </div>
           </div>
         </Paper>
+        <Paper className="flex flex-col gap-4">
+          <SubHeading title="YNAB" />
+          <div className="flex flex-row gap-4">
+            <div className="grid grid-cols-2 w-full">
+              <div className="flex flex-row gap-4 items-center">
+                <YnabIcon />
+                <div className="flex flex-col gap-1">
+                  <span>{sync.ynab.budgetName}</span>
+                  <span className="text-sm text-neutral-500">Budget</span>
+                </div>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span>{sync.ynab.accountName}</span>
+                <span className="text-sm text-neutral-500">Account</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row gap-4">
+            <KeyIcon className="w-8 h-8 mt-2" />
+            <div className="grid grid-cols-2 w-full">
+              <div className="flex flex-col gap-1">
+                <span>014d********</span>
+                <span className="text-sm text-neutral-500">API Key</span>
+              </div>
+            </div>
+          </div>
+        </Paper>
+      </div>
+      <div className="container mx-auto gap-4 hidden">
         <Paper>
           <SubHeading title="History" />
           <div className="flex flex-col">

@@ -1,25 +1,47 @@
+import classNames from "classnames";
 import React from "react";
 import type { SyncStatus } from "~/api/api";
 
 export type SyncStatusTitleProps = {
   status: SyncStatus;
+  className?: string;
 };
 
-export function SyncStatusTitle({ status }: SyncStatusTitleProps) {
+export function SyncStatusTitle({ status, className }: SyncStatusTitleProps) {
   switch (status) {
     case "notsynced":
-      return <div>Not Synced</div>;
+      return (
+        <div className={classNames("text-sm text-neutral-400", className)}>
+          Not Synced
+        </div>
+      );
 
     case "syncing":
-      return <div>Syncing</div>;
+      return (
+        <div className={classNames("text-sm text-ynab", className)}>
+          Syncing
+        </div>
+      );
 
     case "queued":
-      return <div>Queued</div>;
+      return (
+        <div className={classNames("text-sm text-neutral-400", className)}>
+          Queued
+        </div>
+      );
 
     case "synced":
-      return <div>Synced</div>;
+      return (
+        <div className={classNames("text-sm text-green-600", className)}>
+          Synced
+        </div>
+      );
 
     case "error":
-      return <div>Error</div>;
+      return (
+        <div className={classNames("text-sm text-red-600", className)}>
+          Error
+        </div>
+      );
   }
 }

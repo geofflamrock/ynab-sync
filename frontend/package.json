@@ -4,9 +4,10 @@
   "scripts": {
     "build": "run-s \"build:*\"",
     "build:css": "pnpm run generate:css -- --minify",
+    "build:dev": "pnpm run prisma:generate",
     "build:remix": "remix build",
     "build:worker": "tsc ./worker/sync.ts --outDir ./worker/build",
-    "dev": "pnpm run prisma:generate && run-p \"dev:*\"",
+    "dev": "run-p \"dev:*\"",
     "dev:css": "pnpm run generate:css --watch",
     "dev:remix": "remix dev",
     "dev:worker": "pnpm run build:worker && node ./worker/build/worker/sync.js",

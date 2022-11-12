@@ -17,7 +17,7 @@ export function SyncStatusIcon({ status }: SyncStatusIconProps) {
     case "notsynced":
       return (
         <NoSymbolIcon
-          className="mt-0.5 h-8 w-8 text-neutral-400"
+          className="-mt-0.5 h-6 w-6 text-neutral-400"
           title="Never synced"
         />
       );
@@ -25,7 +25,7 @@ export function SyncStatusIcon({ status }: SyncStatusIconProps) {
     case "syncing":
       return (
         <ArrowPathIcon
-          className="mt-0.5 h-8 w-8 animate-spin text-ynab"
+          className="-mt-0.5 h-6 w-6 animate-spin text-ynab"
           title="Syncing transactions"
         />
       );
@@ -33,7 +33,7 @@ export function SyncStatusIcon({ status }: SyncStatusIconProps) {
     case "queued":
       return (
         <QueueListIcon
-          className="mt-0.5 h-8 w-8 text-neutral-400"
+          className="-mt-0.5 h-6 w-6 text-neutral-400"
           title="Sync queued"
         />
       );
@@ -41,7 +41,7 @@ export function SyncStatusIcon({ status }: SyncStatusIconProps) {
     case "synced":
       return (
         <CheckCircleIcon
-          className="mt-0.5 h-8 w-8 text-green-600"
+          className="-mt-0.5 h-6 w-6 text-green-600"
           title="Synced"
         />
       );
@@ -49,7 +49,7 @@ export function SyncStatusIcon({ status }: SyncStatusIconProps) {
     case "error":
       return (
         <ExclamationTriangleIcon
-          className="mt-0.5 h-8 w-8 text-red-600"
+          className="-mt-0.5 h-6 w-6 text-red-600"
           title="Error syncing transactions"
         />
       );

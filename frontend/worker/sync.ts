@@ -163,14 +163,26 @@ async function updateSyncAndAccountStatus(sync: Sync, status: SyncStatus) {
       status: status,
     },
   });
-  await prisma.account.update({
-    where: {
-      id: sync.accountId,
-    },
-    data: {
-      syncStatus: status,
-    },
-  });
+  if (status === "synced") {
+    await prisma.account.update({
+      where: {
+        id: sync.accountId,
+      },
+      data: {
+        syncStatus: status,
+        lastSyncTime: sync.date,
+      },
+    });
+  } else {
+    await prisma.account.update({
+      where: {
+        id: sync.accountId,
+      },
+      data: {
+        syncStatus: status,
+      },
+    });
+  }
 }
 
 pollAndSyncIfRequired()

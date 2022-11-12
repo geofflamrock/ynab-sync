@@ -2,6 +2,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
 import classnames from "classnames";
+import { formatDistanceToNow } from "date-fns";
 import type { AccountDetail } from "~/api/api";
 import { getSyncDetails } from "~/api/api";
 import {
@@ -12,7 +13,9 @@ import {
 import { useRefreshOnInterval } from "~/components/hooks/useRefreshOnInterval";
 import { Paper } from "~/components/layout/Paper";
 import { Heading } from "~/components/primitive/Heading";
+import { SyncNowButton } from "~/components/sync/SyncNowButton";
 import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
+import { SyncStatusTitle } from "~/components/sync/SyncStatusTitle";
 import { ContentHeader } from "../../components/layout/ContentHeader";
 
 export async function loader() {
@@ -21,12 +24,12 @@ export async function loader() {
 
 export default function Accounts() {
   const data = useLoaderData<Array<AccountDetail>>();
-  useRefreshOnInterval({ enabled: true, interval: 10000 });
+  useRefreshOnInterval({ enabled: true, interval: 5000 });
 
   return (
     <div className="flex flex-col">
       <ContentHeader>
-        <div className="flex w-full items-center">
+        <div className="flex w-full items-center gap-4">
           <Heading title="Accounts" />
           <div className="ml-auto relative text-neutral-400">
             <div className="h-10 w-10 flex items-center justify-center pointer-events-none absolute">
@@ -40,36 +43,38 @@ export default function Accounts() {
           </div>
         </div>
       </ContentHeader>
-      <div className="container mx-auto">
-        <Paper className="p-0">
-          <div className="flex flex-col ">
-            {data.map((d) => {
-              return (
+      <div className="container mx-auto gap-2">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          {data.map((d) => {
+            return (
+              <Paper className="p-0" key={d.id}>
                 <NavLink
                   key={d.id}
                   to={`/accounts/${d.id}`}
                   className={({ isActive }) =>
                     classnames(
-                      "grid grid-cols-12 items-center gap-8 rounded-lg text-neutral-400 hover:bg-neutral-700 p-4",
+                      "flex flex-col gap-8 rounded-lg text-neutral-400 p-4",
                       { "bg-neutral-200": isActive }
                     )
                   }
                 >
-                  <div className="xl:col-span-3 2xl:col-span-2 lg:col-span-4 col-span-5">
+                  <div className="flex items-center gap-4">
                     <BankAccountSummary account={d.bank} />
-                  </div>
-                  <div className="flex gap-4 2xl:col-span-10 items-center xl:col-span-9 lg:col-span-8 col-span-7">
                     <SyncDirectionIcon />
                     <YnabAccountSummary account={d.ynab} />
-                    <div className="ml-auto">
+                    <div className="ml-auto flex gap-2">
                       <SyncStatusIcon status={d.status} />
+                      <SyncStatusTitle status={d.status} />
                     </div>
                   </div>
+                  <div className="flex items-center">
+                    <SyncNowButton accountId={d.id} />
+                  </div>
                 </NavLink>
-              );
-            })}
-          </div>
-        </Paper>
+              </Paper>
+            );
+          })}
+        </div>
       </div>
       {/* </div> */}
       {/* <Link
