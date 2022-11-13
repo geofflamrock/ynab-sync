@@ -1,15 +1,17 @@
-import { useNavigate } from "@remix-run/react";
+import { useLocation, useNavigate } from "@remix-run/react";
 import { useCallback, useEffect } from "react";
 
 function useRefresh() {
   // We get the navigate function from React Rotuer
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // And return a function which will navigate to `.` (same URL) and replace it
   return useCallback(
     function revalidate() {
-      navigate(".", { replace: true });
+      navigate(location, { replace: true });
     },
-    [navigate]
+    [navigate, location]
   );
 }
 interface Options {
@@ -27,6 +29,6 @@ export function useRefreshOnInterval({
       let intervalId = setInterval(revalidate, interval);
       return () => clearInterval(intervalId);
     },
-    [revalidate]
+    [revalidate, enabled, interval]
   );
 }

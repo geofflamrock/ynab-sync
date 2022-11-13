@@ -270,6 +270,7 @@ export const syncNow = async (id: number) => {
     },
     data: {
       syncStatus: "queued",
+      lastSyncTime: new Date(),
     },
   });
 

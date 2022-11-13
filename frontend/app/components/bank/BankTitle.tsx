@@ -17,3 +17,16 @@ export function BankTitle({ bank }: BankTitleProps) {
       return null;
   }
 }
+
+export function getBankTitle(bank: BankDetails) {
+  switch (bank.type) {
+    case "westpac":
+      return "Westpac";
+
+    case "stgeorge":
+      return "St George";
+
+    default:
+      throw new Error("Unknown bank type");
+  }
+}

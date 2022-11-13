@@ -1,15 +1,12 @@
 import {
   Bars3Icon,
   Cog6ToothIcon,
-  CogIcon,
   CreditCardIcon,
-  HomeIcon,
   KeyIcon,
 } from "@heroicons/react/24/outline";
 import { NavLink } from "@remix-run/react";
 import classnames from "classnames";
 import React from "react";
-import { YnabIcon } from "../ynab/YnabIcon";
 
 type SidearItemProps = {
   name?: string;
@@ -38,7 +35,7 @@ const SidebarItem = ({ name, icon, to, className }: SidearItemProps) => (
 
 export function NavigationRail() {
   return (
-    <div className="flex h-full w-20 flex-col bg-neutral-800 border-r border-r-neutral-700">
+    <div className="flex h-full w-20 flex-col border-r border-r-neutral-700 bg-neutral-800">
       {/* <SidebarItem
         to="/"
         icon={<YnabIcon className="h-6 w-6" />}
@@ -68,7 +65,7 @@ export function NavigationRail() {
 
 export function NavigationBar() {
   return (
-    <div className="flex w-full h-16 items-center justify-around bg-neutral-800 border-t border-t-neutral-700">
+    <div className="flex h-16 w-full items-center justify-around border-t border-t-neutral-700 bg-neutral-800">
       {/* <SidebarItem
         to="/"
         icon={<YnabIcon className="h-6 w-6" />}

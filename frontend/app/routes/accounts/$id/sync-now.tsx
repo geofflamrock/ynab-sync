@@ -1,7 +1,9 @@
 import type { ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
+import { Form } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { syncNow } from "~/api/api";
+import { Paper } from "~/components/layout/Paper";
 
 export const action: ActionFunction = async ({ params, request }) => {
   invariant(params.id, "Id must be provided");
@@ -23,5 +25,13 @@ export const action: ActionFunction = async ({ params, request }) => {
 };
 
 export default function SyncNow() {
-  return <div className="text-white">Syncing</div>;
+  return (
+    <Paper>
+      <Form method="post">
+        <button className="flex items-center gap-2 rounded-full bg-ynab py-2 pl-4 pr-4 text-sm text-neutral-100">
+          Sync
+        </button>
+      </Form>
+    </Paper>
+  );
 }

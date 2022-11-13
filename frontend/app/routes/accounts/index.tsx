@@ -31,20 +31,20 @@ export default function Accounts() {
       <ContentHeader>
         <div className="flex w-full items-center gap-4">
           <Heading title="Accounts" />
-          <div className="ml-auto relative text-neutral-400">
-            <div className="h-10 w-10 flex items-center justify-center pointer-events-none absolute">
+          <div className="relative ml-auto text-neutral-400">
+            <div className="pointer-events-none absolute flex h-10 w-10 items-center justify-center">
               <MagnifyingGlassIcon className="h-5 w-5 stroke-neutral-600" />
             </div>
             <input
               type="text"
               placeholder="Search accounts"
-              className="h-10 pl-10 text-sm hover:bg-neutral-700 bg-neutral-800 rounded-full border-0 focus:bg-neutral-700 px-4 text-neutral-400 placeholder:text-neutral-600 hover:placeholder:text-neutral-500 focus:ring-0 focus:placeholder:text-neutral-400"
+              className="h-10 rounded-full border-2 border-neutral-600 bg-neutral-800 px-4 pl-10 text-sm text-neutral-400 placeholder:text-neutral-600 hover:bg-neutral-700 hover:placeholder:text-neutral-500 focus:border-neutral-600 focus:bg-neutral-700 focus:ring-0 focus:placeholder:text-neutral-400"
             />
           </div>
         </div>
       </ContentHeader>
       <div className="container mx-auto gap-2">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {data.map((d) => {
             return (
               <Paper className="p-0" key={d.id}>
@@ -53,7 +53,7 @@ export default function Accounts() {
                   to={`/accounts/${d.id}`}
                   className={({ isActive }) =>
                     classnames(
-                      "flex flex-col gap-8 rounded-lg text-neutral-400 p-4",
+                      "flex flex-col gap-4 rounded-lg p-4 text-neutral-400",
                       { "bg-neutral-200": isActive }
                     )
                   }
@@ -62,12 +62,22 @@ export default function Accounts() {
                     <BankAccountSummary account={d.bank} />
                     <SyncDirectionIcon />
                     <YnabAccountSummary account={d.ynab} />
-                    <div className="ml-auto flex gap-2">
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       <SyncStatusIcon status={d.status} />
                       <SyncStatusTitle status={d.status} />
                     </div>
+                    <div className="h-1 w-1 rounded-full bg-neutral-400"></div>
+                    {d.lastSyncTime && (
+                      <div className="text-sm">
+                        {formatDistanceToNow(new Date(d.lastSyncTime), {
+                          addSuffix: true,
+                        })}
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center">
+                  <div className="-ml-3 flex items-center">
                     <SyncNowButton accountId={d.id} />
                   </div>
                 </NavLink>

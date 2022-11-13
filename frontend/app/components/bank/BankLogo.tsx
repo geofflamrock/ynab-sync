@@ -5,14 +5,15 @@ import { WestpacLogo } from "./WestpacLogo";
 
 type BankLogoProps = {
   bank: BankDetails;
+  className?: string;
 };
 
-export function BankLogo({ bank }: BankLogoProps) {
+export function BankLogo({ bank, className }: BankLogoProps) {
   switch (bank.type) {
     case "westpac":
-      return <WestpacLogo />;
+      return <WestpacLogo className={className} />;
     case "stgeorge":
-      return <StGeorgeLogo />;
+      return <StGeorgeLogo className={className} />;
     default:
       return null;
   }

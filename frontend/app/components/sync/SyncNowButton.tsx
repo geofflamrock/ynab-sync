@@ -1,5 +1,5 @@
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
-import { Form, useLocation, useSubmit } from "@remix-run/react";
+import { NavLink, useLocation, useSubmit } from "@remix-run/react";
 import React from "react";
 
 type SyncNowButtonProps = {
@@ -20,19 +20,11 @@ export function SyncNowButton({ accountId }: SyncNowButtonProps) {
   }
 
   return (
-    // <Form
-    //   method="post"
-    //   action={`/accounts/${accountId}/sync-now`}
-    //   onSubmit={onSubmit}
-    //   onSubmitCapture={onSubmit}
-    // >
-    <button
-      className="rounded-full border-neutral-500 border-2 text-ynab pl-3 pr-4 py-2 hover:bg-neutral-700 flex gap-2 items-center text-sm"
-      onClick={onClick}
-    >
-      <ArrowPathIcon className="h-4 w-4" />
-      <span>Sync now</span>
-    </button>
-    // </Form>
+    <NavLink to={`/accounts/${accountId}/sync-now`}>
+      <button className="flex items-center gap-2 rounded-full border-0 border-neutral-600 py-2 pl-4 pr-4 text-sm text-ynab hover:bg-neutral-700">
+        {/* <ArrowPathIcon className="h-4 w-4" /> */}
+        <span>Sync now</span>
+      </button>
+    </NavLink>
   );
 }

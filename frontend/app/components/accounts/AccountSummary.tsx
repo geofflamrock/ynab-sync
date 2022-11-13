@@ -1,7 +1,4 @@
-import {
-  ArrowRightCircleIcon,
-  ArrowRightIcon,
-} from "@heroicons/react/24/outline";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import type {
   BankDetails as BankAccounts,
   AccountDetail,
@@ -55,7 +52,7 @@ export function AccountSummary({
   account: Omit<AccountDetail, "history">;
 }) {
   return (
-    <div className="flex gap-8 items-center" key={account.id}>
+    <div className="flex items-center gap-8" key={account.id}>
       <BankAccountSummary account={account.bank} />
       <SyncDirectionIcon />
       <YnabAccountSummary account={account.ynab} />
