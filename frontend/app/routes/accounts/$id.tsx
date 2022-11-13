@@ -86,7 +86,7 @@ export default function AccountLayout() {
             {/* <div className="hidden h-1 w-1 rounded-full bg-neutral-400 lg:block"></div> */}
             <NavLink
               to={`/accounts/${sync.id}/sync-now`}
-              className="hidden rounded-full bg-ynab px-4 py-2 text-sm text-neutral-100 lg:block"
+              className="hidden rounded-full bg-neutral-700 px-4 py-2 text-sm text-ynab hover:bg-neutral-600 lg:block"
             >
               Sync now
             </NavLink>
