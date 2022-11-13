@@ -13,7 +13,11 @@ import invariant from "tiny-invariant";
 import type { AccountDetail } from "~/api/api";
 import { getAccountDetail } from "~/api/api";
 import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
-import { format, formatDistanceToNow } from "date-fns";
+import {
+  format,
+  formatDistanceToNow,
+  formatDistanceToNowStrict,
+} from "date-fns";
 import { ContentHeader } from "~/components/layout/ContentHeader";
 import { Heading } from "~/components/primitive/Heading";
 import {
@@ -30,6 +34,7 @@ import { YnabIcon } from "~/components/ynab/YnabIcon";
 import { SyncNowButton } from "~/components/sync/SyncNowButton";
 import { DetailSection } from "../../components/primitive/DetailSection";
 import { SyncStatusTitle } from "~/components/sync/SyncStatusTitle";
+import { SyncStatusWithLastSyncTime } from "~/components/sync/SyncStatus";
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.id, "Id must be provided");
@@ -69,21 +74,12 @@ export default function AccountLayout() {
           <SyncDirectionIcon />
           <YnabAccountSummary account={sync.ynab} />
           <div className="ml-auto flex flex-row items-center gap-2">
-            <div className="flex items-center gap-1">
-              <SyncStatusIcon status={sync.status} />
-              <SyncStatusTitle status={sync.status} />
-            </div>
-            {sync.lastSyncTime && (
-              <>
-                <div className="hidden h-1 w-1 rounded-full bg-neutral-400 lg:block"></div>
-                <div className="hidden text-sm text-neutral-400 lg:block">
-                  {formatDistanceToNow(new Date(sync.lastSyncTime), {
-                    addSuffix: true,
-                  })}
-                </div>
-              </>
-            )}
-            {/* <div className="hidden h-1 w-1 rounded-full bg-neutral-400 lg:block"></div> */}
+            <SyncStatusWithLastSyncTime
+              status={sync.status}
+              lastSyncTime={
+                sync.lastSyncTime ? new Date(sync.lastSyncTime) : undefined
+              }
+            />
             <NavLink
               to={`/accounts/${sync.id}/sync-now`}
               className="hidden rounded-full bg-neutral-700 px-4 py-2 text-sm text-ynab hover:bg-neutral-600 lg:block"

@@ -2,7 +2,6 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
 import classnames from "classnames";
-import { formatDistanceToNow } from "date-fns";
 import type { AccountDetail } from "~/api/api";
 import { getSyncDetails } from "~/api/api";
 import {
@@ -14,8 +13,7 @@ import { useRefreshOnInterval } from "~/components/hooks/useRefreshOnInterval";
 import { Paper } from "~/components/layout/Paper";
 import { Heading } from "~/components/primitive/Heading";
 import { SyncNowButton } from "~/components/sync/SyncNowButton";
-import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
-import { SyncStatusTitle } from "~/components/sync/SyncStatusTitle";
+import { SyncStatusWithLastSyncTime } from "~/components/sync/SyncStatus";
 import { ContentHeader } from "../../components/layout/ContentHeader";
 
 export async function loader() {
@@ -64,18 +62,12 @@ export default function Accounts() {
                     <YnabAccountSummary account={d.ynab} />
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1">
-                      <SyncStatusIcon status={d.status} />
-                      <SyncStatusTitle status={d.status} />
-                    </div>
-                    <div className="h-1 w-1 rounded-full bg-neutral-400"></div>
-                    {d.lastSyncTime && (
-                      <div className="text-sm">
-                        {formatDistanceToNow(new Date(d.lastSyncTime), {
-                          addSuffix: true,
-                        })}
-                      </div>
-                    )}
+                    <SyncStatusWithLastSyncTime
+                      status={d.status}
+                      lastSyncTime={
+                        d.lastSyncTime ? new Date(d.lastSyncTime) : undefined
+                      }
+                    />
                   </div>
                   <div className="-ml-3 flex items-center">
                     <SyncNowButton accountId={d.id} />
@@ -86,14 +78,6 @@ export default function Accounts() {
           })}
         </div>
       </div>
-      {/* </div> */}
-      {/* <Link
-        to="/accounts/new"
-        className="flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-neutral-300 p-4 text-neutral-500 hover:border-neutral-400 hover:text-neutral-700"
-      >
-        <PlusCircleIcon className="h-6 w-6" />
-        Add New Account
-      </Link> */}
     </div>
   );
 }
