@@ -14,40 +14,40 @@ export function SyncStatusButton({ status }: SyncStatusButtonProps) {
   switch (status) {
     case "notsynced":
       return (
-        <button className="rounded-full border-2 text-neutral-400 border-neutral-400 ml-auto py-2 px-4 flex gap-1 items-center text-sm hover:bg-neutral-400 hover:text-white group">
-          <ArrowPathIcon className="w-4 h-4 mt-0.5" />
+        <button className="group ml-auto flex items-center gap-1 rounded-full border-2 border-gray-400 py-2 px-4 text-sm text-gray-400 hover:bg-gray-400 hover:text-white">
+          <ArrowPathIcon className="mt-0.5 h-4 w-4" />
           <span>Never Synced</span>
         </button>
       );
 
     case "syncing":
       return (
-        <button className="rounded-full border-2 text-ynab border-ynab ml-auto py-2 px-4 flex gap-1 items-center text-sm hover:bg-ynab hover:text-white group">
-          <ArrowPathIcon className="w-4 h-4 mt-0.5 animate-spin" />
+        <button className="group ml-auto flex items-center gap-1 rounded-full border-2 border-ynab py-2 px-4 text-sm text-ynab hover:bg-ynab hover:text-white">
+          <ArrowPathIcon className="mt-0.5 h-4 w-4 animate-spin" />
           <span>Syncing</span>
         </button>
       );
 
     case "queued":
       return (
-        <button className="rounded-full border-2 text-ynab border-ynab ml-auto py-2 px-4 flex gap-1 items-center text-sm hover:bg-ynab hover:text-white group">
-          <ArrowPathIcon className="w-4 h-4 mt-0.5" />
+        <button className="group ml-auto flex items-center gap-1 rounded-full border-2 border-ynab py-2 px-4 text-sm text-ynab hover:bg-ynab hover:text-white">
+          <ArrowPathIcon className="mt-0.5 h-4 w-4" />
           <span>Queued</span>
         </button>
       );
 
     case "synced":
       return (
-        <button className="rounded-full border-2 text-green-600 border-green-600 ml-auto py-2 px-4 flex gap-1 items-center text-sm hover:bg-green-600 hover:text-white group">
-          <CheckIcon className="w-4 h-4 mt-0.5" />
+        <button className="group ml-auto flex items-center gap-1 rounded-full border-2 border-green-600 py-2 px-4 text-sm text-green-600 hover:bg-green-600 hover:text-white">
+          <CheckIcon className="mt-0.5 h-4 w-4" />
           <span>Synced</span>
         </button>
       );
 
     case "error":
       return (
-        <button className="rounded-full border-2 text-red-600 border-red-600 ml-auto py-2 px-4 flex gap-1 items-center hover:bg-red-600 hover:text-white group">
-          <ExclamationTriangleIcon className="w-4 h-4 mt-0.5" />
+        <button className="group ml-auto flex items-center gap-1 rounded-full border-2 border-red-600 py-2 px-4 text-red-600 hover:bg-red-600 hover:text-white">
+          <ExclamationTriangleIcon className="mt-0.5 h-4 w-4" />
           <span className="text-sm">Error</span>
         </button>
       );

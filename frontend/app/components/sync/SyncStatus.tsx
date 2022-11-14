@@ -21,14 +21,14 @@ type LastSyncTimeProps = {
 };
 
 export const TimeDivider = () => (
-  <div className="h-1 w-1 rounded-full bg-neutral-400" />
+  <div className="h-1 w-1 rounded-full bg-gray-400" />
 );
 
 export const LastSyncTime = ({ lastSyncTime }: LastSyncTimeProps) => {
   if (lastSyncTime === undefined) return null;
 
   return (
-    <div className="text-sm text-neutral-400">
+    <div className="text-sm text-gray-400">
       {formatDistanceToNowStrict(new Date(lastSyncTime), {
         addSuffix: true,
       })}

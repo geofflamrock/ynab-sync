@@ -9,10 +9,7 @@ type SubHeadingProps = {
 export function SubHeading({ title, icon, className }: SubHeadingProps) {
   return (
     <div
-      className={classNames(
-        "flex items-center gap-4 text-neutral-400",
-        className
-      )}
+      className={classNames("flex items-center gap-4 text-gray-300", className)}
     >
       {icon}
       <div className="text-lg">{title}</div>

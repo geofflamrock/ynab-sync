@@ -9,10 +9,7 @@ type HeadingProps = {
 export function Heading({ title, icon, className }: HeadingProps) {
   return (
     <div
-      className={classNames(
-        "flex items-center gap-4 text-neutral-400",
-        className
-      )}
+      className={classNames("flex items-center gap-4 text-gray-300", className)}
     >
       {icon}
       <div className="text-xl">{title}</div>

@@ -17,8 +17,8 @@ export function BankAccountSummary({
     <div className="flex items-center gap-4">
       <BankLogo bank={bank} />
       <div className="flex flex-col">
-        <div className="text-neutral-400">{bank.accountName}</div>
-        <div className="text-sm text-neutral-500">
+        <div className="text-gray-300">{bank.accountName}</div>
+        <div className="text-sm text-gray-500">
           {bank.bsbNumber} {bank.accountNumber}
         </div>
       </div>
@@ -35,15 +35,15 @@ export function YnabAccountSummary({
     <div className="flex items-center gap-4">
       <YnabIcon />
       <div className="flex flex-col">
-        <div className="text-neutral-400">{ynabAccount.accountName}</div>
-        <div className="text-sm text-neutral-500">{ynabAccount.budgetName}</div>
+        <div className="text-gray-300">{ynabAccount.accountName}</div>
+        <div className="text-sm text-gray-500">{ynabAccount.budgetName}</div>
       </div>
     </div>
   );
 }
 
 export function SyncDirectionIcon() {
-  return <ArrowRightIcon className="h-4 w-4 text-neutral-500" />;
+  return <ArrowRightIcon className="h-4 w-4 text-gray-500" />;
 }
 
 export function AccountSummary({

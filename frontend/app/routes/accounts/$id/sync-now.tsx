@@ -28,7 +28,7 @@ export default function SyncNow() {
   return (
     <Paper>
       <Form method="post">
-        <button className="flex items-center gap-2 rounded-full bg-ynab py-2 pl-4 pr-4 text-sm text-neutral-100">
+        <button className="flex items-center gap-2 rounded-full bg-ynab py-2 pl-4 pr-4 text-sm text-ynab-800 hover:bg-ynab-200">
           Sync
         </button>
       </Form>

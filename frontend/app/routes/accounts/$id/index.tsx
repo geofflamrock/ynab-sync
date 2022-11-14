@@ -81,7 +81,7 @@ export default function Account() {
             {sync.history.map((h) => (
               <div
                 key={h.id}
-                className="flex items-center gap-4 rounded-lg py-2 text-neutral-400"
+                className="flex items-center gap-4 rounded-lg py-2 text-gray-400"
               >
                 <SyncStatusIcon status={h.status} />
                 <div title={format(new Date(h.date), "Pp")}>

@@ -11,7 +11,7 @@ export function SyncStatusTitle({ status, className }: SyncStatusTitleProps) {
   switch (status) {
     case "notsynced":
       return (
-        <div className={classNames("text-sm text-neutral-400", className)}>
+        <div className={classNames("text-sm text-gray-400", className)}>
           Not Synced
         </div>
       );
@@ -25,7 +25,7 @@ export function SyncStatusTitle({ status, className }: SyncStatusTitleProps) {
 
     case "queued":
       return (
-        <div className={classNames("text-sm text-neutral-400", className)}>
+        <div className={classNames("text-sm text-gray-400", className)}>
           Queued
         </div>
       );

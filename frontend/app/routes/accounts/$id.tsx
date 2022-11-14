@@ -42,7 +42,7 @@ export default function AccountLayout() {
               <Heading title="Accounts" />
             </Link>
           </div>
-          <ChevronRightIcon className="hidden h-4 w-4 text-neutral-500 md:block" />
+          <ChevronRightIcon className="hidden h-4 w-4 text-gray-500 md:block" />
           <BankAccountSummary account={sync.bank} />
           <SyncDirectionIcon />
           <YnabAccountSummary account={sync.ynab} />
@@ -55,7 +55,7 @@ export default function AccountLayout() {
             />
             <NavLink
               to={`/accounts/${sync.id}/sync-now`}
-              className="hidden rounded-full bg-neutral-700 px-4 py-2 text-sm text-ynab hover:bg-neutral-600 lg:block"
+              className="hidden rounded-full bg-gray-700 px-4 py-2 text-sm text-ynab hover:bg-gray-600 lg:block"
             >
               Sync now
             </NavLink>

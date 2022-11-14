@@ -9,7 +9,7 @@ export function Paper({ children, className }: PaperProps) {
   return (
     <div
       className={classNames(
-        "rounded-lg border-neutral-700 bg-neutral-800 p-4 text-neutral-400",
+        "rounded-lg border-gray-700 bg-gray-800 p-4 text-gray-400",
         className
       )}
     >

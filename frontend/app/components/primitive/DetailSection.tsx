@@ -7,13 +7,13 @@ type DetailSectionProps = {
 export function DetailSection({ icon, items }: DetailSectionProps) {
   return (
     <div className="grid grid-cols-12 gap-4">
-      <div className="col-span-2 md:col-span-1">{icon}</div>
+      <div className="col-span-2 text-gray-300 md:col-span-1">{icon}</div>
       <div className="col-span-10 md:col-span-11">
         <div className="grid w-full grid-cols-2 gap-4">
           {items.map((item) => (
-            <div className="flex flex-col gap-1" key={item.name}>
+            <div className="flex flex-col gap-1 text-gray-300" key={item.name}>
               <span>{item.value}</span>
-              <span className="text-sm text-neutral-500">{item.name}</span>
+              <span className="text-sm text-gray-500">{item.name}</span>
             </div>
           ))}
         </div>

@@ -17,7 +17,7 @@ export function SyncStatusIcon({ status }: SyncStatusIconProps) {
     case "notsynced":
       return (
         <NoSymbolIcon
-          className="-mt-0.5 h-6 w-6 text-neutral-400"
+          className="-mt-0.5 h-6 w-6 text-gray-400"
           title="Never synced"
         />
       );
@@ -33,7 +33,7 @@ export function SyncStatusIcon({ status }: SyncStatusIconProps) {
     case "queued":
       return (
         <QueueListIcon
-          className="-mt-0.5 h-6 w-6 text-neutral-400"
+          className="-mt-0.5 h-6 w-6 text-gray-400"
           title="Sync queued"
         />
       );
