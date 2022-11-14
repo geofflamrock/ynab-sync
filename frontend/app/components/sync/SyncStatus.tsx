@@ -28,7 +28,7 @@ export const LastSyncTime = ({ lastSyncTime }: LastSyncTimeProps) => {
   if (lastSyncTime === undefined) return null;
 
   return (
-    <div className="hidden text-sm text-neutral-400 lg:block">
+    <div className="text-sm text-neutral-400">
       {formatDistanceToNowStrict(new Date(lastSyncTime), {
         addSuffix: true,
       })}

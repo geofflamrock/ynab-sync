@@ -26,7 +26,7 @@ const SidebarItem = ({ name, icon, to, className }: SidearItemProps) => (
       )
     }
   >
-    <div className="rounded-full py-1 px-4 group-hover:bg-neutral-700 group-[.active]:bg-ynab group-[.active]:text-white">
+    <div className="rounded-full py-1 px-4 group-hover:bg-neutral-700 group-[.active]:bg-ynab group-[.active]:text-neutral-800">
       {icon}
     </div>
     {name && <span className="text-xs">{name}</span>}
@@ -36,12 +36,6 @@ const SidebarItem = ({ name, icon, to, className }: SidearItemProps) => (
 export function NavigationRail() {
   return (
     <div className="flex h-full w-20 flex-col border-r border-r-neutral-700 bg-neutral-800">
-      {/* <SidebarItem
-        to="/"
-        icon={<YnabIcon className="h-6 w-6" />}
-        className="mb-auto"
-      /> */}
-      {/* <SidebarItem to="/" icon={<HomeIcon className="h-6 w-6" />} name="Home" /> */}
       <SidebarItem to="/" icon={<Bars3Icon className="h-6 w-6" />} />
       <SidebarItem
         to="/accounts"
@@ -66,12 +60,6 @@ export function NavigationRail() {
 export function NavigationBar() {
   return (
     <div className="flex h-16 w-full items-center justify-around border-t border-t-neutral-700 bg-neutral-800">
-      {/* <SidebarItem
-        to="/"
-        icon={<YnabIcon className="h-6 w-6" />}
-        className="mb-auto"
-      /> */}
-      {/* <SidebarItem to="/" icon={<HomeIcon className="h-6 w-6" />} name="Home" /> */}
       <SidebarItem
         to="/accounts"
         icon={<CreditCardIcon className="h-6 w-6" />}

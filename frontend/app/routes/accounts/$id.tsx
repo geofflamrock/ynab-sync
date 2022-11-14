@@ -1,23 +1,10 @@
-import { ChevronRightIcon, KeyIcon } from "@heroicons/react/24/outline";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import {
-  Link,
-  NavLink,
-  Outlet,
-  useLoaderData,
-  useLocation,
-  useMatches,
-} from "@remix-run/react";
+import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import type { AccountDetail } from "~/api/api";
 import { getAccountDetail } from "~/api/api";
-import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
-import {
-  format,
-  formatDistanceToNow,
-  formatDistanceToNowStrict,
-} from "date-fns";
 import { ContentHeader } from "~/components/layout/ContentHeader";
 import { Heading } from "~/components/primitive/Heading";
 import {
@@ -25,15 +12,7 @@ import {
   SyncDirectionIcon,
   YnabAccountSummary,
 } from "~/components/accounts/AccountSummary";
-import { Paper } from "~/components/layout/Paper";
-import { SubHeading } from "~/components/primitive/SubHeading";
 import { useRefreshOnInterval } from "../../components/hooks/useRefreshOnInterval";
-import { BankLogo } from "~/components/bank/BankLogo";
-import { getBankTitle } from "~/components/bank/BankTitle";
-import { YnabIcon } from "~/components/ynab/YnabIcon";
-import { SyncNowButton } from "~/components/sync/SyncNowButton";
-import { DetailSection } from "../../components/primitive/DetailSection";
-import { SyncStatusTitle } from "~/components/sync/SyncStatusTitle";
 import { SyncStatusWithLastSyncTime } from "~/components/sync/SyncStatus";
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -44,12 +23,6 @@ export const loader: LoaderFunction = async ({ params }) => {
   if (!sync) throw new Response("Not Found", { status: 404 });
 
   return json(sync);
-};
-
-type SummaryCardProps = {
-  key: string;
-  title: string | React.ReactNode;
-  subtitle?: string | React.ReactNode;
 };
 
 export type DetailItem = {
@@ -86,11 +59,10 @@ export default function AccountLayout() {
             >
               Sync now
             </NavLink>
-            {/* <SyncNowButton accountId={sync.id} /> */}
           </div>
         </div>
       </ContentHeader>
-      <div>
+      <div className="container mx-auto">
         <Outlet context={sync} />
       </div>
     </div>

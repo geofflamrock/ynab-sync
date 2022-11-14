@@ -36,7 +36,7 @@ export default function Accounts() {
             <input
               type="text"
               placeholder="Search accounts"
-              className="h-10 rounded-full border-2 border-neutral-600 bg-neutral-800 px-4 pl-10 text-sm text-neutral-400 placeholder:text-neutral-600 hover:bg-neutral-700 hover:placeholder:text-neutral-500 focus:border-neutral-600 focus:bg-neutral-700 focus:ring-0 focus:placeholder:text-neutral-400"
+              className="h-10 rounded-full border border-neutral-600 bg-neutral-800 px-4 pl-10 text-sm text-neutral-400 placeholder:text-neutral-600 hover:bg-neutral-700 hover:placeholder:text-neutral-500 focus:border-neutral-600 focus:bg-neutral-700 focus:ring-0 focus:placeholder:text-neutral-400"
             />
           </div>
         </div>

@@ -1,6 +1,12 @@
 import { ClockIcon, KeyIcon } from "@heroicons/react/24/outline";
 import { useOutletContext } from "@remix-run/react";
-import { format, formatDistanceToNow } from "date-fns";
+import {
+  format,
+  formatDistanceToNow,
+  setHours,
+  addDays,
+  formatRelative,
+} from "date-fns";
 import type { AccountDetail } from "~/api/api";
 import { BankLogo } from "~/components/bank/BankLogo";
 import { getBankTitle } from "~/components/bank/BankTitle";
@@ -12,8 +18,14 @@ import { YnabIcon } from "~/components/ynab/YnabIcon";
 
 export default function Account() {
   const sync = useOutletContext<AccountDetail>();
+  const now = new Date();
+
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const tomorrow = addDays(today, 1);
+  const nextSyncTime = setHours(tomorrow, 10);
+
   return (
-    <div className="container mx-auto flex flex-col gap-4 pb-4">
+    <div className="flex flex-col gap-4 pb-4">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Paper className="flex flex-col gap-4">
           <SubHeading title="Bank" />
@@ -52,7 +64,13 @@ export default function Account() {
           <SubHeading title="Sync" />
           <DetailSection
             icon={<ClockIcon className="mt-2 h-8 w-8" />}
-            items={[{ name: "Schedule", value: "Daily at 10am" }]}
+            items={[
+              { name: "Schedule", value: "Daily at 10am" },
+              {
+                name: "Next sync",
+                value: formatRelative(nextSyncTime, new Date()),
+              },
+            ]}
           />
         </Paper>
       </div>
