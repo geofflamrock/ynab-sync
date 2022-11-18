@@ -28,7 +28,7 @@ const NavigationItem = ({ name, icon, to, className }: NavigationItemProps) => (
       )
     }
   >
-    <div className="rounded-full py-1 px-4 group-hover:bg-gray-100 group-[.active]:bg-ynab group-[.active]:text-gray-800 dark:group-hover:bg-gray-700">
+    <div className="rounded-full py-1 px-4 group-hover:bg-gray-100 group-[.active]:bg-ynab group-[.active]:text-gray-800 dark:group-hover:bg-gray-700 dark:group-[.active]:bg-ynab">
       {icon}
     </div>
     {name && <span className="text-xs">{name}</span>}
@@ -41,7 +41,7 @@ type NavigationProps = {
 
 export function NavigationRail({ environment }: NavigationProps) {
   return (
-    <div className="flex h-full w-20 flex-col dark:border-r dark:border-r-gray-700 dark:bg-gray-800">
+    <div className="flex h-full w-20 flex-col dark:border-r-0 dark:border-r-gray-700 dark:bg-gray-800">
       <NavigationItem to="/" icon={<Bars3Icon className="h-6 w-6" />} />
       <NavigationItem
         to="/accounts"
@@ -73,7 +73,7 @@ export function NavigationRail({ environment }: NavigationProps) {
 
 export function NavigationBar({ environment }: NavigationProps) {
   return (
-    <div className="flex h-16 w-full items-center justify-around dark:border-t dark:border-t-gray-700 dark:bg-gray-800">
+    <div className="flex h-16 w-full items-center justify-around dark:border-t-0 dark:border-t-gray-700 dark:bg-gray-800">
       <NavigationItem
         to="/accounts"
         icon={<CreditCardIcon className="h-6 w-6" />}
