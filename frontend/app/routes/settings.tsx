@@ -1,6 +1,7 @@
 import { ContentHeader } from "~/components/layout/ContentHeader";
 import { Paper } from "~/components/layout/Paper";
 import { Heading } from "~/components/primitive/Heading";
+import { SubHeading } from "~/components/primitive/SubHeading";
 
 export default function Settings() {
   return (
@@ -11,7 +12,9 @@ export default function Settings() {
         </div>
       </ContentHeader>
       <div className="container mx-auto">
-        <Paper>Nothing here yet</Paper>
+        <Paper>
+          <SubHeading title="Display" />
+        </Paper>
       </div>
     </div>
   );

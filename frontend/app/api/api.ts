@@ -8,6 +8,8 @@ import type {
 import { PrismaClient } from "@prisma/client";
 import { orderBy } from "lodash";
 
+export type Environment = "development" | "test" | "production";
+
 export type WestpacSyncDetail = {
   type: "westpac";
   accountName: string;

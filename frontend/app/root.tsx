@@ -1,4 +1,8 @@
-import type { MetaFunction, LinksFunction } from "@remix-run/node";
+import type {
+  MetaFunction,
+  LinksFunction,
+  LoaderFunction,
+} from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -6,17 +10,26 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
+import type { Environment } from "./api/api";
 import { Layout } from "./components/layout/Layout";
 
 import styles from "./tailwind.css";
 
-/*
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
-*/
+type RootRouteLoaderData = {
+  environment: Environment;
+};
+
+export const loader = (): RootRouteLoaderData => {
+  const env: Environment = process.env.NODE_ENV;
+
+  console.log(env);
+
+  return {
+    environment: env,
+  };
+};
 
 export const links: LinksFunction = () => [
   { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
@@ -44,6 +57,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function App() {
+  const data = useLoaderData<typeof loader>();
   return (
     <html lang="en">
       <head>
@@ -51,7 +65,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Layout>
+        <Layout environment={data.environment}>
           <Outlet />
         </Layout>
         <ScrollRestoration />

@@ -29,7 +29,7 @@ export default function Accounts() {
       <ContentHeader>
         <div className="flex w-full items-center gap-4">
           <Heading title="Accounts" />
-          <div className="relative ml-auto text-gray-400">
+          <div className="relative ml-auto hidden text-gray-400">
             <div className="pointer-events-none absolute flex h-10 w-10 items-center justify-center">
               <MagnifyingGlassIcon className="h-5 w-5 stroke-gray-600" />
             </div>
@@ -45,16 +45,11 @@ export default function Accounts() {
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {data.map((d) => {
             return (
-              <Paper className="p-0" key={d.id}>
+              <Paper key={d.id}>
                 <NavLink
                   key={d.id}
                   to={`/accounts/${d.id}`}
-                  className={({ isActive }) =>
-                    classnames(
-                      "flex flex-col gap-4 rounded-lg p-4 text-gray-400",
-                      { "bg-gray-200": isActive }
-                    )
-                  }
+                  className="text flex flex-col gap-4 rounded-lg"
                 >
                   <div className="flex items-center gap-4">
                     <BankAccountSummary account={d.bank} />
@@ -76,122 +71,6 @@ export default function Accounts() {
               </Paper>
             );
           })}
-        </div>
-      </div>
-      <div className="container mx-auto pt-4">
-        <div className="grid grid-cols-3 gap-4">
-          <Paper className="bg-gray-800 p-10">
-            <p className="text-gray-800">This is some text</p>
-            <p className="text-gray-700">This is some text</p>
-            <p className="text-gray-600">This is some text</p>
-            <p className="text-gray-500">This is some text</p>
-            <p className="text-gray-400">This is some text</p>
-            <p className="text-gray-300">This is some text</p>
-            <p className="text-gray-200">This is some text</p>
-            <p className="text-gray-100">This is some text</p>
-            <p className="text-gray-50">This is some text</p>
-          </Paper>
-          <Paper className="bg-gray-700 p-10">
-            <p className="text-gray-800">This is some text</p>
-            <p className="text-gray-700">This is some text</p>
-            <p className="text-gray-600">This is some text</p>
-            <p className="text-gray-500">This is some text</p>
-            <p className="text-gray-400">This is some text</p>
-            <p className="text-gray-300">This is some text</p>
-            <p className="text-gray-200">This is some text</p>
-            <p className="text-gray-100">This is some text</p>
-            <p className="text-gray-50">This is some text</p>
-          </Paper>
-          <Paper className="bg-gray-600 p-10">
-            <p className="text-gray-800">This is some text</p>
-            <p className="text-gray-700">This is some text</p>
-            <p className="text-gray-600">This is some text</p>
-            <p className="text-gray-500">This is some text</p>
-            <p className="text-gray-400">This is some text</p>
-            <p className="text-gray-300">This is some text</p>
-            <p className="text-gray-200">This is some text</p>
-            <p className="text-gray-100">This is some text</p>
-            <p className="text-gray-50">This is some text</p>
-          </Paper>
-          <Paper className="bg-gray-500 p-10">
-            <p className="text-gray-800">This is some text</p>
-            <p className="text-gray-700">This is some text</p>
-            <p className="text-gray-600">This is some text</p>
-            <p className="text-gray-500">This is some text</p>
-            <p className="text-gray-400">This is some text</p>
-            <p className="text-gray-300">This is some text</p>
-            <p className="text-gray-200">This is some text</p>
-            <p className="text-gray-100">This is some text</p>
-            <p className="text-gray-50">This is some text</p>
-          </Paper>
-          <Paper className="bg-gray-400 p-10">
-            <p className="text-gray-800">This is some text</p>
-            <p className="text-gray-700">This is some text</p>
-            <p className="text-gray-600">This is some text</p>
-            <p className="text-gray-500">This is some text</p>
-            <p className="text-gray-400">This is some text</p>
-            <p className="text-gray-300">This is some text</p>
-            <p className="text-gray-200">This is some text</p>
-            <p className="text-gray-100">This is some text</p>
-            <p className="text-gray-50">This is some text</p>
-          </Paper>
-          <Paper className="bg-gray-300 p-10">
-            <p className="text-gray-800">This is some text</p>
-            <p className="text-gray-700">This is some text</p>
-            <p className="text-gray-600">This is some text</p>
-            <p className="text-gray-500">This is some text</p>
-            <p className="text-gray-400">This is some text</p>
-            <p className="text-gray-300">This is some text</p>
-            <p className="text-gray-200">This is some text</p>
-            <p className="text-gray-100">This is some text</p>
-            <p className="text-gray-50">This is some text</p>
-          </Paper>
-          <Paper className="bg-gray-200 p-10">
-            <p className="text-gray-800">This is some text</p>
-            <p className="text-gray-700">This is some text</p>
-            <p className="text-gray-600">This is some text</p>
-            <p className="text-gray-500">This is some text</p>
-            <p className="text-gray-400">This is some text</p>
-            <p className="text-gray-300">This is some text</p>
-            <p className="text-gray-200">This is some text</p>
-            <p className="text-gray-100">This is some text</p>
-            <p className="text-gray-50">This is some text</p>
-          </Paper>
-          <Paper className="bg-gray-100 p-10">
-            <p className="text-gray-800">This is some text</p>
-            <p className="text-gray-700">This is some text</p>
-            <p className="text-gray-600">This is some text</p>
-            <p className="text-gray-500">This is some text</p>
-            <p className="text-gray-400">This is some text</p>
-            <p className="text-gray-300">This is some text</p>
-            <p className="text-gray-200">This is some text</p>
-            <p className="text-gray-100">This is some text</p>
-            <p className="text-gray-50">This is some text</p>
-          </Paper>
-          <Paper className="bg-gray-50 p-10">
-            <p className="text-gray-800">This is some text</p>
-            <p className="text-gray-700">This is some text</p>
-            <p className="text-gray-600">This is some text</p>
-            <p className="text-gray-500">This is some text</p>
-            <p className="text-gray-400">This is some text</p>
-            <p className="text-gray-300">This is some text</p>
-            <p className="text-gray-200">This is some text</p>
-            <p className="text-gray-100">This is some text</p>
-            <p className="text-gray-50">This is some text</p>
-          </Paper>
-        </div>
-      </div>
-      <div className="container mx-auto pt-4">
-        <div className="grid grid-cols-3 gap-4">
-          <p className="text-gray-800">This is some text</p>
-          <p className="text-gray-700">This is some text</p>
-          <p className="text-gray-600">This is some text</p>
-          <p className="text-gray-500">This is some text</p>
-          <p className="text-gray-400">This is some text</p>
-          <p className="text-gray-300">This is some text</p>
-          <p className="text-gray-200">This is some text</p>
-          <p className="text-gray-100">This is some text</p>
-          <p className="text-gray-50">This is some text</p>
         </div>
       </div>
     </div>

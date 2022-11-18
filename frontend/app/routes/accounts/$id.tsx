@@ -55,7 +55,7 @@ export default function AccountLayout() {
             />
             <NavLink
               to={`/accounts/${sync.id}/sync-now`}
-              className="hidden rounded-full bg-gray-700 px-4 py-2 text-sm text-ynab hover:bg-gray-600 lg:block"
+              className="hidden rounded-full bg-gray-100 px-4 py-2 text-sm text-ynab hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 lg:block"
             >
               Sync now
             </NavLink>
