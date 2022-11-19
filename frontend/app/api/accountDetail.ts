@@ -4,6 +4,8 @@ import type {
   YnabAccount,
   YnabBudget,
   Sync,
+  BankCredential,
+  YnabCredential,
 } from "@prisma/client";
 import type { StGeorgeBankAccountDetails } from "./banks/stgeorge";
 import type { WestpacBankAccountDetails } from "./banks/westpac";
@@ -12,22 +14,35 @@ import type { SyncStatus } from "./sync";
 import { getSyncStatus } from "./sync";
 import { orderBy } from "lodash";
 
+type BankCredentialField = {
+  name: string;
+  displayName: string;
+};
+
+export type BankAccountField = {
+  name: string;
+  displayName: string;
+  value: string;
+};
+
+type BankCredentialDetail = {
+  id: number;
+  name: string;
+  fields: Array<BankCredentialField>;
+};
+
 export type WestpacAccountDetail = {
   type: "westpac";
-  accountName: string;
-  bsbNumber: string;
-  accountNumber: string;
-  credentialsId: number;
-  credentialsName: string;
+  name: string;
+  fields: Array<BankAccountField>;
+  credentials: BankCredentialDetail;
 };
 
 export type StGeorgeAccountDetail = {
   type: "stgeorge";
-  accountName: string;
-  bsbNumber: string;
-  accountNumber: string;
-  credentialsId: number;
-  credentialsName: string;
+  name: string;
+  fields: Array<BankAccountField>;
+  credentials: BankCredentialDetail;
 };
 
 export type BankAccountDetail = WestpacAccountDetail | StGeorgeAccountDetail;
@@ -67,22 +82,13 @@ export const getAccountDetail = async (
     },
     include: {
       bankAccount: true,
-      bankCredentials: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
+      bankCredentials: true,
       ynabAccount: {
         include: {
           budget: true,
         },
       },
-      ynabCredentials: {
-        select: {
-          id: true,
-        },
-      },
+      ynabCredentials: true,
       history: {
         orderBy: {
           date: "desc",
@@ -101,16 +107,11 @@ export const getAccountDetail = async (
 const getAccountDetailFromAccount = (
   account: Account & {
     bankAccount: BankAccount;
-    bankCredentials: {
-      id: number;
-      name: string;
-    };
+    bankCredentials: BankCredential;
     ynabAccount: YnabAccount & {
       budget: YnabBudget;
     };
-    ynabCredentials: {
-      id: number;
-    };
+    ynabCredentials: YnabCredential;
     history: Sync[];
   }
 ): AccountDetail => {
@@ -123,11 +124,33 @@ const getAccountDetailFromAccount = (
 
     bankAccount = {
       type: "westpac",
-      accountName: account.bankAccount.name,
-      accountNumber: details.accountNumber,
-      bsbNumber: details.bsbNumber,
-      credentialsId: account.bankCredentials.id,
-      credentialsName: account.bankCredentials.name,
+      name: account.bankAccount.name,
+      fields: [
+        {
+          name: "bsbNumber",
+          displayName: "BSB Number",
+          value: details.bsbNumber,
+        },
+        {
+          name: "accountNumber",
+          displayName: "Account Number",
+          value: details.accountNumber,
+        },
+      ],
+      credentials: {
+        id: account.bankCredentials.id,
+        name: account.bankCredentials.name,
+        fields: [
+          {
+            name: "username",
+            displayName: "Username",
+          },
+          {
+            name: "password",
+            displayName: "Password",
+          },
+        ],
+      },
     };
   } else if (account.bankAccount.type === "stgeorge") {
     const details: StGeorgeBankAccountDetails = JSON.parse(
@@ -135,11 +158,37 @@ const getAccountDetailFromAccount = (
     );
     bankAccount = {
       type: "stgeorge",
-      accountName: account.bankAccount.name,
-      accountNumber: details.accountNumber,
-      bsbNumber: details.bsbNumber,
-      credentialsId: account.bankCredentials.id,
-      credentialsName: account.bankCredentials.name,
+      name: account.bankAccount.name,
+      fields: [
+        {
+          name: "bsbNumber",
+          displayName: "BSB Number",
+          value: details.bsbNumber,
+        },
+        {
+          name: "accountNumber",
+          displayName: "Account Number",
+          value: details.accountNumber,
+        },
+      ],
+      credentials: {
+        id: account.bankCredentials.id,
+        name: account.bankCredentials.name,
+        fields: [
+          {
+            name: "accessNumber",
+            displayName: "Access Number",
+          },
+          {
+            name: "securityNumber",
+            displayName: "Security Number",
+          },
+          {
+            name: "password",
+            displayName: "Password",
+          },
+        ],
+      },
     };
   }
 

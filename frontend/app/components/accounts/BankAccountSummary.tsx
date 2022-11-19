@@ -1,5 +1,5 @@
-import { BankAccountDetail } from "~/api/api";
-import { BankAccountSummary as BankAccountSummaryApi } from "~/api/accountSummary";
+import type { BankAccountDetail } from "~/api/api";
+import type { BankAccountSummary as BankAccountSummaryApi } from "~/api/accountSummary";
 import { BankLogo } from "../bank/BankLogo";
 
 export function BankAccountSummary({
@@ -11,11 +11,11 @@ export function BankAccountSummary({
     <div className="flex items-center gap-4">
       <BankLogo bank={bank} />
       <div className="flex flex-col">
-        <div className="text-gray-700 dark:text-gray-300">
-          {bank.accountName}
-        </div>
-        <div className="text-sm text-gray-500">
-          {bank.bsbNumber} {bank.accountNumber}
+        <div className="text-gray-700 dark:text-gray-300">{bank.name}</div>
+        <div className="flex flex-row gap-1 text-sm text-gray-500">
+          {bank.fields.map((field) => (
+            <span key={field.name}>{field.value}</span>
+          ))}
         </div>
       </div>
     </div>

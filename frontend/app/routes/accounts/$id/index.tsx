@@ -7,7 +7,7 @@ import {
   addDays,
   formatRelative,
 } from "date-fns";
-import { AccountSummary } from "~/api/accountSummary";
+import type { AccountDetail } from "~/api/accountDetail";
 import { BankLogo } from "~/components/bank/BankLogo";
 import { getBankTitle } from "~/components/bank/BankTitle";
 import { Paper } from "~/components/layout/Paper";
@@ -17,7 +17,7 @@ import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
 import { YnabIcon } from "~/components/ynab/YnabIcon";
 
 export default function Account() {
-  const sync = useOutletContext<AccountSummary>();
+  const account = useOutletContext<AccountDetail>();
   const now = new Date();
 
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -30,20 +30,20 @@ export default function Account() {
         <Paper className="flex flex-col gap-4">
           <SubHeading title="Bank" />
           <DetailSection
-            icon={<BankLogo bank={sync.bank} className="mt-2" />}
+            icon={<BankLogo bank={account.bank} className="mt-2" />}
             items={[
-              { name: "Bank", value: getBankTitle(sync.bank) },
-              { name: "Account Name", value: sync.bank.accountName },
-              { name: "BSB Number", value: sync.bank.bsbNumber },
-              { name: "Account Number", value: sync.bank.accountNumber },
+              { name: "Bank", value: getBankTitle(account.bank) },
+              { name: "Account Name", value: account.bank.name },
+              ...account.bank.fields.map((field) => {
+                return { name: field.displayName, value: field.value };
+              }),
             ]}
           />
           <DetailSection
             icon={<KeyIcon className="mt-2 h-8 w-8" />}
-            items={[
-              { name: "Username", value: "65******" },
-              { name: "Password", value: "********" },
-            ]}
+            items={account.bank.credentials.fields.map((field) => {
+              return { name: field.displayName, value: "********" };
+            })}
           />
         </Paper>
         <Paper className="flex flex-col gap-4">
@@ -51,13 +51,13 @@ export default function Account() {
           <DetailSection
             icon={<YnabIcon className="mt-2" />}
             items={[
-              { name: "Budget", value: sync.ynab.budgetName },
-              { name: "Account", value: sync.ynab.accountName },
+              { name: "Budget", value: account.ynab.budgetName },
+              { name: "Account", value: account.ynab.accountName },
             ]}
           />
           <DetailSection
             icon={<KeyIcon className="mt-2 h-8 w-8" />}
-            items={[{ name: "API Key", value: "014d********" }]}
+            items={[{ name: "API Key", value: "********" }]}
           />
         </Paper>
         <Paper className="flex flex-col gap-4">
@@ -78,7 +78,7 @@ export default function Account() {
         <Paper>
           <SubHeading title="History" />
           <div className="flex flex-col">
-            {sync.history.map((h) => (
+            {account.history.map((h) => (
               <div
                 key={h.id}
                 className="flex items-center gap-4 rounded-lg py-2 text-gray-400"

@@ -4,19 +4,18 @@ import { getSyncStatus } from "./sync";
 import type { StGeorgeBankAccountDetails } from "./banks/stgeorge";
 import type { WestpacBankAccountDetails } from "./banks/westpac";
 import { prisma } from "./client";
+import type { BankAccountField } from "./accountDetail";
 
 export type WestpacBankAccountSummary = {
   type: "westpac";
-  accountName: string;
-  bsbNumber: string;
-  accountNumber: string;
+  name: string;
+  fields: Array<BankAccountField>;
 };
 
 export type StGeorgeBankAccountSummary = {
   type: "stgeorge";
-  accountName: string;
-  bsbNumber: string;
-  accountNumber: string;
+  name: string;
+  fields: Array<BankAccountField>;
 };
 
 export type BankAccountSummary =
@@ -46,9 +45,19 @@ function getBankAccountSummary(bankAccount: BankAccount): BankAccountSummary {
       );
       return {
         type: "westpac",
-        accountName: bankAccount.name,
-        accountNumber: details.accountNumber,
-        bsbNumber: details.bsbNumber,
+        name: bankAccount.name,
+        fields: [
+          {
+            name: "bsbNumber",
+            displayName: "BSB Number",
+            value: details.bsbNumber,
+          },
+          {
+            name: "accountNumber",
+            displayName: "Account Number",
+            value: details.accountNumber,
+          },
+        ],
       };
     }
 
@@ -58,9 +67,19 @@ function getBankAccountSummary(bankAccount: BankAccount): BankAccountSummary {
       );
       return {
         type: "stgeorge",
-        accountName: bankAccount.name,
-        accountNumber: details.accountNumber,
-        bsbNumber: details.bsbNumber,
+        name: bankAccount.name,
+        fields: [
+          {
+            name: "bsbNumber",
+            displayName: "BSB Number",
+            value: details.bsbNumber,
+          },
+          {
+            name: "accountNumber",
+            displayName: "Account Number",
+            value: details.accountNumber,
+          },
+        ],
       };
     }
 
