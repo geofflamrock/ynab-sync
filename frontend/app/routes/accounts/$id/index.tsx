@@ -7,7 +7,7 @@ import {
   addDays,
   formatRelative,
 } from "date-fns";
-import type { AccountDetail } from "~/api/api";
+import { AccountSummary } from "~/api/accountSummary";
 import { BankLogo } from "~/components/bank/BankLogo";
 import { getBankTitle } from "~/components/bank/BankTitle";
 import { Paper } from "~/components/layout/Paper";
@@ -17,7 +17,7 @@ import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
 import { YnabIcon } from "~/components/ynab/YnabIcon";
 
 export default function Account() {
-  const sync = useOutletContext<AccountDetail>();
+  const sync = useOutletContext<AccountSummary>();
   const now = new Date();
 
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());

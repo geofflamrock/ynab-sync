@@ -1,10 +1,11 @@
 import React from "react";
-import type { BankDetails } from "~/api/api";
+import type { BankAccountDetail } from "~/api/api";
+import type { BankAccountSummary } from "~/api/accountSummary";
 import { StGeorgeLogo } from "./StGeorgeLogo";
 import { WestpacLogo } from "./WestpacLogo";
 
 type BankLogoProps = {
-  bank: BankDetails;
+  bank: BankAccountDetail | BankAccountSummary;
   className?: string;
 };
 

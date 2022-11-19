@@ -7,11 +7,9 @@ import type { AccountDetail } from "~/api/api";
 import { getAccountDetail } from "~/api/api";
 import { ContentHeader } from "~/components/layout/ContentHeader";
 import { Heading } from "~/components/primitive/Heading";
-import {
-  BankAccountSummary,
-  SyncDirectionIcon,
-  YnabAccountSummary,
-} from "~/components/accounts/AccountSummary";
+import { SyncDirectionIcon } from "~/components/accounts/SyncDirectionIcon";
+import { YnabAccountSummary } from "~/components/accounts/YnabAccountSummary";
+import { BankAccountSummary } from "~/components/accounts/BankAccountSummary";
 import { useRefreshOnInterval } from "../../components/hooks/useRefreshOnInterval";
 import { SyncStatusWithLastSyncTime } from "~/components/sync/SyncStatus";
 

@@ -12,7 +12,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import type { Environment } from "./api/api";
+import type { Environment } from "./api/environment";
 import { Layout } from "./components/layout/Layout";
 
 import styles from "./tailwind.css";

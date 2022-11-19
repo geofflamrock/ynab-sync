@@ -1,8 +1,8 @@
 import React from "react";
-import type { BankDetails } from "~/api/api";
+import type { BankAccountDetail } from "~/api/api";
 
 type BankTitleProps = {
-  bank: BankDetails;
+  bank: BankAccountDetail;
 };
 
 export function BankTitle({ bank }: BankTitleProps) {
@@ -18,7 +18,7 @@ export function BankTitle({ bank }: BankTitleProps) {
   }
 }
 
-export function getBankTitle(bank: BankDetails) {
+export function getBankTitle(bank: BankAccountDetail) {
   switch (bank.type) {
     case "westpac":
       return "Westpac";

@@ -40,6 +40,7 @@ importers:
       '@remix-run/react': ^1.7.2
       '@remix-run/serve': ^1.7.2
       '@tailwindcss/forms': ^0.5.3
+      '@types/lodash': 4.14.189
       '@types/react': ^18.0.15
       '@types/react-dom': ^18.0.6
       classnames: ^2.3.2
@@ -78,6 +79,7 @@ importers:
       '@remix-run/dev': 1.7.4_uroeops6y5plvzrhwx7fnuiija
       '@remix-run/eslint-config': 1.7.4_lmezopescv3nnfjcfgbaewnf6i
       '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.1
+      '@types/lodash': 4.14.189
       '@types/react': 18.0.24
       '@types/react-dom': 18.0.8
       eslint: 8.26.0
@@ -2362,6 +2364,10 @@ packages:
 
   /@types/lodash/4.14.170:
     resolution: {integrity: sha512-bpcvu/MKHHeYX+qeEN8GE7DIravODWdACVA1ctevD8CN24RhPZIKMn9ntfAsrvLfSX3cR5RrBKAbYm9bGs0A+Q==}
+    dev: true
+
+  /@types/lodash/4.14.189:
+    resolution: {integrity: sha512-kb9/98N6X8gyME9Cf7YaqIMvYGnBSWqEci6tiettE6iJWH1XdJz/PO8LB0GtLCG7x8dU3KWhZT+lA1a35127tA==}
     dev: true
 
   /@types/mdast/3.0.10:
