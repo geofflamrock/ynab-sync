@@ -1,7 +1,7 @@
 import type {
   BankAccountDetail,
   BankAccountSummary as BankAccountSummaryApi,
-} from "~/api";
+} from "~/../api";
 import { BankLogo } from "../bank/BankLogo";
 
 export function BankAccountSummary({

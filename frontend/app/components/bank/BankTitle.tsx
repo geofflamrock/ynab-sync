@@ -1,5 +1,5 @@
 import React from "react";
-import type { BankAccountDetail } from "~/api";
+import type { BankAccountDetail } from "~/../api";
 
 type BankTitleProps = {
   bank: BankAccountDetail;

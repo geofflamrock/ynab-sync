@@ -1,5 +1,5 @@
 import React from "react";
-import type { Environment } from "~/api";
+import type { Environment } from "~/../api";
 import { Content } from "./Content";
 import { NavigationBar, NavigationRail } from "./Navigation";
 

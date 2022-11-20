@@ -6,7 +6,7 @@ import {
   NoSymbolIcon,
   QueueListIcon,
 } from "@heroicons/react/24/outline";
-import type { SyncStatus } from "~/api";
+import type { SyncStatus } from "~/../api";
 
 export type SyncStatusIconProps = {
   status: SyncStatus;

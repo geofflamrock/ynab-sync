@@ -1,8 +1,4 @@
-import type {
-  MetaFunction,
-  LinksFunction,
-  LoaderFunction,
-} from "@remix-run/node";
+import type { MetaFunction, LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -12,7 +8,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import type { Environment } from "./api/environment";
+import type { Environment } from "~/../api/environment";
 import { Layout } from "./components/layout/Layout";
 
 import styles from "./tailwind.css";

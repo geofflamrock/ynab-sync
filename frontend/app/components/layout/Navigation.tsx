@@ -8,7 +8,7 @@ import {
 import { NavLink } from "@remix-run/react";
 import classnames from "classnames";
 import React from "react";
-import type { Environment } from "~/api";
+import type { Environment } from "~/../api";
 
 type NavigationItemProps = {
   name?: string;

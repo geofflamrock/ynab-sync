@@ -4,7 +4,7 @@ import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import type { SyncStatus } from "~/api";
+import type { SyncStatus } from "~/../api";
 
 export type SyncStatusButtonProps = {
   status: SyncStatus;

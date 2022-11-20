@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import type { SyncStatus } from "~/api";
+import type { SyncStatus } from "~/../api";
 
 export type SyncStatusTitleProps = {
   status: SyncStatus;

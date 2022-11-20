@@ -1,5 +1,5 @@
 import React from "react";
-import type { BankAccountDetail, BankAccountSummary } from "~/api";
+import type { BankAccountDetail, BankAccountSummary } from "~/../api";
 import { StGeorgeLogo } from "./StGeorgeLogo";
 import { WestpacLogo } from "./WestpacLogo";
 

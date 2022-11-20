@@ -1,7 +1,7 @@
 import type {
   YnabAccountDetail,
   YnabAccountSummary as YnabAccountSummaryApi,
-} from "~/api";
+} from "~/../api";
 import { YnabIcon } from "../ynab/YnabIcon";
 
 export function YnabAccountSummary({

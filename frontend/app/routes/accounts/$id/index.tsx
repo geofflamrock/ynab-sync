@@ -7,7 +7,7 @@ import {
   addDays,
   formatRelative,
 } from "date-fns";
-import type { AccountDetail } from "~/api";
+import type { AccountDetail } from "~/../api";
 import { BankLogo } from "~/components/bank/BankLogo";
 import { getBankTitle } from "~/components/bank/BankTitle";
 import { Paper } from "~/components/layout/Paper";
