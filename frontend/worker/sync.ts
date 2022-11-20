@@ -13,7 +13,7 @@ import {
   AccountType,
   syncTransactions as syncStGeorgeTransactions,
 } from "ynab-sync-st-george-au";
-import type { SyncStatus } from "../app/api/api";
+import type { SyncStatus } from "../app/api";
 
 const prisma = new PrismaClient();
 

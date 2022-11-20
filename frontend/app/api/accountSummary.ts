@@ -1,31 +1,20 @@
 import type { BankAccount } from "@prisma/client";
 import type { SyncStatus } from "./sync";
 import { getSyncStatus } from "./sync";
-import type { StGeorgeBankAccountDetails } from "./banks/stgeorge";
-import type { WestpacBankAccountDetails } from "./banks/westpac";
 import { prisma } from "./client";
-import type { BankAccountField } from "./accountDetail";
+import type { BankAccountFields } from "./banks";
+import type { SupportedBankTypes } from "./banks";
+import { getBankType } from "./banks";
+import { getBankAccountFields } from "./banks";
 
-export type WestpacBankAccountSummary = {
-  type: "westpac";
+export type BankAccountSummary = {
+  type: SupportedBankTypes;
   name: string;
-  fields: Array<BankAccountField>;
+  fields: BankAccountFields;
 };
-
-export type StGeorgeBankAccountSummary = {
-  type: "stgeorge";
-  name: string;
-  fields: Array<BankAccountField>;
-};
-
-export type BankAccountSummary =
-  | WestpacBankAccountSummary
-  | StGeorgeBankAccountSummary;
 
 export type YnabAccountSummary = {
-  budgetId: string;
   budgetName: string;
-  accountId: string;
   accountName: string;
 };
 
@@ -38,54 +27,13 @@ export type AccountSummary = {
 };
 
 function getBankAccountSummary(bankAccount: BankAccount): BankAccountSummary {
-  switch (bankAccount.type) {
-    case "westpac": {
-      const details: WestpacBankAccountDetails = JSON.parse(
-        bankAccount.details
-      );
-      return {
-        type: "westpac",
-        name: bankAccount.name,
-        fields: [
-          {
-            name: "bsbNumber",
-            displayName: "BSB Number",
-            value: details.bsbNumber,
-          },
-          {
-            name: "accountNumber",
-            displayName: "Account Number",
-            value: details.accountNumber,
-          },
-        ],
-      };
-    }
+  const bankType = getBankType(bankAccount.type);
 
-    case "stgeorge": {
-      const details: StGeorgeBankAccountDetails = JSON.parse(
-        bankAccount.details
-      );
-      return {
-        type: "stgeorge",
-        name: bankAccount.name,
-        fields: [
-          {
-            name: "bsbNumber",
-            displayName: "BSB Number",
-            value: details.bsbNumber,
-          },
-          {
-            name: "accountNumber",
-            displayName: "Account Number",
-            value: details.accountNumber,
-          },
-        ],
-      };
-    }
-
-    default:
-      throw new Error(`Unknown bank account type ${bankAccount.type}`);
-  }
+  return {
+    type: bankType,
+    name: bankAccount.name,
+    fields: getBankAccountFields(bankAccount),
+  };
 }
 
 export const getAccountSummaries = async (): Promise<Array<AccountSummary>> => {
@@ -105,9 +53,7 @@ export const getAccountSummaries = async (): Promise<Array<AccountSummary>> => {
       id: account.id,
       bankAccount: getBankAccountSummary(account.bankAccount),
       ynabAccount: {
-        accountId: account.ynabAccount.id,
         accountName: account.ynabAccount.name,
-        budgetId: account.ynabAccount.budget.id,
         budgetName: account.ynabAccount.budget.name,
       },
       status: getSyncStatus(account.syncStatus),

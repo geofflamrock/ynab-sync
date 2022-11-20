@@ -1,8 +1,8 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
-import type { AccountSummary } from "~/api/accountSummary";
-import { getAccountSummaries } from "~/api/api";
+import type { AccountSummary } from "~/api";
+import { getAccountSummaries } from "~/api";
 import { SyncDirectionIcon } from "~/components/accounts/SyncDirectionIcon";
 import { YnabAccountSummary } from "~/components/accounts/YnabAccountSummary";
 import { BankAccountSummary } from "~/components/accounts/BankAccountSummary";

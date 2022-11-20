@@ -1,51 +1,29 @@
-import type {
-  Account,
-  BankAccount,
-  YnabAccount,
-  YnabBudget,
-  Sync,
-  BankCredential,
-  YnabCredential,
-} from "@prisma/client";
-import type { StGeorgeBankAccountDetails } from "./banks/stgeorge";
-import type { WestpacBankAccountDetails } from "./banks/westpac";
+import type { BankAccount, Sync, BankCredential } from "@prisma/client";
 import { prisma } from "./client";
 import type { SyncStatus } from "./sync";
 import { getSyncStatus } from "./sync";
 import { orderBy } from "lodash";
-
-type BankCredentialField = {
-  name: string;
-  displayName: string;
-};
-
-export type BankAccountField = {
-  name: string;
-  displayName: string;
-  value: string;
-};
+import type {
+  BankCredentialFields,
+  SupportedBankTypes,
+  BankAccountFields,
+} from "./banks";
+import { getBankType } from "./banks";
+import { getBankAccountFields } from "./banks";
+import { getBankCredentialFields } from "./banks";
 
 type BankCredentialDetail = {
   id: number;
   name: string;
-  fields: Array<BankCredentialField>;
+  fields: BankCredentialFields;
 };
 
-export type WestpacAccountDetail = {
-  type: "westpac";
+export type BankAccountDetail = {
+  type: SupportedBankTypes;
   name: string;
-  fields: Array<BankAccountField>;
+  fields: BankAccountFields;
   credentials: BankCredentialDetail;
 };
-
-export type StGeorgeAccountDetail = {
-  type: "stgeorge";
-  name: string;
-  fields: Array<BankAccountField>;
-  credentials: BankCredentialDetail;
-};
-
-export type BankAccountDetail = WestpacAccountDetail | StGeorgeAccountDetail;
 
 export type YnabAccountDetail = {
   budgetId: string;
@@ -101,112 +79,16 @@ export const getAccountDetail = async (
 
   if (account === null) return undefined;
 
-  return getAccountDetailFromAccount(account);
-};
-
-const getAccountDetailFromAccount = (
-  account: Account & {
-    bankAccount: BankAccount;
-    bankCredentials: BankCredential;
-    ynabAccount: YnabAccount & {
-      budget: YnabBudget;
-    };
-    ynabCredentials: YnabCredential;
-    history: Sync[];
-  }
-): AccountDetail => {
-  let bankAccount: BankAccountDetail | undefined = undefined;
-
-  if (account.bankAccount.type === "westpac") {
-    const details: WestpacBankAccountDetails = JSON.parse(
-      account.bankAccount.details
-    );
-
-    bankAccount = {
-      type: "westpac",
-      name: account.bankAccount.name,
-      fields: [
-        {
-          name: "bsbNumber",
-          displayName: "BSB Number",
-          value: details.bsbNumber,
-        },
-        {
-          name: "accountNumber",
-          displayName: "Account Number",
-          value: details.accountNumber,
-        },
-      ],
-      credentials: {
-        id: account.bankCredentials.id,
-        name: account.bankCredentials.name,
-        fields: [
-          {
-            name: "username",
-            displayName: "Username",
-          },
-          {
-            name: "password",
-            displayName: "Password",
-          },
-        ],
-      },
-    };
-  } else if (account.bankAccount.type === "stgeorge") {
-    const details: StGeorgeBankAccountDetails = JSON.parse(
-      account.bankAccount.details
-    );
-    bankAccount = {
-      type: "stgeorge",
-      name: account.bankAccount.name,
-      fields: [
-        {
-          name: "bsbNumber",
-          displayName: "BSB Number",
-          value: details.bsbNumber,
-        },
-        {
-          name: "accountNumber",
-          displayName: "Account Number",
-          value: details.accountNumber,
-        },
-      ],
-      credentials: {
-        id: account.bankCredentials.id,
-        name: account.bankCredentials.name,
-        fields: [
-          {
-            name: "accessNumber",
-            displayName: "Access Number",
-          },
-          {
-            name: "securityNumber",
-            displayName: "Security Number",
-          },
-          {
-            name: "password",
-            displayName: "Password",
-          },
-        ],
-      },
-    };
-  }
-
-  if (bankAccount === undefined)
-    throw new Error(`Unknown bank account type '${account.bankAccount.type}'`);
-
-  let ynabAccount: YnabAccountDetail = {
-    accountId: account.ynabAccount.id,
-    accountName: account.ynabAccount.name,
-    budgetId: account.ynabAccount.budgetId,
-    budgetName: account.ynabAccount.budget.name,
-    credentialsId: account.ynabCredentials.id,
-  };
-
   return {
     id: account.id,
-    bank: bankAccount,
-    ynab: ynabAccount,
+    bank: getBankAccountDetail(account.bankAccount, account.bankCredentials),
+    ynab: {
+      accountId: account.ynabAccount.id,
+      accountName: account.ynabAccount.name,
+      budgetId: account.ynabAccount.budgetId,
+      budgetName: account.ynabAccount.budget.name,
+      credentialsId: account.ynabCredentials.id,
+    },
     history: orderBy(account.history, ["date"], ["desc"]).map<SyncDetail>(
       (h: Sync) => {
         return {
@@ -224,3 +106,21 @@ const getAccountDetailFromAccount = (
     status: getSyncStatus(account.syncStatus),
   };
 };
+
+function getBankAccountDetail(
+  bankAccount: BankAccount,
+  bankCredentials: BankCredential
+): BankAccountDetail {
+  const bankType = getBankType(bankAccount.type);
+
+  return {
+    type: bankType,
+    name: bankAccount.name,
+    fields: getBankAccountFields(bankAccount),
+    credentials: {
+      id: bankCredentials.id,
+      name: bankCredentials.name,
+      fields: getBankCredentialFields(bankType),
+    },
+  };
+}

@@ -1,5 +1,5 @@
 import { formatDistanceToNowStrict } from "date-fns";
-import type { SyncStatus as Status } from "~/api/api";
+import type { SyncStatus as Status } from "~/api";
 import { SyncStatusIcon } from "./SyncStatusIcon";
 import { SyncStatusTitle } from "./SyncStatusTitle";
 

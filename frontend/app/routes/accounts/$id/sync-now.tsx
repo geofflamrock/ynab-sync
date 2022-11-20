@@ -2,7 +2,7 @@ import type { ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { syncNow } from "~/api/api";
+import { syncNow } from "~/api";
 import { Paper } from "~/components/layout/Paper";
 
 export const action: ActionFunction = async ({ params, request }) => {
