@@ -30,6 +30,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tiny-invariant": "^1.3.1",
+    "ynab-sync-core": "0.3.0",
     "ynab-sync-st-george-au": "0.3.2",
     "ynab-sync-westpac-au": "0.4.1"
   },
