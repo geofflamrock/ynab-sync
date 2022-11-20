@@ -1,6 +1,7 @@
 import type { Sync } from "@prisma/client";
 import type { SyncStatus } from "../api";
 import { prisma, syncBankAccountToYnab } from "../api";
+import * as dotenv from "dotenv";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -71,11 +72,22 @@ async function updateSyncAndAccountStatus(sync: Sync, status: SyncStatus) {
     },
     data: {
       syncStatus: status,
-      lastSyncTime: sync.date,
+      lastSyncTime: new Date(),
     },
   });
 }
 
+console.log("Starting sync worker");
+
+// Load environment
+dotenv.config();
+
 pollAndSyncIfRequired()
-  .finally(() => process.exit(0))
-  .catch(() => process.exit(1));
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(() => {
+    console.log("Stopping sync worker");
+    process.exit(0);
+  });
