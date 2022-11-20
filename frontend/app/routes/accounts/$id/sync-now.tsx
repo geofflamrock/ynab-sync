@@ -15,8 +15,6 @@ export const action: ActionFunction = async ({ params, request }) => {
 
   const returnLocation = url.searchParams.get("return");
 
-  console.log(returnLocation);
-
   if (returnLocation) {
     return redirect(returnLocation);
   } else {

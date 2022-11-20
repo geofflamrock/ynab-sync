@@ -24,8 +24,6 @@ type RootRouteLoaderData = {
 export const loader = (): RootRouteLoaderData => {
   const env: Environment = process.env.NODE_ENV;
 
-  console.log(env);
-
   return {
     environment: env,
   };
