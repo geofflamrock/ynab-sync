@@ -1,16 +1,16 @@
 import type { BankAccount, Sync, BankCredential } from "@prisma/client";
-import { prisma } from "./client";
-import type { SyncStatus } from "./sync";
-import { getSyncStatus } from "./sync";
+import { prisma } from "../client";
+import type { SyncStatus } from "../sync";
+import { getSyncStatus } from "../sync";
 import { orderBy } from "lodash";
 import type {
   BankCredentialFields,
   SupportedBankTypes,
   BankAccountFields,
-} from "./banks";
-import { getBankType } from "./banks";
-import { getBankAccountFields } from "./banks";
-import { getBankCredentialFields } from "./banks";
+} from "../banks";
+import { getBankType } from "../banks";
+import { getBankAccountFields } from "../banks";
+import { getBankCredentialFields } from "../banks";
 
 type BankCredentialDetail = {
   id: number;
@@ -37,9 +37,6 @@ export type SyncDetail = {
   id: number;
   status: SyncStatus;
   date: Date;
-  newRecordsCount: number;
-  updatedRecordsCount: number;
-  unchangedRecordsCount: number;
 };
 
 export type AccountDetail = {
@@ -95,9 +92,6 @@ export const getAccountDetail = async (
           date: h.date,
           id: h.id,
           status: getSyncStatus(h.status),
-          newRecordsCount: 0,
-          unchangedRecordsCount: 0,
-          updatedRecordsCount: 0,
         };
       }
     ),

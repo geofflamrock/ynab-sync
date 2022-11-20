@@ -1,11 +1,11 @@
 import type { BankAccount } from "@prisma/client";
-import type { SyncStatus } from "./sync";
-import { getSyncStatus } from "./sync";
-import { prisma } from "./client";
-import type { BankAccountFields } from "./banks";
-import type { SupportedBankTypes } from "./banks";
-import { getBankType } from "./banks";
-import { getBankAccountFields } from "./banks";
+import type { SyncStatus } from "../sync";
+import { getSyncStatus } from "../sync";
+import { prisma } from "../client";
+import type { BankAccountFields } from "../banks";
+import type { SupportedBankTypes } from "../banks";
+import { getBankType } from "../banks";
+import { getBankAccountFields } from "../banks";
 
 export type BankAccountSummary = {
   type: SupportedBankTypes;
