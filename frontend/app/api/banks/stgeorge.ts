@@ -1,9 +1,21 @@
-import type { BankAccount } from "@prisma/client";
+import type {
+  BankAccount,
+  BankCredential,
+  YnabAccount,
+  YnabCredential,
+} from "@prisma/client";
+import { AccountType, syncTransactions } from "ynab-sync-st-george-au";
 import type { BankAccountFields, BankCredentialFields } from ".";
 
-export type StGeorgeBankAccountDetails = {
+type StGeorgeBankAccountDetails = {
   bsbNumber: string;
   accountNumber: string;
+};
+
+type StGeorgeCredentials = {
+  accessNumber: string;
+  securityNumber: number;
+  password: string;
 };
 
 export function getStGeorgeBankAccountFields(
@@ -39,4 +51,37 @@ export function getStGeorgeBankCredentialFields(): BankCredentialFields {
       displayName: "Password",
     },
   ];
+}
+
+export async function syncStGeorgeAccount(
+  bankAccount: BankAccount,
+  bankCredentials: BankCredential,
+  ynabAccount: YnabAccount,
+  ynabCredentials: YnabCredential
+) {
+  const credentials: StGeorgeCredentials = JSON.parse(bankCredentials.details);
+
+  const stGeorgeAccount: StGeorgeBankAccountDetails = JSON.parse(
+    bankAccount.details
+  );
+
+  await syncTransactions({
+    options: {
+      debug: true,
+      numberOfDaysToSync: 7,
+    },
+    stGeorgeAccount: {
+      accountNumber: stGeorgeAccount.accountNumber,
+      accountType: AccountType.Debit,
+      bsbNumber: stGeorgeAccount.bsbNumber,
+    },
+    stGeorgeCredentials: credentials,
+    ynabAccount: {
+      budgetId: ynabAccount.budgetId,
+      accountId: ynabAccount.id,
+    },
+    ynabCredentials: {
+      apiKey: ynabCredentials.apiKey,
+    },
+  });
 }

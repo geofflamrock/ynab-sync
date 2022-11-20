@@ -1,9 +1,20 @@
-import type { BankAccount } from "@prisma/client";
+import type {
+  BankAccount,
+  BankCredential,
+  YnabAccount,
+  YnabCredential,
+} from "@prisma/client";
 import type { BankAccountFields, BankCredentialFields } from ".";
+import { syncTransactions } from "ynab-sync-westpac-au";
 
-export type WestpacBankAccountDetails = {
+type WestpacBankAccountDetails = {
   bsbNumber: string;
   accountNumber: string;
+};
+
+type WestpacCredentials = {
+  username: string;
+  password: string;
 };
 
 export function getWestpacBankAccountFields(
@@ -35,4 +46,31 @@ export function getWestpacBankCredentialFields(): BankCredentialFields {
       displayName: "Password",
     },
   ];
+}
+
+export async function syncWestpacAccount(
+  bankAccount: BankAccount,
+  bankCredentials: BankCredential,
+  ynabAccount: YnabAccount,
+  ynabCredentials: YnabCredential
+) {
+  const credentials: WestpacCredentials = JSON.parse(bankCredentials.details);
+
+  await syncTransactions({
+    options: {
+      debug: true,
+      numberOfDaysToSync: 7,
+    },
+    westpacAccount: {
+      accountName: bankAccount.name,
+    },
+    westpacCredentials: credentials,
+    ynabAccount: {
+      budgetId: ynabAccount.budgetId,
+      accountId: ynabAccount.id,
+    },
+    ynabCredentials: {
+      apiKey: ynabCredentials.apiKey,
+    },
+  });
 }

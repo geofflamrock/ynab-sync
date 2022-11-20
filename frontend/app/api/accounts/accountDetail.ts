@@ -114,7 +114,7 @@ function getBankAccountDetail(
     credentials: {
       id: bankCredentials.id,
       name: bankCredentials.name,
-      fields: getBankCredentialFields(bankType),
+      fields: getBankCredentialFields(bankCredentials),
     },
   };
 }
