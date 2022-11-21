@@ -4,6 +4,7 @@ import type {
   YnabAccount,
   YnabCredential,
 } from "@prisma/client";
+import type { SyncOptions } from "api/sync";
 import { AccountType, syncTransactions } from "ynab-sync-st-george-au";
 import type { BankAccountFields, BankCredentialFields } from ".";
 
@@ -57,7 +58,8 @@ export async function syncStGeorgeAccount(
   bankAccount: BankAccount,
   bankCredentials: BankCredential,
   ynabAccount: YnabAccount,
-  ynabCredentials: YnabCredential
+  ynabCredentials: YnabCredential,
+  options: SyncOptions
 ) {
   const credentials: StGeorgeCredentials = JSON.parse(bankCredentials.details);
 
@@ -67,8 +69,10 @@ export async function syncStGeorgeAccount(
 
   await syncTransactions({
     options: {
-      debug: true,
+      debug: options.debug,
       numberOfDaysToSync: 7,
+      startDate: options.startDate,
+      endDate: options.endDate,
     },
     stGeorgeAccount: {
       accountNumber: stGeorgeAccount.accountNumber,

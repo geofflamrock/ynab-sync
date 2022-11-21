@@ -1,15 +1,10 @@
-import { ClockIcon, KeyIcon } from "@heroicons/react/24/outline";
+import { KeyIcon } from "@heroicons/react/24/outline";
 import { useOutletContext } from "@remix-run/react";
-import {
-  format,
-  formatDistanceToNow,
-  setHours,
-  addDays,
-  formatRelative,
-} from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import type { AccountDetail } from "~/../api";
 import { BankLogo } from "~/components/bank/BankLogo";
 import { getBankTitle } from "~/components/bank/BankTitle";
+import { useRefreshOnInterval } from "~/components/hooks/useRefreshOnInterval";
 import { Paper } from "~/components/layout/Paper";
 import { DetailSection } from "~/components/primitive/DetailSection";
 import { SubHeading } from "~/components/primitive/SubHeading";
@@ -18,11 +13,7 @@ import { YnabIcon } from "~/components/ynab/YnabIcon";
 
 export default function Account() {
   const account = useOutletContext<AccountDetail>();
-  const now = new Date();
-
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const tomorrow = addDays(today, 1);
-  const nextSyncTime = setHours(tomorrow, 10);
+  useRefreshOnInterval({ enabled: true, interval: 5000 });
 
   return (
     <div className="flex flex-col gap-4 pb-4">
@@ -58,19 +49,6 @@ export default function Account() {
           <DetailSection
             icon={<KeyIcon className="mt-2 h-8 w-8" />}
             items={[{ name: "API Key", value: "********" }]}
-          />
-        </Paper>
-        <Paper className="flex flex-col gap-4">
-          <SubHeading title="Sync" />
-          <DetailSection
-            icon={<ClockIcon className="mt-2 h-8 w-8" />}
-            items={[
-              { name: "Schedule", value: "Daily at 10am" },
-              {
-                name: "Next sync",
-                value: formatRelative(nextSyncTime, new Date()),
-              },
-            ]}
           />
         </Paper>
       </div>

@@ -17,11 +17,13 @@
     "dev:worker:watch": "nodemon ./build/workers/sync.js",
     "lint:fix": "eslint . --fix",
     "lint": "eslint .",
+    "prisma": "prisma",
     "prisma:generate": "prisma generate",
     "generate:css": "tailwindcss -o ./app/tailwind.css",
     "start": "remix-serve build"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^2.0.12",
     "@prisma/client": "^4.5.0",
     "@remix-run/node": "^1.7.2",

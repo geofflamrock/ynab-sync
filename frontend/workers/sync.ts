@@ -1,35 +1,30 @@
 import type { Sync } from "@prisma/client";
 import type { SyncStatus } from "../api";
+import { getInProgressSyncs } from "../api";
+import { getNextSync } from "../api";
 import { prisma, syncBankAccountToYnab } from "../api";
 import * as dotenv from "dotenv";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+async function cancelInProgressSyncs() {
+  console.log(
+    "Checking if there are any in-progress syncs that need cancelling"
+  );
+  const inProgressSyncs = await getInProgressSyncs();
+
+  for (const sync of inProgressSyncs) {
+    console.log(`Marking sync ${sync.id} as error`);
+    await updateSyncAndAccountStatus(sync, "error");
+  }
+}
+
 async function pollAndSyncIfRequired() {
+  await cancelInProgressSyncs();
+
   while (true) {
     console.log("Polling for next sync to process");
-    const nextSync = await prisma.sync.findFirst({
-      where: {
-        status: "queued",
-      },
-      orderBy: {
-        date: "asc",
-      },
-      include: {
-        account: {
-          include: {
-            bankAccount: true,
-            bankCredentials: true,
-            ynabAccount: {
-              include: {
-                budget: true,
-              },
-            },
-            ynabCredentials: true,
-          },
-        },
-      },
-    });
+    const nextSync = await getNextSync();
 
     if (nextSync !== null) {
       console.log(
@@ -39,6 +34,7 @@ async function pollAndSyncIfRequired() {
 
       try {
         await syncBankAccountToYnab(
+          nextSync,
           nextSync.account.bankAccount,
           nextSync.account.bankCredentials,
           nextSync.account.ynabAccount,

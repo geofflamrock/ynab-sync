@@ -56,7 +56,7 @@ model Account {
   ynabCredentials  YnabCredential @relation(fields: [ynabCredentialId], references: [id])
   ynabAccountId    String
   ynabAccount      YnabAccount    @relation(fields: [ynabAccountId], references: [id])
-  syncStatus       String
+  syncStatus       String         @default("notsynced")
   lastSyncTime     DateTime?
   history          Sync[]
 }
@@ -66,5 +66,6 @@ model Sync {
   accountId Int
   account   Account  @relation(fields: [accountId], references: [id])
   date      DateTime
-  status    String
+  status    String   @default("queued")
+  details   String   @default("{}")
 }

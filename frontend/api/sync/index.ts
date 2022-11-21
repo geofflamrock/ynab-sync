@@ -1,3 +1,4 @@
+import { format, formatISO, parse, parseISO } from "date-fns";
 import { prisma } from "../client";
 
 export type SyncStatus =
@@ -24,10 +25,46 @@ export function getSyncStatus(status: string): SyncStatus {
   }
 }
 
-export const syncNow = async (id: number) => {
+export type SyncOptions = {
+  debug: boolean;
+  startDate: Date;
+  endDate?: Date;
+};
+
+export function formatSyncOptions(options: SyncOptions): string {
+  const formattedOptions: SyncOptionsFormatted = {
+    debug: options.debug,
+    endDate: options.endDate
+      ? formatISO(options.endDate, { representation: "date" })
+      : undefined,
+    startDate: formatISO(options.startDate, { representation: "date" }),
+  };
+
+  return JSON.stringify(formattedOptions);
+}
+
+type SyncOptionsFormatted = {
+  debug: boolean;
+  startDate: string;
+  endDate?: string;
+};
+
+export function parseSyncOptions(options: string): SyncOptions {
+  const formattedOptions: SyncOptionsFormatted = JSON.parse(options);
+
+  return {
+    debug: formattedOptions.debug,
+    endDate: formattedOptions.endDate
+      ? parseISO(formattedOptions.endDate)
+      : undefined,
+    startDate: parseISO(formattedOptions.startDate),
+  };
+}
+
+export const syncNow = async (accountId: number, options: SyncOptions) => {
   const account = await prisma.account.findUnique({
     where: {
-      id: id,
+      id: accountId,
     },
     include: {
       bankAccount: true,
@@ -48,6 +85,7 @@ export const syncNow = async (id: number) => {
       accountId: account.id,
       status: "queued",
       date: new Date(),
+      details: formatSyncOptions(options),
     },
   });
 
@@ -61,3 +99,39 @@ export const syncNow = async (id: number) => {
     },
   });
 };
+
+export async function getNextSync() {
+  return await prisma.sync.findFirst({
+    where: {
+      status: "queued",
+    },
+    orderBy: {
+      date: "asc",
+    },
+    include: {
+      account: {
+        include: {
+          bankAccount: true,
+          bankCredentials: true,
+          ynabAccount: {
+            include: {
+              budget: true,
+            },
+          },
+          ynabCredentials: true,
+        },
+      },
+    },
+  });
+}
+
+export async function getInProgressSyncs() {
+  return await prisma.sync.findMany({
+    where: {
+      status: "syncing",
+    },
+    orderBy: {
+      date: "asc",
+    },
+  });
+}

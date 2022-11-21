@@ -10,7 +10,6 @@ import { Heading } from "~/components/primitive/Heading";
 import { SyncDirectionIcon } from "~/components/accounts/SyncDirectionIcon";
 import { YnabAccountSummary } from "~/components/accounts/YnabAccountSummary";
 import { BankAccountSummary } from "~/components/accounts/BankAccountSummary";
-import { useRefreshOnInterval } from "../../components/hooks/useRefreshOnInterval";
 import { SyncStatusWithLastSyncTime } from "~/components/sync/SyncStatus";
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -29,8 +28,7 @@ export type DetailItem = {
 };
 
 export default function AccountLayout() {
-  const sync = useLoaderData<AccountDetail>();
-  useRefreshOnInterval({ enabled: true, interval: 5000 });
+  const account = useLoaderData<AccountDetail>();
   return (
     <div className="flex flex-col">
       <ContentHeader>
@@ -41,18 +39,20 @@ export default function AccountLayout() {
             </Link>
           </div>
           <ChevronRightIcon className="hidden h-4 w-4 text-gray-500 md:block" />
-          <BankAccountSummary account={sync.bank} />
+          <BankAccountSummary account={account.bank} />
           <SyncDirectionIcon />
-          <YnabAccountSummary account={sync.ynab} />
+          <YnabAccountSummary account={account.ynab} />
           <div className="ml-auto flex flex-row items-center gap-2">
             <SyncStatusWithLastSyncTime
-              status={sync.status}
+              status={account.status}
               lastSyncTime={
-                sync.lastSyncTime ? new Date(sync.lastSyncTime) : undefined
+                account.lastSyncTime
+                  ? new Date(account.lastSyncTime)
+                  : undefined
               }
             />
             <NavLink
-              to={`/accounts/${sync.id}/sync-now`}
+              to={`/accounts/${account.id}/sync-now`}
               className="hidden rounded-full bg-gray-100 px-4 py-2 text-sm text-ynab hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 lg:block"
             >
               Sync now
@@ -61,7 +61,7 @@ export default function AccountLayout() {
         </div>
       </ContentHeader>
       <div className="container mx-auto">
-        <Outlet context={sync} />
+        <Outlet context={account} />
       </div>
     </div>
   );

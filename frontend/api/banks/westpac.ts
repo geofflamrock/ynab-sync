@@ -1,11 +1,13 @@
 import type {
   BankAccount,
   BankCredential,
+  Sync,
   YnabAccount,
   YnabCredential,
 } from "@prisma/client";
 import type { BankAccountFields, BankCredentialFields } from ".";
 import { syncTransactions } from "ynab-sync-westpac-au";
+import type { SyncOptions } from "api/sync";
 
 type WestpacBankAccountDetails = {
   bsbNumber: string;
@@ -52,13 +54,16 @@ export async function syncWestpacAccount(
   bankAccount: BankAccount,
   bankCredentials: BankCredential,
   ynabAccount: YnabAccount,
-  ynabCredentials: YnabCredential
+  ynabCredentials: YnabCredential,
+  options: SyncOptions
 ) {
   const credentials: WestpacCredentials = JSON.parse(bankCredentials.details);
 
   await syncTransactions({
     options: {
-      debug: true,
+      debug: options.debug,
+      startDate: options.startDate,
+      endDate: options.endDate,
       numberOfDaysToSync: 7,
     },
     westpacAccount: {

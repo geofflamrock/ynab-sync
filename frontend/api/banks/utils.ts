@@ -1,9 +1,11 @@
 import type {
   BankAccount,
   BankCredential,
+  Sync,
   YnabAccount,
   YnabCredential,
 } from "@prisma/client";
+import { parseSyncOptions } from "api/sync";
 import { exhaustiveCheck } from "../utils/exhaustiveCheck";
 import {
   getStGeorgeBankAccountFields,
@@ -73,12 +75,14 @@ export function getBankCredentialFields(
 }
 
 export async function syncBankAccountToYnab(
+  sync: Sync,
   bankAccount: BankAccount,
   bankCredentials: BankCredential,
   ynabAccount: YnabAccount,
   ynabCredentials: YnabCredential
 ) {
   const bankType = getBankType(bankAccount.type);
+  const syncOptions = parseSyncOptions(sync.details);
 
   switch (bankType) {
     case "stgeorge":
@@ -86,7 +90,8 @@ export async function syncBankAccountToYnab(
         bankAccount,
         bankCredentials,
         ynabAccount,
-        ynabCredentials
+        ynabCredentials,
+        syncOptions
       );
       break;
 
@@ -95,7 +100,8 @@ export async function syncBankAccountToYnab(
         bankAccount,
         bankCredentials,
         ynabAccount,
-        ynabCredentials
+        ynabCredentials,
+        syncOptions
       );
       break;
 
