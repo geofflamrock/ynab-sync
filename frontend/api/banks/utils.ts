@@ -17,6 +17,7 @@ import {
   getWestpacBankCredentialFields,
   syncWestpacAccount,
 } from "./westpac";
+import type { Logger } from "ynab-sync-core";
 
 export type BankAccountField = {
   name: string;
@@ -79,7 +80,8 @@ export async function syncBankAccountToYnab(
   bankAccount: BankAccount,
   bankCredentials: BankCredential,
   ynabAccount: YnabAccount,
-  ynabCredentials: YnabCredential
+  ynabCredentials: YnabCredential,
+  logger: Logger
 ) {
   const bankType = getBankType(bankAccount.type);
   const syncOptions = parseSyncOptions(sync.details);
@@ -91,7 +93,8 @@ export async function syncBankAccountToYnab(
         bankCredentials,
         ynabAccount,
         ynabCredentials,
-        syncOptions
+        syncOptions,
+        logger
       );
       break;
 
@@ -101,7 +104,8 @@ export async function syncBankAccountToYnab(
         bankCredentials,
         ynabAccount,
         ynabCredentials,
-        syncOptions
+        syncOptions,
+        logger
       );
       break;
 

@@ -1,4 +1,5 @@
 import puppeteer, { Page, TimeoutError } from "puppeteer";
+import { Logger } from "ynab-sync-core";
 
 async function getLoginError(page: Page): Promise<string | undefined> {
   const alert = await page.$(".alert.alert-error .alert-icon");
@@ -32,12 +33,13 @@ export async function createPageAndLogin(
   options: LoginOptions = {
     debug: false,
     loginTimeoutInMs: 2000,
-  }
+  },
+  logger: Logger
 ): Promise<Page> {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  await login(page, username, password, options);
+  await login(page, username, password, options, logger);
 
   return page;
 }
@@ -49,7 +51,8 @@ export async function login(
   options: LoginOptions = {
     debug: false,
     loginTimeoutInMs: 2000,
-  }
+  },
+  logger: Logger
 ): Promise<void> {
   // Westpac attempts to detect browser compatibility by checking the user agent and redirects to an error page if it's not compatible.
   // When running in headless mode the user agent string contains "HeadlessChrome" which Westpac detects as incompatible,
@@ -76,7 +79,7 @@ export async function login(
       throw e;
     } else {
       if (options.debug)
-        console.log(`Timeout logging in after ${options.loginTimeoutInMs}ms`);
+        logger.info(`Timeout logging in after ${options.loginTimeoutInMs}ms`);
     }
   }
 

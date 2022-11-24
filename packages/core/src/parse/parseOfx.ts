@@ -2,6 +2,7 @@ import fs from "fs";
 import { TransactionDetail, SaveTransaction } from "ynab";
 import ofx from "ofx";
 import format from "string-template";
+import { Logger } from "../logging";
 
 export type OfxTransactionParserOptions = {
   importIdTemplate?: string;
@@ -11,12 +12,13 @@ export type OfxTransactionParserOptions = {
 export function parseOfx(
   accountId: string,
   filePath: string,
-  options: OfxTransactionParserOptions
+  options: OfxTransactionParserOptions,
+  logger: Logger
 ): TransactionDetail[] {
   const transactions: TransactionDetail[] = [];
   const defaultImportIdTemplate: string = "{id}";
 
-  if (options.debug) console.log(`Reading transactions from '${filePath}`);
+  if (options.debug) logger.info(`Reading transactions from '${filePath}`);
 
   const ofxRawData = fs.readFileSync(filePath, "utf8");
   const ofxParsed = ofx.parse(ofxRawData);
@@ -62,7 +64,7 @@ export function parseOfx(
     );
 
     if (options.debug) {
-      console.log(
+      logger.info(
         `Created import id '${importId}' from template '${
           options.importIdTemplate || defaultImportIdTemplate
         }' and parameters`,
@@ -73,7 +75,7 @@ export function parseOfx(
     transaction.import_id = importId;
 
     if (options.debug) {
-      console.log("Parsed transaction", transaction);
+      logger.info("Parsed transaction", transaction);
     }
 
     transactions.push(transaction);

@@ -1,6 +1,7 @@
 import commander from "commander";
 import { createWestpacAuSyncCommand } from "./westpac-au";
 import { createStGeorgeAuSyncCommand } from "./st-george-au";
+import { consoleLogger } from "./logging/consoleLogger";
 
 const program = new commander.Command();
 program
@@ -15,6 +16,6 @@ program
     process.exit(0);
   })
   .catch((e) => {
-    console.error(e);
+    consoleLogger.error(e);
     process.exit(1);
   });

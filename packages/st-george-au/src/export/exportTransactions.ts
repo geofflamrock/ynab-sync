@@ -3,6 +3,7 @@ import { format, addMilliseconds } from "date-fns";
 import path from "path";
 import tmp from "tmp";
 import fs from "fs";
+import { Logger } from "ynab-sync-core";
 
 function getFileExtension(exportFormat: ExportFormat): string {
   switch (exportFormat) {
@@ -21,6 +22,7 @@ enum ExportFormat {
 
 export async function exportTransactions(
   page: Page,
+  logger: Logger,
   bsbNumber: string,
   accountNumber: string,
   startDate?: Date,
@@ -52,7 +54,7 @@ export async function exportTransactions(
   );
 
   if (options.debug)
-    console.log(`Found ${bsbNumbers.length} bsb numbers`, bsbNumbers);
+    logger.info(`Found ${bsbNumbers.length} bsb numbers`, bsbNumbers);
 
   const accountNumberElements = await page.$$(
     "#acctSummaryList > li > dl.account-number-details > dt.account-number + dd"
@@ -68,7 +70,7 @@ export async function exportTransactions(
   );
 
   if (options.debug)
-    console.log(
+    logger.info(
       `Found ${accountNumbers.length} account numbers`,
       accountNumbers
     );
@@ -86,7 +88,7 @@ export async function exportTransactions(
     });
   }
 
-  if (options.debug) console.log(`Found ${accounts.length} accounts`, accounts);
+  if (options.debug) logger.info(`Found ${accounts.length} accounts`, accounts);
 
   const accountIndex: number = accounts.findIndex(
     (a) => a.bsbNumber === bsbNumber && a.accountNumber === accountNumber
@@ -116,7 +118,7 @@ export async function exportTransactions(
     await page.type("#acctDetDateTo", endDateFormatted);
   }
 
-  if (options.debug) console.log("Clicking search button");
+  if (options.debug) logger.info("Clicking search button");
 
   await page.click(
     "#transaction-date-range > form > div > fieldset > ol > li.has-btn > span > input[type=button]"
@@ -134,7 +136,7 @@ export async function exportTransactions(
   }
 
   if (options.debug)
-    console.log(`Exporting transactions to '${downloadDirectory}'`);
+    logger.info(`Exporting transactions to '${downloadDirectory}'`);
 
   const client = await page.target().createCDPSession();
   await client.send("Page.setDownloadBehavior", {
@@ -152,7 +154,7 @@ export async function exportTransactions(
 
   while (true) {
     if (options.debug)
-      console.log(`Checking for downloaded file in '${downloadDirectory}'`);
+      logger.info(`Checking for downloaded file in '${downloadDirectory}'`);
 
     const downloadDirFiles = fs.readdirSync(downloadDirectory, {
       withFileTypes: true,
@@ -161,7 +163,7 @@ export async function exportTransactions(
     if (downloadDirFiles.length > 0) {
       downloadDirFiles.forEach((file) => {
         if (options.debug)
-          console.log(`Checking downloaded file '${file.name}'`);
+          logger.info(`Checking downloaded file '${file.name}'`);
 
         if (
           file.isFile() &&
@@ -169,7 +171,7 @@ export async function exportTransactions(
             getFileExtension(exportFormat).toLowerCase()
         ) {
           if (options.debug)
-            console.log(`Found transactions file '${file.name}'`);
+            logger.info(`Found transactions file '${file.name}'`);
 
           transactionsFile = path.join(downloadDirectory || "", file.name);
         }

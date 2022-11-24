@@ -7,6 +7,7 @@ import {
   parseCsv,
   YnabCredentials,
   YnabAccount,
+  Logger,
 } from "ynab-sync-core";
 import { createBrowser } from "ynab-sync-puppeteer";
 import path from "path";
@@ -48,7 +49,8 @@ export type StGeorgeTransactionSyncParams = {
 };
 
 export const syncTransactions = async (
-  params: StGeorgeTransactionSyncParams
+  params: StGeorgeTransactionSyncParams,
+  logger: Logger
 ) => {
   let endDate = new Date();
 
@@ -70,11 +72,11 @@ export const syncTransactions = async (
       ? path.join(params.options.toolsDirectory, ".chromium")
       : undefined;
 
-  const browser = await createBrowser(chromiumDownloadDirectory);
+  const browser = await createBrowser(logger, chromiumDownloadDirectory);
   const page = await browser.newPage();
   const locale = await getUserLocale();
 
-  console.log(
+  logger.info(
     `Exporting St George transactions with date range of '${format(
       startDate,
       "P",
@@ -94,11 +96,13 @@ export const syncTransactions = async (
     {
       debug: params.options.debug || false,
       loginTimeoutInMs: params.options.loginTimeoutInMs || 5000,
-    }
+    },
+    logger
   );
 
   const outputFilePath = await exportTransactions(
     page,
+    logger,
     params.stGeorgeAccount.bsbNumber,
     params.stGeorgeAccount.accountNumber,
     startDate,
@@ -111,40 +115,45 @@ export const syncTransactions = async (
   );
 
   if (outputFilePath === undefined) {
-    console.log("No transactions found to export");
+    logger.info("No transactions found to export");
     return;
   }
 
-  console.log(`Transactions exported successfully to '${outputFilePath}'`);
+  logger.info(`Transactions exported successfully to '${outputFilePath}'`);
 
-  console.log(`Parsing transactions from '${outputFilePath}'`);
+  logger.info(`Parsing transactions from '${outputFilePath}'`);
 
-  const transactions = parseCsv(params.ynabAccount.accountId, outputFilePath, {
-    importIdTemplate: params.options.importIdTemplate,
-    debug: params.options.debug,
-    getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
-    getAmount: (input: any) => {
-      if (input.Debit) {
-        return (
-          input.Debit *
-          (params.stGeorgeAccount.accountType === AccountType.Debit ? -1 : 1)
-        );
-      } else {
-        return (
-          input.Credit *
-          (params.stGeorgeAccount.accountType === AccountType.Credit ? -1 : 1)
-        );
-      }
+  const transactions = parseCsv(
+    params.ynabAccount.accountId,
+    outputFilePath,
+    {
+      importIdTemplate: params.options.importIdTemplate,
+      debug: params.options.debug,
+      getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
+      getAmount: (input: any) => {
+        if (input.Debit) {
+          return (
+            input.Debit *
+            (params.stGeorgeAccount.accountType === AccountType.Debit ? -1 : 1)
+          );
+        } else {
+          return (
+            input.Credit *
+            (params.stGeorgeAccount.accountType === AccountType.Credit ? -1 : 1)
+          );
+        }
+      },
+      getMemo: (input: any) => undefined,
+      getPayee: (input: any) => input.Description,
     },
-    getMemo: (input: any) => undefined,
-    getPayee: (input: any) => input.Description,
-  });
+    logger
+  );
 
-  console.log(
+  logger.info(
     `Parsed ${transactions.length} transactions from '${outputFilePath}'`
   );
 
-  console.log(`Importing ${transactions.length} transactions into YNAB`);
+  logger.info(`Importing ${transactions.length} transactions into YNAB`);
 
   const importResults = await importTransactions(
     params.ynabCredentials,
@@ -152,10 +161,11 @@ export const syncTransactions = async (
     transactions,
     {
       debug: params.options.debug,
-    }
+    },
+    logger
   );
 
-  console.log(
+  logger.info(
     `Imported ${transactions.length} transactions into YNAB successfully: ${importResults.transactionsCreated.length} created, ${importResults.transactionsUpdated.length} updated, ${importResults.transactionsUnchanged.length} not changed`
   );
 };

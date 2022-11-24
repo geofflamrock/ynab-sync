@@ -1,5 +1,6 @@
 import { API, TransactionDetail } from "ynab";
 import { minBy } from "lodash";
+import { Logger } from "../logging";
 
 export type YnabCredentials = {
   apiKey: string;
@@ -35,7 +36,8 @@ export async function importTransactions(
   transactions: TransactionDetail[],
   options: {
     debug?: boolean;
-  }
+  },
+  logger: Logger
 ): Promise<TransactionImportResults> {
   const ynabAPI = new API(credentials.apiKey);
 
@@ -78,7 +80,7 @@ export async function importTransactions(
 
   if (transactionsToCreate && transactionsToCreate.length) {
     if (options.debug)
-      console.log(
+      logger.info(
         `Creating ${transactionsToCreate.length} transactions in budget '${account.budgetId}', account '${account.accountId}`,
         transactionsToCreate
       );
@@ -89,16 +91,16 @@ export async function importTransactions(
     );
 
     if (options.debug)
-      console.log("Transaction create response", createResponse);
+      logger.info("Transaction create response", createResponse);
 
     results.transactionsCreated = createResponse.data.transactions ?? [];
   } else {
-    if (options.debug) console.log("No new transactions to create");
+    if (options.debug) logger.info("No new transactions to create");
   }
 
   if (transactionsToUpdate && transactionsToUpdate.length) {
     if (options.debug)
-      console.log(
+      logger.info(
         `Updating ${transactionsToUpdate.length} transactions in budget '${account.budgetId}', account '${account.accountId}'`,
         transactionsToUpdate
       );
@@ -109,11 +111,11 @@ export async function importTransactions(
     );
 
     if (options.debug)
-      console.log("Transaction update response:", updateResponse);
+      logger.info("Transaction update response:", updateResponse);
 
     results.transactionsUpdated = updateResponse.data.transactions ?? [];
   } else {
-    if (options.debug) console.log("No existing transactions to update");
+    if (options.debug) logger.info("No existing transactions to update");
   }
 
   return results;

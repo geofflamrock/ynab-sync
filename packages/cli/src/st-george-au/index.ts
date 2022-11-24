@@ -5,6 +5,7 @@ import {
   syncTransactions,
 } from "ynab-sync-st-george-au";
 import commander from "commander";
+import { consoleLogger } from "../logging/consoleLogger";
 
 type StGeorgeTransactionSyncCommandArgs = {
   accessNumber: string;
@@ -139,34 +140,37 @@ export const createStGeorgeAuSyncCommand = (): commander.Command => {
           `Account type must be one of 'Debit' or 'Credit', value provided was '${args.accountType}'`
         );
 
-      await syncTransactions({
-        stGeorgeCredentials: {
-          accessNumber: args.accessNumber,
-          password: args.password,
-          securityNumber: args.securityNumber,
+      await syncTransactions(
+        {
+          stGeorgeCredentials: {
+            accessNumber: args.accessNumber,
+            password: args.password,
+            securityNumber: args.securityNumber,
+          },
+          stGeorgeAccount: {
+            bsbNumber: args.bsbNumber,
+            accountNumber: args.accountNumber,
+            accountType,
+          },
+          ynabCredentials: {
+            apiKey: args.ynabApiKey,
+          },
+          ynabAccount: {
+            budgetId: args.ynabBudgetId,
+            accountId: args.ynabAccountId,
+          },
+          options: {
+            debug: args.debug,
+            numberOfDaysToSync: args.numberOfDaysToSync,
+            downloadDirectory: args.downloadDirectory,
+            endDate: args.endDate,
+            importIdTemplate: args.importIdTemplate,
+            loginTimeoutInMs: args.loginTimeout,
+            startDate: args.startDate,
+            toolsDirectory: args.toolsDirectory,
+          },
         },
-        stGeorgeAccount: {
-          bsbNumber: args.bsbNumber,
-          accountNumber: args.accountNumber,
-          accountType,
-        },
-        ynabCredentials: {
-          apiKey: args.ynabApiKey,
-        },
-        ynabAccount: {
-          budgetId: args.ynabBudgetId,
-          accountId: args.ynabAccountId,
-        },
-        options: {
-          debug: args.debug,
-          numberOfDaysToSync: args.numberOfDaysToSync,
-          downloadDirectory: args.downloadDirectory,
-          endDate: args.endDate,
-          importIdTemplate: args.importIdTemplate,
-          loginTimeoutInMs: args.loginTimeout,
-          startDate: args.startDate,
-          toolsDirectory: args.toolsDirectory,
-        },
-      });
+        consoleLogger
+      );
     });
 };

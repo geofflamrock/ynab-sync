@@ -7,6 +7,7 @@ import type {
 import type { SyncOptions } from "api/sync";
 import { AccountType, syncTransactions } from "ynab-sync-st-george-au";
 import type { BankAccountFields, BankCredentialFields } from ".";
+import type { Logger } from "ynab-sync-core";
 
 type StGeorgeBankAccountDetails = {
   bsbNumber: string;
@@ -59,7 +60,8 @@ export async function syncStGeorgeAccount(
   bankCredentials: BankCredential,
   ynabAccount: YnabAccount,
   ynabCredentials: YnabCredential,
-  options: SyncOptions
+  options: SyncOptions,
+  logger: Logger
 ) {
   const credentials: StGeorgeCredentials = JSON.parse(bankCredentials.details);
 
@@ -67,25 +69,28 @@ export async function syncStGeorgeAccount(
     bankAccount.details
   );
 
-  await syncTransactions({
-    options: {
-      debug: options.debug,
-      numberOfDaysToSync: 7,
-      startDate: options.startDate,
-      endDate: options.endDate,
+  await syncTransactions(
+    {
+      options: {
+        debug: options.debug,
+        numberOfDaysToSync: 7,
+        startDate: options.startDate,
+        endDate: options.endDate,
+      },
+      stGeorgeAccount: {
+        accountNumber: stGeorgeAccount.accountNumber,
+        accountType: AccountType.Debit,
+        bsbNumber: stGeorgeAccount.bsbNumber,
+      },
+      stGeorgeCredentials: credentials,
+      ynabAccount: {
+        budgetId: ynabAccount.budgetId,
+        accountId: ynabAccount.id,
+      },
+      ynabCredentials: {
+        apiKey: ynabCredentials.apiKey,
+      },
     },
-    stGeorgeAccount: {
-      accountNumber: stGeorgeAccount.accountNumber,
-      accountType: AccountType.Debit,
-      bsbNumber: stGeorgeAccount.bsbNumber,
-    },
-    stGeorgeCredentials: credentials,
-    ynabAccount: {
-      budgetId: ynabAccount.budgetId,
-      accountId: ynabAccount.id,
-    },
-    ynabCredentials: {
-      apiKey: ynabCredentials.apiKey,
-    },
-  });
+    logger
+  );
 }

@@ -4,6 +4,7 @@ import { Response } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
+import { systemLogger } from "logging";
 
 const ABORT_DELAY = 5000;
 
@@ -60,7 +61,7 @@ function handleBotRequest(
         onError(error: unknown) {
           didError = true;
 
-          console.error(error);
+          systemLogger.error(error);
         },
       }
     );
@@ -101,7 +102,7 @@ function handleBrowserRequest(
         onError(error: unknown) {
           didError = true;
 
-          console.error(error);
+          systemLogger.error(error);
         },
       }
     );

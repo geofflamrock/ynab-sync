@@ -8,6 +8,7 @@ import type {
 import type { BankAccountFields, BankCredentialFields } from ".";
 import { syncTransactions } from "ynab-sync-westpac-au";
 import type { SyncOptions } from "api/sync";
+import type { Logger } from "ynab-sync-core";
 
 type WestpacBankAccountDetails = {
   bsbNumber: string;
@@ -55,27 +56,31 @@ export async function syncWestpacAccount(
   bankCredentials: BankCredential,
   ynabAccount: YnabAccount,
   ynabCredentials: YnabCredential,
-  options: SyncOptions
+  options: SyncOptions,
+  logger: Logger
 ) {
   const credentials: WestpacCredentials = JSON.parse(bankCredentials.details);
 
-  await syncTransactions({
-    options: {
-      debug: options.debug,
-      startDate: options.startDate,
-      endDate: options.endDate,
-      numberOfDaysToSync: 7,
+  await syncTransactions(
+    {
+      options: {
+        debug: options.debug,
+        startDate: options.startDate,
+        endDate: options.endDate,
+        numberOfDaysToSync: 7,
+      },
+      westpacAccount: {
+        accountName: bankAccount.name,
+      },
+      westpacCredentials: credentials,
+      ynabAccount: {
+        budgetId: ynabAccount.budgetId,
+        accountId: ynabAccount.id,
+      },
+      ynabCredentials: {
+        apiKey: ynabCredentials.apiKey,
+      },
     },
-    westpacAccount: {
-      accountName: bankAccount.name,
-    },
-    westpacCredentials: credentials,
-    ynabAccount: {
-      budgetId: ynabAccount.budgetId,
-      accountId: ynabAccount.id,
-    },
-    ynabCredentials: {
-      apiKey: ynabCredentials.apiKey,
-    },
-  });
+    logger
+  );
 }

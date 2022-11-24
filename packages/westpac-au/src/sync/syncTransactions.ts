@@ -3,6 +3,7 @@ import path from "path";
 import {
   getUserLocale,
   importTransactions,
+  Logger,
   parseOfx,
   YnabAccount,
   YnabCredentials,
@@ -39,7 +40,8 @@ export type WestpacTransactionSyncParams = {
 };
 
 export const syncTransactions = async (
-  params: WestpacTransactionSyncParams
+  params: WestpacTransactionSyncParams,
+  logger: Logger
 ) => {
   let endDate = undefined;
 
@@ -58,7 +60,7 @@ export const syncTransactions = async (
 
   const locale = await getUserLocale();
 
-  console.log(
+  logger.info(
     `Exporting Westpac transactions with date range of '${format(
       startDate,
       "P",
@@ -75,7 +77,7 @@ export const syncTransactions = async (
       ? path.join(params.options.toolsDirectory, ".chromium")
       : undefined;
 
-  const browser = await createBrowser(chromiumDownloadDirectory);
+  const browser = await createBrowser(logger, chromiumDownloadDirectory);
   const page = await browser.newPage();
 
   await login(
@@ -85,11 +87,13 @@ export const syncTransactions = async (
     {
       debug: params.options.debug || false,
       loginTimeoutInMs: params.options.loginTimeoutInMs || 2000,
-    }
+    },
+    logger
   );
 
   const outputFilePath = await exportTransactions(
     page,
+    logger,
     params.westpacAccount.accountName,
     startDate,
     endDate,
@@ -101,24 +105,29 @@ export const syncTransactions = async (
   );
 
   if (outputFilePath === undefined) {
-    console.log("No transactions found to export");
+    logger.info("No transactions found to export");
     return;
   }
 
-  console.log(`Transactions exported successfully to '${outputFilePath}'`);
+  logger.info(`Transactions exported successfully to '${outputFilePath}'`);
 
-  console.log(`Parsing transactions from '${outputFilePath}'`);
+  logger.info(`Parsing transactions from '${outputFilePath}'`);
 
-  const transactions = parseOfx(params.ynabAccount.accountId, outputFilePath, {
-    importIdTemplate: params.options.importIdTemplate,
-    debug: params.options.debug,
-  });
+  const transactions = parseOfx(
+    params.ynabAccount.accountId,
+    outputFilePath,
+    {
+      importIdTemplate: params.options.importIdTemplate,
+      debug: params.options.debug,
+    },
+    logger
+  );
 
-  console.log(
+  logger.info(
     `Parsed ${transactions.length} transactions from '${outputFilePath}'`
   );
 
-  console.log(`Importing ${transactions.length} transactions into YNAB`);
+  logger.info(`Importing ${transactions.length} transactions into YNAB`);
 
   const importResults = await importTransactions(
     params.ynabCredentials,
@@ -126,10 +135,11 @@ export const syncTransactions = async (
     transactions,
     {
       debug: params.options.debug,
-    }
+    },
+    logger
   );
 
-  console.log(
+  logger.info(
     `Imported ${transactions.length} transactions into YNAB successfully: ${importResults.transactionsCreated.length} created, ${importResults.transactionsUpdated.length} updated, ${importResults.transactionsUnchanged.length} not changed`
   );
 };
