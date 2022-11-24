@@ -37,7 +37,6 @@ export const action: ActionFunction = async ({ params, request }) => {
   await syncNow(id, {
     debug,
     startDate,
-    endDate,
   });
 
   const url = new URL(request.url);

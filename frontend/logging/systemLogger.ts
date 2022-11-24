@@ -1,14 +1,15 @@
 import type { Logger } from "ynab-sync-core";
 import winston from "winston";
+import { logLevels } from "./levels";
 
 const winstonSystemLogger = winston.createLogger({
-  level: "verbose",
-  format: winston.format.combine(
-    winston.format.colorize(),
-    winston.format.simple()
-  ),
+  levels: logLevels.levels,
+  level: "debug",
+  format: winston.format.simple(),
   transports: [new winston.transports.Console()],
 });
+
+winston.addColors(logLevels.colors);
 
 export const systemLogger: Logger = {
   debug(message, ...args) {

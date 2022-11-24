@@ -4,36 +4,38 @@ import winston from "winston";
 export function createTaskLogger(id: string): Logger {
   const winstonTaskLogger = winston.createLogger({
     level: "debug",
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    ),
-    transports: [new winston.transports.Console()],
+    format: winston.format.json(),
+    transports: [
+      new winston.transports.File({
+        dirname: ".",
+        filename: `${id}.log`,
+      }),
+    ],
   });
 
   return {
     debug(message, ...args) {
-      winstonTaskLogger.log("debug", `${id} - ${message}`, args);
+      winstonTaskLogger.log("debug", message, args);
     },
 
     error(message, ...args) {
-      winstonTaskLogger.log("error", `${id} - ${message}`, args);
+      winstonTaskLogger.log("error", message, args);
     },
 
     fatal(message, ...args) {
-      winstonTaskLogger.log("error", `${id} - ${message}`, args);
+      winstonTaskLogger.log("error", message, args);
     },
 
     info(message, ...args) {
-      winstonTaskLogger.log("info", `${id} - ${message}`, args);
+      winstonTaskLogger.log("info", message, args);
     },
 
     verbose(message, ...args) {
-      winstonTaskLogger.log("verbose", `${id} - ${message}`, args);
+      winstonTaskLogger.log("verbose", message, args);
     },
 
     warning(message, ...args) {
-      winstonTaskLogger.log("warn", `${id} - ${message}`, args);
+      winstonTaskLogger.log("warn", message, args);
     },
   };
 }

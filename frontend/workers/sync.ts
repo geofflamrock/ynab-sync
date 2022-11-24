@@ -24,7 +24,7 @@ async function pollAndSyncIfRequired() {
   await cancelInProgressSyncs();
 
   while (true) {
-    systemLogger.debug("Polling for next sync to process");
+    systemLogger.verbose("Polling for next sync to process");
     const nextSync = await getNextSync();
 
     if (nextSync !== null) {
@@ -49,7 +49,7 @@ async function pollAndSyncIfRequired() {
         await updateSyncAndAccountStatus(nextSync, "error");
       }
     } else {
-      systemLogger.debug("No sync to process, sleeping for 5 seconds");
+      systemLogger.verbose("No sync to process, sleeping for 5 seconds");
       await sleep(5000);
     }
   }
