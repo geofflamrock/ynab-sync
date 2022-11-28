@@ -127,6 +127,31 @@ export function parseSyncOptions(options: string): SyncOptions {
   };
 }
 
+export async function updateSyncAndAccountStatus(
+  syncId: number,
+  status: SyncStatus
+) {
+  const now = new Date();
+  const sync = await prisma.sync.update({
+    where: {
+      id: syncId,
+    },
+    data: {
+      status: status,
+      date: now,
+    },
+  });
+  await prisma.account.update({
+    where: {
+      id: sync.accountId,
+    },
+    data: {
+      syncStatus: status,
+      lastSyncTime: now,
+    },
+  });
+}
+
 export const syncNow = async (accountId: number, options: SyncOptions) => {
   const account = await prisma.account.findUnique({
     where: {
@@ -146,11 +171,13 @@ export const syncNow = async (accountId: number, options: SyncOptions) => {
 
   if (account === null) throw new Error("Could not find account details");
 
+  const now = new Date();
+
   const sync = await prisma.sync.create({
     data: {
       accountId: account.id,
       status: "queued",
-      date: new Date(),
+      date: now,
       details: formatSyncOptions(options),
     },
   });
@@ -161,7 +188,7 @@ export const syncNow = async (accountId: number, options: SyncOptions) => {
     },
     data: {
       syncStatus: "queued",
-      lastSyncTime: new Date(),
+      lastSyncTime: now,
     },
   });
 

@@ -1,5 +1,5 @@
 import type { Sync } from "@prisma/client";
-import type { SyncStatus } from "../api";
+import { SyncStatus, updateSyncAndAccountStatus } from "../api";
 import { getInProgressSyncs } from "../api";
 import { getNextSync } from "../api";
 import { prisma, syncBankAccountToYnab } from "../api";
@@ -31,7 +31,7 @@ async function pollAndSyncIfRequired() {
       systemLogger.info(
         `Found sync '${nextSync.id}' to process from ${nextSync.account.bankAccount.type} bank account '${nextSync.account.bankAccount.name}' to ynab account '${nextSync.account.ynabAccount.name}' in budget '${nextSync.account.ynabAccount.budget.name}'`
       );
-      await updateSyncAndAccountStatus(nextSync, "syncing");
+      await updateSyncAndAccountStatus(nextSync.id, "syncing");
 
       try {
         await syncBankAccountToYnab(
@@ -43,36 +43,16 @@ async function pollAndSyncIfRequired() {
           createTaskLogger(`Sync-${nextSync.id}`)
         );
 
-        await updateSyncAndAccountStatus(nextSync, "synced");
+        await updateSyncAndAccountStatus(nextSync.id, "synced");
       } catch (error) {
-        systemLogger.error(error);
-        await updateSyncAndAccountStatus(nextSync, "error");
+        systemLogger.error("An error has occurred syncing", error);
+        await updateSyncAndAccountStatus(nextSync.id, "error");
       }
     } else {
       systemLogger.verbose("No sync to process, sleeping for 5 seconds");
       await sleep(5000);
     }
   }
-}
-
-async function updateSyncAndAccountStatus(sync: Sync, status: SyncStatus) {
-  await prisma.sync.update({
-    where: {
-      id: sync.id,
-    },
-    data: {
-      status: status,
-    },
-  });
-  await prisma.account.update({
-    where: {
-      id: sync.accountId,
-    },
-    data: {
-      syncStatus: status,
-      lastSyncTime: new Date(),
-    },
-  });
 }
 
 systemLogger.info("Starting sync worker");
