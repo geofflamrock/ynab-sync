@@ -18,7 +18,7 @@ export function parseOfx(
   const transactions: TransactionDetail[] = [];
   const defaultImportIdTemplate: string = "{id}";
 
-  if (options.debug) logger.info(`Reading transactions from '${filePath}`);
+  if (options.debug) logger.debug(`Reading transactions from '${filePath}`);
 
   const ofxRawData = fs.readFileSync(filePath, "utf8");
   const ofxParsed = ofx.parse(ofxRawData);
@@ -64,7 +64,7 @@ export function parseOfx(
     );
 
     if (options.debug) {
-      logger.info(
+      logger.verbose(
         `Created import id '${importId}' from template '${
           options.importIdTemplate || defaultImportIdTemplate
         }' and parameters`,
@@ -75,7 +75,7 @@ export function parseOfx(
     transaction.import_id = importId;
 
     if (options.debug) {
-      logger.info("Parsed transaction", transaction);
+      logger.debug("Parsed transaction", transaction);
     }
 
     transactions.push(transaction);

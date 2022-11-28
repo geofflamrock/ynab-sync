@@ -1,5 +1,5 @@
 import { KeyIcon } from "@heroicons/react/24/outline";
-import { useOutletContext } from "@remix-run/react";
+import { NavLink, useOutletContext } from "@remix-run/react";
 import { format, formatDistanceToNow } from "date-fns";
 import type { AccountDetail } from "~/../api";
 import { BankLogo } from "~/components/bank/BankLogo";
@@ -52,20 +52,21 @@ export default function Account() {
           />
         </Paper>
       </div>
-      <div className="hidden">
+      <div className="">
         <Paper>
           <SubHeading title="History" />
           <div className="flex flex-col">
             {account.history.map((h) => (
-              <div
+              <NavLink
+                to={`history/${h.id}`}
                 key={h.id}
-                className="flex items-center gap-4 rounded-lg py-2 text-gray-400"
+                className="flex items-center gap-4 py-2"
               >
                 <SyncStatusIcon status={h.status} />
                 <div title={format(new Date(h.date), "Pp")}>
                   {formatDistanceToNow(new Date(h.date), { addSuffix: true })}
                 </div>
-              </div>
+              </NavLink>
             ))}
           </div>
         </Paper>

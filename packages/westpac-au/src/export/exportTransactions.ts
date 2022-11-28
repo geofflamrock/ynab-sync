@@ -100,7 +100,7 @@ export const exportTransactions = async (
     const startDateFormatted = format(startDate, "dd/MM/yyyy");
 
     if (options.debug)
-      logger.info(`Setting start date '${startDateFormatted}'`);
+      logger.debug(`Setting start date '${startDateFormatted}'`);
 
     await page.click("#DateRange_StartDate", { clickCount: 3 });
     await page.type("#DateRange_StartDate", startDateFormatted);
@@ -109,13 +109,13 @@ export const exportTransactions = async (
   if (endDate !== undefined) {
     const endDateFormatted = format(endDate, "dd/MM/yyyy");
 
-    if (options.debug) logger.info(`Setting end date '${endDateFormatted}'`);
+    if (options.debug) logger.debug(`Setting end date '${endDateFormatted}'`);
 
     await page.click("#DateRange_EndDate", { clickCount: 3 });
     await page.type("#DateRange_EndDate", endDateFormatted);
   }
 
-  if (options.debug) logger.info(`Selecting account '${accountName}'`);
+  if (options.debug) logger.debug(`Selecting account '${accountName}'`);
 
   await page.type("#Accounts_1", accountName);
   await page.waitForTimeout(2000);
@@ -125,7 +125,7 @@ export const exportTransactions = async (
   const fileTypeSelector = getFileTypeSelector(exportFormat);
 
   if (options.debug)
-    logger.info(`Setting export format '${ExportFormat[exportFormat]}'`);
+    logger.debug(`Setting export format '${ExportFormat[exportFormat]}'`);
 
   await page.waitForTimeout(2000);
   await page.waitForSelector(fileTypeSelector);
@@ -141,7 +141,7 @@ export const exportTransactions = async (
   }
 
   if (options.debug)
-    logger.info(`Exporting transactions to '${downloadDirectory}'`);
+    logger.debug(`Exporting transactions to '${downloadDirectory}'`);
 
   const client = await page.target().createCDPSession();
   await client.send("Page.setDownloadBehavior", {
@@ -158,7 +158,7 @@ export const exportTransactions = async (
   }
 
   if (!(await doesExportContainData(page))) {
-    if (options.debug) logger.info(`Transaction export contains no data`);
+    if (options.debug) logger.debug(`Transaction export contains no data`);
     return undefined;
   }
 
@@ -171,7 +171,7 @@ export const exportTransactions = async (
 
   while (true) {
     if (options.debug)
-      logger.info(`Checking for downloaded file in '${downloadDirectory}'`);
+      logger.debug(`Checking for downloaded file in '${downloadDirectory}'`);
 
     const downloadDirFiles = fs.readdirSync(downloadDirectory, {
       withFileTypes: true,
@@ -180,7 +180,7 @@ export const exportTransactions = async (
     if (downloadDirFiles.length > 0) {
       downloadDirFiles.forEach((file) => {
         if (options.debug)
-          logger.info(`Checking downloaded file '${file.name}'`);
+          logger.debug(`Checking downloaded file '${file.name}'`);
 
         if (
           file.isFile() &&
@@ -188,7 +188,7 @@ export const exportTransactions = async (
             getFileExtension(exportFormat).toLowerCase()
         ) {
           if (options.debug)
-            logger.info(`Found transactions file '${file.name}'`);
+            logger.debug(`Found transactions file '${file.name}'`);
 
           transactionsFile = path.join(downloadDirectory || "", file.name);
         }

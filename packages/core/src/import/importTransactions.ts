@@ -80,7 +80,7 @@ export async function importTransactions(
 
   if (transactionsToCreate && transactionsToCreate.length) {
     if (options.debug)
-      logger.info(
+      logger.debug(
         `Creating ${transactionsToCreate.length} transactions in budget '${account.budgetId}', account '${account.accountId}`,
         transactionsToCreate
       );
@@ -91,16 +91,16 @@ export async function importTransactions(
     );
 
     if (options.debug)
-      logger.info("Transaction create response", createResponse);
+      logger.debug("Transaction create response", createResponse);
 
     results.transactionsCreated = createResponse.data.transactions ?? [];
   } else {
-    if (options.debug) logger.info("No new transactions to create");
+    if (options.debug) logger.debug("No new transactions to create");
   }
 
   if (transactionsToUpdate && transactionsToUpdate.length) {
     if (options.debug)
-      logger.info(
+      logger.debug(
         `Updating ${transactionsToUpdate.length} transactions in budget '${account.budgetId}', account '${account.accountId}'`,
         transactionsToUpdate
       );
@@ -111,11 +111,11 @@ export async function importTransactions(
     );
 
     if (options.debug)
-      logger.info("Transaction update response:", updateResponse);
+      logger.debug("Transaction update response:", updateResponse);
 
     results.transactionsUpdated = updateResponse.data.transactions ?? [];
   } else {
-    if (options.debug) logger.info("No existing transactions to update");
+    if (options.debug) logger.debug("No existing transactions to update");
   }
 
   return results;

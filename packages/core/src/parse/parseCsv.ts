@@ -23,7 +23,7 @@ export function parseCsv(
   const defaultImportIdTemplate: string = "{date}-{amount}-{payee}";
   const transactions: TransactionDetail[] = [];
 
-  if (options.debug) logger.info(`Reading transactions from '${filePath}`);
+  if (options.debug) logger.debug(`Reading transactions from '${filePath}`);
 
   const csvRawData = fs.readFileSync(filePath, "utf8");
   const csvParsed = parse(csvRawData, {
@@ -71,7 +71,7 @@ export function parseCsv(
     if (importId.length > 36) importId = importId.slice(0, 36);
 
     if (options.debug) {
-      logger.info(
+      logger.verbose(
         `Created import id '${importId}' from template '${
           options.importIdTemplate || defaultImportIdTemplate
         }' and parameters`,
@@ -82,7 +82,7 @@ export function parseCsv(
     transaction.import_id = importId;
 
     if (options.debug) {
-      logger.info("Parsed transaction", transaction);
+      logger.debug("Parsed transaction", transaction);
     }
 
     transactions.push(transaction);

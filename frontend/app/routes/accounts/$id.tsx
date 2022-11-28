@@ -62,7 +62,7 @@ export default function AccountLayout() {
         </div>
       </ContentHeader>
       <div className="container mx-auto flex flex-col gap-4">
-        <div className="flex w-full justify-center gap-4 border-b-0 border-b-gray-500 px-0 md:justify-start">
+        <div className="flex hidden w-full justify-center gap-4 border-b-0 border-b-gray-500 px-0 md:justify-start">
           <NavLink
             to={`/accounts/${account.id}`}
             end

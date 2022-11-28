@@ -79,7 +79,7 @@ export async function login(
       throw e;
     } else {
       if (options.debug)
-        logger.info(`Timeout logging in after ${options.loginTimeoutInMs}ms`);
+        logger.debug(`Timeout logging in after ${options.loginTimeoutInMs}ms`);
     }
   }
 

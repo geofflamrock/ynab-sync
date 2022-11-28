@@ -1,5 +1,10 @@
-import { format, formatISO, parse, parseISO } from "date-fns";
+import { formatISO, parseISO } from "date-fns";
+import { existsSync } from "fs";
+// import { existsSync } from "fs";
+import { readFile } from "fs/promises";
+import { EOL } from "os";
 import { prisma } from "../client";
+import { pathExistsSync } from "fs-extra";
 
 export type SyncStatus =
   | "notsynced"
@@ -23,6 +28,67 @@ export function getSyncStatus(status: string): SyncStatus {
     default:
       return "notsynced";
   }
+}
+
+export type SyncLogLevel =
+  | "fatal"
+  | "error"
+  | "warn"
+  | "info"
+  | "debug"
+  | "verbose";
+
+export type SyncLogMessage = {
+  level: SyncLogLevel;
+  message: string;
+  timestamp: Date;
+  [key: string]: any;
+};
+
+export type SyncDetailWithLogs = {
+  id: number;
+  date: Date;
+  status: SyncStatus;
+  options: SyncOptions;
+  logs: Array<SyncLogMessage>;
+};
+
+export async function getSyncDetail(
+  syncId: number,
+  levels: Array<SyncLogLevel>
+): Promise<SyncDetailWithLogs> {
+  const sync = await prisma.sync.findUnique({
+    where: {
+      id: syncId,
+    },
+  });
+
+  if (sync === null)
+    throw new Error(`Sync with id ${syncId} could not be found`);
+
+  const syncLogFilePath = `./Sync-${sync.id}.log`;
+
+  const logs: Array<SyncLogMessage> = [];
+
+  if (pathExistsSync(syncLogFilePath)) {
+    const fileContents = (await readFile(syncLogFilePath)).toString();
+    const logMessages = fileContents.split(EOL);
+    for (const logMessage of logMessages) {
+      if (logMessage) {
+        const parsedLogMessage: SyncLogMessage = JSON.parse(logMessage);
+        if (levels.includes(parsedLogMessage.level))
+          logs.push(parsedLogMessage);
+      }
+    }
+  }
+
+  return {
+    id: sync.id,
+    date: sync.date,
+    status: getSyncStatus(sync.status),
+    options: parseSyncOptions(sync.details),
+    logs,
+  };
 }
 
 export type SyncOptions = {
@@ -80,7 +146,7 @@ export const syncNow = async (accountId: number, options: SyncOptions) => {
 
   if (account === null) throw new Error("Could not find account details");
 
-  await prisma.sync.create({
+  const sync = await prisma.sync.create({
     data: {
       accountId: account.id,
       status: "queued",
@@ -98,6 +164,8 @@ export const syncNow = async (accountId: number, options: SyncOptions) => {
       lastSyncTime: new Date(),
     },
   });
+
+  return sync.id;
 };
 
 export async function getNextSync() {

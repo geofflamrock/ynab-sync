@@ -32,22 +32,14 @@ export const action: ActionFunction = async ({ params, request }) => {
   const debugFormData = formData.get("debug");
   const debug: boolean = debugFormData
     ? debugFormData.toString().toLowerCase() === "true"
-    : false;
+    : true;
 
-  await syncNow(id, {
+  const syncId = await syncNow(id, {
     debug,
     startDate,
   });
 
-  const url = new URL(request.url);
-
-  const returnLocation = url.searchParams.get("return");
-
-  if (returnLocation) {
-    return redirect(returnLocation);
-  } else {
-    return redirect(`/accounts/${id}`);
-  }
+  return redirect(`/accounts/${id}/history/${syncId}`);
 };
 
 export async function loader() {
@@ -83,12 +75,11 @@ export default function SyncNow() {
               className="rounded-md p-2 dark:border dark:border-gray-600 dark:bg-gray-700 dark:focus:border-gray-500 dark:focus:ring-0"
             />
           </div>
-          <Switch.Group>
+          {/* <Switch.Group>
             <div className="flex items-center justify-between gap-2 md:justify-start">
               <Switch.Label className="mx-1 text-sm">Debug</Switch.Label>
               <Switch name="debug" value="true" as={Fragment}>
                 {({ checked }) => (
-                  /* Use the `checked` state to conditionally style the button. */
                   <button
                     className={`${
                       checked ? "bg-ynab" : "border border-gray-600 bg-gray-700"
@@ -104,7 +95,7 @@ export default function SyncNow() {
                 )}
               </Switch>
             </div>
-          </Switch.Group>
+          </Switch.Group> */}
         </div>
         <div>
           <button className="flex items-center gap-2 rounded-full bg-ynab py-2 pl-4 pr-4 text-sm text-ynab-800 hover:bg-ynab-200">
