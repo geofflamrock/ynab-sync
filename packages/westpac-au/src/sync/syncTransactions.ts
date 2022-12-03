@@ -1,4 +1,4 @@
-import { format, subDays } from "date-fns";
+import { format, startOfYesterday, subDays } from "date-fns";
 import path from "path";
 import {
   getUserLocale,
@@ -109,9 +109,9 @@ export const syncTransactions = async (
     return;
   }
 
-  logger.info(`Transactions exported successfully to '${outputFilePath}'`);
+  logger.debug(`Transactions exported successfully to '${outputFilePath}'`);
 
-  logger.info(`Parsing transactions from '${outputFilePath}'`);
+  logger.debug(`Parsing transactions from '${outputFilePath}'`);
 
   const transactions = parseOfx(
     params.ynabAccount.accountId,
@@ -123,7 +123,7 @@ export const syncTransactions = async (
     logger
   );
 
-  logger.info(
+  logger.debug(
     `Parsed ${transactions.length} transactions from '${outputFilePath}'`
   );
 

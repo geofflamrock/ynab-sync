@@ -7,17 +7,31 @@ import {
   QueueListIcon,
 } from "@heroicons/react/24/outline";
 import type { SyncStatus } from "~/../api";
+import classnames from "classnames";
 
 export type SyncStatusIconProps = {
   status: SyncStatus;
+  size?: "small" | "large";
+  className?: string;
 };
 
-export function SyncStatusIcon({ status }: SyncStatusIconProps) {
+export function SyncStatusIcon({
+  status,
+  size,
+  className,
+}: SyncStatusIconProps) {
+  const baseClassName = classnames(
+    {
+      "h-6 w-6": size === undefined || size === "small",
+      "h-8 w-8": size === "large",
+    },
+    className
+  );
   switch (status) {
     case "notsynced":
       return (
         <NoSymbolIcon
-          className="-mt-0.5 h-6 w-6 text-gray-400"
+          className={classnames(baseClassName, "text-gray-400")}
           title="Never synced"
         />
       );
@@ -25,7 +39,7 @@ export function SyncStatusIcon({ status }: SyncStatusIconProps) {
     case "syncing":
       return (
         <ArrowPathIcon
-          className="-mt-0.5 h-6 w-6 animate-spin text-ynab"
+          className={classnames(baseClassName, "animate-spin text-ynab")}
           title="Syncing transactions"
         />
       );
@@ -33,7 +47,7 @@ export function SyncStatusIcon({ status }: SyncStatusIconProps) {
     case "queued":
       return (
         <QueueListIcon
-          className="-mt-0.5 h-6 w-6 text-gray-400"
+          className={classnames(baseClassName, "text-gray-400")}
           title="Sync queued"
         />
       );
@@ -41,7 +55,7 @@ export function SyncStatusIcon({ status }: SyncStatusIconProps) {
     case "synced":
       return (
         <CheckCircleIcon
-          className="-mt-0.5 h-6 w-6 text-green-600"
+          className={classnames(baseClassName, "text-green-600")}
           title="Synced"
         />
       );
@@ -49,7 +63,7 @@ export function SyncStatusIcon({ status }: SyncStatusIconProps) {
     case "error":
       return (
         <ExclamationTriangleIcon
-          className="-mt-0.5 h-6 w-6 text-red-600"
+          className={classnames(baseClassName, "text-red-600")}
           title="Error syncing transactions"
         />
       );

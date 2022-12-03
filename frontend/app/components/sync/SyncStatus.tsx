@@ -10,7 +10,7 @@ type SyncStatusProps = {
 export const SyncStatus = ({ status }: SyncStatusProps) => {
   return (
     <div className="flex items-center gap-1">
-      <SyncStatusIcon status={status} />
+      <SyncStatusIcon status={status} className="-mt-0.5" />
       <SyncStatusTitle status={status} />
     </div>
   );

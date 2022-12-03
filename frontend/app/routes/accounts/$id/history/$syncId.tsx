@@ -1,4 +1,4 @@
-import { CheckIcon } from "@heroicons/react/24/outline";
+import { CalendarDaysIcon, CheckIcon } from "@heroicons/react/24/outline";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
@@ -10,13 +10,16 @@ import {
 import type { SyncDetailWithLogs, SyncLogLevel } from "api";
 import { getSyncDetail } from "api";
 import classnames from "classnames";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { enAU } from "date-fns/locale";
 import { useRef } from "react";
 import invariant from "tiny-invariant";
 import { useRefreshOnInterval } from "~/components/hooks/useRefreshOnInterval";
 import { Paper } from "~/components/layout/Paper";
-import { SyncStatusWithLastSyncTime } from "~/components/sync/SyncStatus";
+import { DetailSection } from "~/components/primitive/DetailSection";
+import { SubHeading } from "~/components/primitive/SubHeading";
+import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
+import { getSyncStatusTitle } from "~/components/sync/SyncStatusTitle";
 
 function getLogLevel(level: string): SyncLogLevel {
   if (level === "fatal") return "fatal";
@@ -64,10 +67,12 @@ function SyncLogMessage({ timestamp, level, message }: SyncLogMessageProps) {
   });
 
   return (
-    <div className="flex gap-4">
-      <span className={levelClassName}>{level}</span>
-      <span className={levelClassName}>{message}</span>
-      <span className="ml-auto text-gray-500">
+    <div className="grid grid-cols-12 gap-4">
+      <span className={classnames(levelClassName)}>{level}</span>
+      <span className={classnames(levelClassName, "col-span-9")}>
+        {message}
+      </span>
+      <span className="col-span-2 ml-auto text-gray-500">
         {format(new Date(timestamp), "P pp", { locale: enAU })}
       </span>
     </div>
@@ -110,7 +115,7 @@ function FilterChip({ name, value, title, selected }: FilterChipProps) {
   );
 }
 
-export default function SyncHistory() {
+export default function SyncHistoryDetail() {
   const syncDetail = useLoaderData<SyncDetailWithLogs>();
   const [searchParams] = useSearchParams();
   const submit = useSubmit();
@@ -118,56 +123,84 @@ export default function SyncHistory() {
   const logLevels = searchParams.getAll("level");
 
   return (
-    <div className="flex flex-col gap-2">
-      <Form
-        method="get"
-        onChange={(e) => submit(e.currentTarget)}
-        className="flex items-center justify-end gap-2"
-      >
-        <div className="text-sm text-gray-500">Level:</div>
-        <FilterChip
-          name="level"
-          value="error"
-          title="Error"
-          selected={logLevels.length === 0 || logLevels.includes("error")}
-        />
-        <FilterChip
-          name="level"
-          value="warn"
-          title="Warning"
-          selected={logLevels.length === 0 || logLevels.includes("warn")}
-        />
-        <FilterChip
-          name="level"
-          value="info"
-          title="Info"
-          selected={logLevels.length === 0 || logLevels.includes("info")}
-        />
-        <FilterChip
-          name="level"
-          value="debug"
-          title="Debug"
-          selected={logLevels.includes("debug")}
-        />
-        <FilterChip
-          name="level"
-          value="verbose"
-          title="Verbose"
-          selected={logLevels.includes("verbose")}
-        />
-      </Form>
+    <div className="flex flex-col gap-4">
       <Paper>
         <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-4 text-xl">
-            Log
-            <div className="ml-auto">
-              <SyncStatusWithLastSyncTime
-                status={syncDetail.status}
-                lastSyncTime={new Date(syncDetail.date)}
-              />
-            </div>
+          <SubHeading title="Details" />
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <DetailSection
+              icon={
+                <SyncStatusIcon
+                  status={syncDetail.status}
+                  size="large"
+                  className="mt-2"
+                />
+              }
+              items={[
+                {
+                  name: "Status",
+                  value: getSyncStatusTitle(syncDetail.status),
+                },
+              ]}
+            />
+            <DetailSection
+              icon={<CalendarDaysIcon className="mt-2 h-8 w-8" />}
+              items={[
+                {
+                  name: "Min transaction date",
+                  value: format(
+                    parseISO(syncDetail.options.startDate),
+                    "dd/MM/yyyy"
+                  ),
+                },
+              ]}
+            />
           </div>
-          <pre className="text-sm">
+        </div>
+      </Paper>
+      <Paper>
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-2">
+            <SubHeading title="Log" />
+            <Form
+              method="get"
+              onChange={(e) => submit(e.currentTarget)}
+              className="ml-auto flex items-center gap-2"
+            >
+              <FilterChip
+                name="level"
+                value="error"
+                title="Error"
+                selected={logLevels.length === 0 || logLevels.includes("error")}
+              />
+              <FilterChip
+                name="level"
+                value="warn"
+                title="Warning"
+                selected={logLevels.length === 0 || logLevels.includes("warn")}
+              />
+              <FilterChip
+                name="level"
+                value="info"
+                title="Info"
+                selected={logLevels.length === 0 || logLevels.includes("info")}
+              />
+              <FilterChip
+                name="level"
+                value="debug"
+                title="Debug"
+                selected={logLevels.includes("debug")}
+              />
+              <FilterChip
+                name="level"
+                value="verbose"
+                title="Verbose"
+                selected={logLevels.includes("verbose")}
+              />
+            </Form>
+          </div>
+
+          <pre className="flex flex-col gap-1 text-sm">
             {syncDetail.logs.map((log, index) => (
               <SyncLogMessage
                 timestamp={log.timestamp}

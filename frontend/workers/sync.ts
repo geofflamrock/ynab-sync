@@ -1,8 +1,7 @@
-import type { Sync } from "@prisma/client";
-import { SyncStatus, updateSyncAndAccountStatus } from "../api";
+import { updateSyncAndAccountStatus } from "../api";
 import { getInProgressSyncs } from "../api";
 import { getNextSync } from "../api";
-import { prisma, syncBankAccountToYnab } from "../api";
+import { syncBankAccountToYnab } from "../api";
 import * as dotenv from "dotenv";
 import { systemLogger, createTaskLogger } from "../logging";
 
@@ -16,8 +15,16 @@ async function cancelInProgressSyncs() {
 
   for (const sync of inProgressSyncs) {
     systemLogger.info(`Marking sync ${sync.id} as error`);
-    await updateSyncAndAccountStatus(sync, "error");
+    const taskLog = createSyncTaskLogger(sync.id);
+    taskLog.error(
+      "Sync was in progress when application started, marking sync as error"
+    );
+    await updateSyncAndAccountStatus(sync.id, "error");
   }
+}
+
+function createSyncTaskLogger(syncId: number) {
+  return createTaskLogger(`Sync-${syncId}`);
 }
 
 async function pollAndSyncIfRequired() {
@@ -40,7 +47,7 @@ async function pollAndSyncIfRequired() {
           nextSync.account.bankCredentials,
           nextSync.account.ynabAccount,
           nextSync.account.ynabCredentials,
-          createTaskLogger(`Sync-${nextSync.id}`)
+          createSyncTaskLogger(nextSync.id)
         );
 
         await updateSyncAndAccountStatus(nextSync.id, "synced");
