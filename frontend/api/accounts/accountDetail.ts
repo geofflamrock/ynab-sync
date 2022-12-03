@@ -37,6 +37,9 @@ export type SyncDetail = {
   id: number;
   status: SyncStatus;
   date: Date;
+  transactionsCreatedCount?: number;
+  transactionsUpdatedCount?: number;
+  transactionsUnchangedCount?: number;
 };
 
 export type AccountDetail = {
@@ -92,6 +95,18 @@ export const getAccountDetail = async (
           date: h.date,
           id: h.id,
           status: getSyncStatus(h.status),
+          transactionsCreatedCount:
+            h.transactionsCreatedCount !== null
+              ? h.transactionsCreatedCount
+              : undefined,
+          transactionsUpdatedCount:
+            h.transactionsUpdatedCount !== null
+              ? h.transactionsUpdatedCount
+              : undefined,
+          transactionsUnchangedCount:
+            h.transactionsUnchangedCount !== null
+              ? h.transactionsUnchangedCount
+              : undefined,
         };
       }
     ),

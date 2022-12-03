@@ -8,6 +8,7 @@ import { useRefreshOnInterval } from "~/components/hooks/useRefreshOnInterval";
 import { Paper } from "~/components/layout/Paper";
 import { DetailSection } from "~/components/primitive/DetailSection";
 import { SubHeading } from "~/components/primitive/SubHeading";
+import { SyncStatusWithLastSyncTime } from "~/components/sync/SyncStatus";
 import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
 import { YnabIcon } from "~/components/ynab/YnabIcon";
 
@@ -62,11 +63,24 @@ export default function Account() {
                 key={h.id}
                 className="flex items-center gap-2 px-4 py-2 hover:dark:bg-gray-700"
               >
-                <SyncStatusIcon status={h.status} />
-                <div title={format(new Date(h.date), "Pp")}>
+                <SyncStatusWithLastSyncTime
+                  status={h.status}
+                  lastSyncTime={h.date}
+                />
+                {/* <div title={format(new Date(h.date), "Pp")}>
                   {formatDistanceToNowStrict(new Date(h.date), {
                     addSuffix: true,
                   })}
+                </div> */}
+                <div className="ml-auto text-sm">
+                  {h.status === "synced" && (
+                    <span>
+                      {h.transactionsCreatedCount?.toString() || "?"} created,{" "}
+                      {h.transactionsUpdatedCount?.toString() || "?"} updated,{" "}
+                      {h.transactionsUnchangedCount?.toString() || "?"} not
+                      changed
+                    </span>
+                  )}
                 </div>
               </NavLink>
             ))}

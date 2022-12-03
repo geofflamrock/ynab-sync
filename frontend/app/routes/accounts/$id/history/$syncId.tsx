@@ -167,17 +167,20 @@ export default function SyncHistoryDetail() {
                   {
                     name: "Created",
                     value:
-                      syncDetail.transactionsCreatedCount?.toString() ?? "0",
+                      syncDetail.transactionsCreatedCount?.toString() ??
+                      "Unknown",
                   },
                   {
                     name: "Updated",
                     value:
-                      syncDetail.transactionsUpdatedCount?.toString() ?? "0",
+                      syncDetail.transactionsUpdatedCount?.toString() ??
+                      "Unknown",
                   },
                   {
                     name: "Not changed",
                     value:
-                      syncDetail.transactionsUnchangedCount?.toString() ?? "0",
+                      syncDetail.transactionsUnchangedCount?.toString() ??
+                      "Unknown",
                   },
                 ]}
               />
