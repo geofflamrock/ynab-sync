@@ -5,6 +5,7 @@ import { readFile } from "fs/promises";
 import { EOL } from "os";
 import { prisma } from "../client";
 import { pathExistsSync } from "fs-extra";
+import type { TransactionImportResults } from "ynab-sync-core";
 
 export type SyncStatus =
   | "notsynced"
@@ -50,6 +51,9 @@ export type SyncDetailWithLogs = {
   date: Date;
   status: SyncStatus;
   options: SyncOptions;
+  transactionsCreatedCount?: number;
+  transactionsUpdatedCount?: number;
+  transactionsUnchangedCount?: number;
   logs: Array<SyncLogMessage>;
 };
 
@@ -87,6 +91,18 @@ export async function getSyncDetail(
     date: sync.date,
     status: getSyncStatus(sync.status),
     options: parseSyncOptions(sync.details),
+    transactionsCreatedCount:
+      sync.transactionsCreatedCount !== null
+        ? sync.transactionsCreatedCount
+        : undefined,
+    transactionsUnchangedCount:
+      sync.transactionsUnchangedCount !== null
+        ? sync.transactionsUnchangedCount
+        : undefined,
+    transactionsUpdatedCount:
+      sync.transactionsUpdatedCount !== null
+        ? sync.transactionsUpdatedCount
+        : undefined,
     logs,
   };
 }
@@ -125,6 +141,44 @@ export function parseSyncOptions(options: string): SyncOptions {
       : undefined,
     startDate: parseISO(formattedOptions.startDate),
   };
+}
+
+export async function updateSync(
+  syncId: number,
+  status: SyncStatus,
+  importResults?: TransactionImportResults
+) {
+  const now = new Date();
+  const sync = await prisma.sync.update({
+    where: {
+      id: syncId,
+    },
+    data: {
+      status: status,
+      date: now,
+      transactionsCreatedCount:
+        importResults !== undefined
+          ? importResults.transactionsCreated.length
+          : undefined,
+      transactionsUnchangedCount:
+        importResults !== undefined
+          ? importResults.transactionsUnchanged.length
+          : undefined,
+      transactionsUpdatedCount:
+        importResults !== undefined
+          ? importResults.transactionsUpdated.length
+          : undefined,
+    },
+  });
+  await prisma.account.update({
+    where: {
+      id: sync.accountId,
+    },
+    data: {
+      syncStatus: status,
+      lastSyncTime: now,
+    },
+  });
 }
 
 export async function updateSyncAndAccountStatus(

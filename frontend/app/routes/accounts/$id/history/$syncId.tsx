@@ -1,4 +1,8 @@
-import { CalendarDaysIcon, CheckIcon } from "@heroicons/react/24/outline";
+import {
+  CalendarDaysIcon,
+  CheckIcon,
+  CreditCardIcon,
+} from "@heroicons/react/24/outline";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
@@ -155,6 +159,29 @@ export default function SyncHistoryDetail() {
                 },
               ]}
             />
+            {syncDetail.status === "synced" && (
+              <DetailSection
+                layout="condensed"
+                icon={<CreditCardIcon className="mt-2 h-8 w-8" />}
+                items={[
+                  {
+                    name: "Created",
+                    value:
+                      syncDetail.transactionsCreatedCount?.toString() ?? "0",
+                  },
+                  {
+                    name: "Updated",
+                    value:
+                      syncDetail.transactionsUpdatedCount?.toString() ?? "0",
+                  },
+                  {
+                    name: "Not changed",
+                    value:
+                      syncDetail.transactionsUnchangedCount?.toString() ?? "0",
+                  },
+                ]}
+              />
+            )}
           </div>
         </div>
       </Paper>

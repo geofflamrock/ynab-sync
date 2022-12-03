@@ -1,4 +1,4 @@
-import { updateSyncAndAccountStatus } from "../api";
+import { updateSync, updateSyncAndAccountStatus } from "../api";
 import { getInProgressSyncs } from "../api";
 import { getNextSync } from "../api";
 import { syncBankAccountToYnab } from "../api";
@@ -41,7 +41,7 @@ async function pollAndSyncIfRequired() {
       await updateSyncAndAccountStatus(nextSync.id, "syncing");
 
       try {
-        await syncBankAccountToYnab(
+        const importResults = await syncBankAccountToYnab(
           nextSync,
           nextSync.account.bankAccount,
           nextSync.account.bankCredentials,
@@ -50,7 +50,7 @@ async function pollAndSyncIfRequired() {
           createSyncTaskLogger(nextSync.id)
         );
 
-        await updateSyncAndAccountStatus(nextSync.id, "synced");
+        await updateSync(nextSync.id, "synced", importResults);
       } catch (error) {
         systemLogger.error("An error has occurred syncing", error);
         await updateSyncAndAccountStatus(nextSync.id, "error");

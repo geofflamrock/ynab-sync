@@ -1,10 +1,11 @@
-import { format, startOfYesterday, subDays } from "date-fns";
+import { format, subDays } from "date-fns";
 import path from "path";
 import {
   getUserLocale,
   importTransactions,
   Logger,
   parseOfx,
+  TransactionImportResults,
   YnabAccount,
   YnabCredentials,
 } from "ynab-sync-core";
@@ -42,7 +43,7 @@ export type WestpacTransactionSyncParams = {
 export const syncTransactions = async (
   params: WestpacTransactionSyncParams,
   logger: Logger
-) => {
+): Promise<TransactionImportResults> => {
   let endDate = undefined;
 
   if (params.options.endDate !== undefined) {
@@ -106,7 +107,11 @@ export const syncTransactions = async (
 
   if (outputFilePath === undefined) {
     logger.info("No transactions found to export");
-    return;
+    return {
+      transactionsCreated: [],
+      transactionsUnchanged: [],
+      transactionsUpdated: [],
+    };
   }
 
   logger.debug(`Transactions exported successfully to '${outputFilePath}'`);
@@ -142,4 +147,6 @@ export const syncTransactions = async (
   logger.info(
     `Imported ${transactions.length} transactions into YNAB successfully: ${importResults.transactionsCreated.length} created, ${importResults.transactionsUpdated.length} updated, ${importResults.transactionsUnchanged.length} not changed`
   );
+
+  return importResults;
 };

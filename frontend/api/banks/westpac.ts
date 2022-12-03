@@ -8,7 +8,7 @@ import type {
 import type { BankAccountFields, BankCredentialFields } from ".";
 import { syncTransactions } from "ynab-sync-westpac-au";
 import type { SyncOptions } from "api/sync";
-import type { Logger } from "ynab-sync-core";
+import type { Logger, TransactionImportResults } from "ynab-sync-core";
 
 type WestpacBankAccountDetails = {
   bsbNumber: string;
@@ -58,10 +58,10 @@ export async function syncWestpacAccount(
   ynabCredentials: YnabCredential,
   options: SyncOptions,
   logger: Logger
-) {
+): Promise<TransactionImportResults> {
   const credentials: WestpacCredentials = JSON.parse(bankCredentials.details);
 
-  await syncTransactions(
+  return await syncTransactions(
     {
       options: {
         debug: options.debug,

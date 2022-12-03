@@ -17,7 +17,7 @@ import {
   getWestpacBankCredentialFields,
   syncWestpacAccount,
 } from "./westpac";
-import type { Logger } from "ynab-sync-core";
+import type { Logger, TransactionImportResults } from "ynab-sync-core";
 
 export type BankAccountField = {
   name: string;
@@ -82,13 +82,13 @@ export async function syncBankAccountToYnab(
   ynabAccount: YnabAccount,
   ynabCredentials: YnabCredential,
   logger: Logger
-) {
+): Promise<TransactionImportResults> {
   const bankType = getBankType(bankAccount.type);
   const syncOptions = parseSyncOptions(sync.details);
 
   switch (bankType) {
     case "stgeorge":
-      await syncStGeorgeAccount(
+      return await syncStGeorgeAccount(
         bankAccount,
         bankCredentials,
         ynabAccount,
@@ -96,10 +96,9 @@ export async function syncBankAccountToYnab(
         syncOptions,
         logger
       );
-      break;
 
     case "westpac":
-      await syncWestpacAccount(
+      return await syncWestpacAccount(
         bankAccount,
         bankCredentials,
         ynabAccount,
@@ -107,7 +106,6 @@ export async function syncBankAccountToYnab(
         syncOptions,
         logger
       );
-      break;
 
     default:
       exhaustiveCheck(bankType, "Unknown bank type");

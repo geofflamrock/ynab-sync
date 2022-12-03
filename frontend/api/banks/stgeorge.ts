@@ -7,7 +7,7 @@ import type {
 import type { SyncOptions } from "api/sync";
 import { AccountType, syncTransactions } from "ynab-sync-st-george-au";
 import type { BankAccountFields, BankCredentialFields } from ".";
-import type { Logger } from "ynab-sync-core";
+import type { Logger, TransactionImportResults } from "ynab-sync-core";
 
 type StGeorgeBankAccountDetails = {
   bsbNumber: string;
@@ -62,14 +62,14 @@ export async function syncStGeorgeAccount(
   ynabCredentials: YnabCredential,
   options: SyncOptions,
   logger: Logger
-) {
+): Promise<TransactionImportResults> {
   const credentials: StGeorgeCredentials = JSON.parse(bankCredentials.details);
 
   const stGeorgeAccount: StGeorgeBankAccountDetails = JSON.parse(
     bankAccount.details
   );
 
-  await syncTransactions(
+  return await syncTransactions(
     {
       options: {
         debug: options.debug,

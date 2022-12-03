@@ -8,6 +8,7 @@ import {
   YnabCredentials,
   YnabAccount,
   Logger,
+  TransactionImportResults,
 } from "ynab-sync-core";
 import { createBrowser } from "ynab-sync-puppeteer";
 import path from "path";
@@ -51,7 +52,7 @@ export type StGeorgeTransactionSyncParams = {
 export const syncTransactions = async (
   params: StGeorgeTransactionSyncParams,
   logger: Logger
-) => {
+): Promise<TransactionImportResults> => {
   let endDate = new Date();
 
   if (params.options.endDate !== undefined) {
@@ -116,7 +117,11 @@ export const syncTransactions = async (
 
   if (outputFilePath === undefined) {
     logger.info("No transactions found to export");
-    return;
+    return {
+      transactionsCreated: [],
+      transactionsUnchanged: [],
+      transactionsUpdated: [],
+    };
   }
 
   logger.info(`Transactions exported successfully to '${outputFilePath}'`);
@@ -168,4 +173,6 @@ export const syncTransactions = async (
   logger.info(
     `Imported ${transactions.length} transactions into YNAB successfully: ${importResults.transactionsCreated.length} created, ${importResults.transactionsUpdated.length} updated, ${importResults.transactionsUnchanged.length} not changed`
   );
+
+  return importResults;
 };
