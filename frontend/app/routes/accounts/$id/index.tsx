@@ -67,11 +67,6 @@ export default function Account() {
                   status={h.status}
                   lastSyncTime={h.date}
                 />
-                {/* <div title={format(new Date(h.date), "Pp")}>
-                  {formatDistanceToNowStrict(new Date(h.date), {
-                    addSuffix: true,
-                  })}
-                </div> */}
                 <div className="ml-auto text-sm">
                   {h.status === "synced" && (
                     <span>
