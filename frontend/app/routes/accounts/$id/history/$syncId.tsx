@@ -165,7 +165,7 @@ export default function SyncHistoryDetail() {
                 icon={<CreditCardIcon className="mt-2 h-8 w-8" />}
                 items={[
                   {
-                    name: "Created",
+                    name: "New",
                     value:
                       syncDetail.transactionsCreatedCount?.toString() ??
                       "Unknown",

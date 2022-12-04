@@ -70,7 +70,7 @@ export default function Account() {
                 <div className="ml-auto text-sm">
                   {h.status === "synced" && (
                     <span>
-                      {h.transactionsCreatedCount?.toString() || "?"} created,{" "}
+                      {h.transactionsCreatedCount?.toString() || "?"} new,{" "}
                       {h.transactionsUpdatedCount?.toString() || "?"} updated,{" "}
                       {h.transactionsUnchangedCount?.toString() || "?"} not
                       changed
