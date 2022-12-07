@@ -34,14 +34,14 @@ export type BankCredentialField = {
 
 export type BankCredentialFields = Array<BankCredentialField>;
 
-export type SupportedBankTypes = "stgeorge" | "westpac";
+export type SupportedBankTypes = "st-george-au" | "westpac-au";
 
 export function getBankType(type: string): SupportedBankTypes {
   switch (type) {
-    case "westpac":
-      return "westpac";
-    case "stgeorge":
-      return "stgeorge";
+    case "westpac-au":
+      return "westpac-au";
+    case "st-george-au":
+      return "st-george-au";
     default:
       throw new Error(`Unknown bank type ${type}`);
   }
@@ -52,9 +52,9 @@ export function getBankAccountFields(
 ): BankAccountFields {
   const bankType = getBankType(bankAccount.type);
   switch (bankType) {
-    case "stgeorge":
+    case "st-george-au":
       return getStGeorgeBankAccountFields(bankAccount);
-    case "westpac":
+    case "westpac-au":
       return getWestpacBankAccountFields(bankAccount);
     default:
       exhaustiveCheck(bankType, "Unknown bank type");
@@ -66,9 +66,9 @@ export function getBankCredentialFields(
 ): BankCredentialFields {
   const bankType = getBankType(bankCredentials.type);
   switch (bankType) {
-    case "stgeorge":
+    case "st-george-au":
       return getStGeorgeBankCredentialFields();
-    case "westpac":
+    case "westpac-au":
       return getWestpacBankCredentialFields();
     default:
       exhaustiveCheck(bankType, "Unknown bank type");
@@ -87,7 +87,7 @@ export async function syncBankAccountToYnab(
   const syncOptions = parseSyncOptions(sync.details);
 
   switch (bankType) {
-    case "stgeorge":
+    case "st-george-au":
       return await syncStGeorgeAccount(
         bankAccount,
         bankCredentials,
@@ -97,7 +97,7 @@ export async function syncBankAccountToYnab(
         logger
       );
 
-    case "westpac":
+    case "westpac-au":
       return await syncWestpacAccount(
         bankAccount,
         bankCredentials,

@@ -7,10 +7,10 @@ type BankTitleProps = {
 
 export function BankTitle({ bank }: BankTitleProps) {
   switch (bank.type) {
-    case "westpac":
+    case "westpac-au":
       return <span>Westpac</span>;
 
-    case "stgeorge":
+    case "st-george-au":
       return <span>St George</span>;
 
     default:
@@ -20,10 +20,10 @@ export function BankTitle({ bank }: BankTitleProps) {
 
 export function getBankTitle(bank: BankAccountDetail) {
   switch (bank.type) {
-    case "westpac":
+    case "westpac-au":
       return "Westpac";
 
-    case "stgeorge":
+    case "st-george-au":
       return "St George";
 
     default:
