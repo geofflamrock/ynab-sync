@@ -31,7 +31,7 @@ export function getSyncStatus(status: string): SyncStatus {
   }
 }
 
-export type SyncLogLevel =
+export type LogLevel =
   | "fatal"
   | "error"
   | "warn"
@@ -40,7 +40,7 @@ export type SyncLogLevel =
   | "verbose";
 
 export type SyncLogMessage = {
-  level: SyncLogLevel;
+  level: LogLevel;
   message: string;
   timestamp: Date;
   [key: string]: any;
@@ -59,7 +59,7 @@ export type SyncDetailWithLogs = {
 
 export async function getSyncDetail(
   syncId: number,
-  levels: Array<SyncLogLevel>
+  levels: Array<LogLevel>
 ): Promise<SyncDetailWithLogs> {
   const sync = await prisma.sync.findUnique({
     where: {

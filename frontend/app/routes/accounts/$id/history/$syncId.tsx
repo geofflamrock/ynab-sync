@@ -1,8 +1,4 @@
-import {
-  CalendarDaysIcon,
-  CheckIcon,
-  CreditCardIcon,
-} from "@heroicons/react/24/outline";
+import { CalendarDaysIcon, CreditCardIcon } from "@heroicons/react/24/outline";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
@@ -11,7 +7,7 @@ import {
   useSearchParams,
   useSubmit,
 } from "@remix-run/react";
-import type { SyncDetailWithLogs, SyncLogLevel } from "api";
+import type { SyncDetailWithLogs, LogLevel } from "api";
 import { getSyncDetail } from "api";
 import { exhaustiveCheck } from "api/utils/exhaustiveCheck";
 import classnames from "classnames";
@@ -25,7 +21,7 @@ import { SubHeading } from "~/components/primitive/SubHeading";
 import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
 import { getSyncStatusTitle } from "~/components/sync/SyncStatusTitle";
 
-function getLogLevel(level: string): SyncLogLevel | undefined {
+function getLogLevel(level: string): LogLevel | undefined {
   if (level === "fatal") return "fatal";
   else if (level === "error") return "error";
   else if (level === "warn") return "warn";
@@ -42,7 +38,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const url = new URL(request.url);
   const minLogLevelSearchParam = url.searchParams.get("minLogLevel");
   const minLogLevel = getLogLevel(minLogLevelSearchParam ?? "info") ?? "info";
-  const levels: Array<SyncLogLevel> = [];
+  const levels: Array<LogLevel> = [];
 
   // This is so bad
   if (minLogLevel === "fatal") levels.push("fatal");
@@ -64,11 +60,11 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 
 type SyncLogMessageProps = {
   timestamp: string;
-  level: SyncLogLevel;
+  level: LogLevel;
   message: string;
 };
 
-function getLogLevelDescription(level: SyncLogLevel) {
+function getLogLevelDescription(level: LogLevel) {
   switch (level) {
     case "debug":
       return "Debug";
