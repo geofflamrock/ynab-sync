@@ -13,10 +13,10 @@ import {
 } from "@remix-run/react";
 import type { SyncDetailWithLogs, SyncLogLevel } from "api";
 import { getSyncDetail } from "api";
+import { exhaustiveCheck } from "api/utils/exhaustiveCheck";
 import classnames from "classnames";
 import { format, parseISO } from "date-fns";
 import { enAU } from "date-fns/locale";
-import { useRef } from "react";
 import invariant from "tiny-invariant";
 import { useRefreshOnInterval } from "~/components/hooks/useRefreshOnInterval";
 import { Paper } from "~/components/layout/Paper";
@@ -25,7 +25,7 @@ import { SubHeading } from "~/components/primitive/SubHeading";
 import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
 import { getSyncStatusTitle } from "~/components/sync/SyncStatusTitle";
 
-function getLogLevel(level: string): SyncLogLevel {
+function getLogLevel(level: string): SyncLogLevel | undefined {
   if (level === "fatal") return "fatal";
   else if (level === "error") return "error";
   else if (level === "warn") return "warn";
@@ -33,21 +33,29 @@ function getLogLevel(level: string): SyncLogLevel {
   else if (level === "debug") return "debug";
   else if (level === "verbose") return "verbose";
 
-  throw new Error(`Unknown log level '${level}'`);
+  return undefined;
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   invariant(params.syncId, "Id must be provided");
   const id = parseInt(params.syncId);
   const url = new URL(request.url);
-  const logLevelSearchParams = url.searchParams.getAll("level");
-  const logLevels = logLevelSearchParams.map((l) => getLogLevel(l));
+  const minLogLevelSearchParam = url.searchParams.get("minLogLevel");
+  const minLogLevel = getLogLevel(minLogLevelSearchParam ?? "info") ?? "info";
+  const levels: Array<SyncLogLevel> = [];
 
-  if (logLevels.length === 0) {
-    logLevels.push("fatal", "error", "warn", "info");
-  }
+  // This is so bad
+  if (minLogLevel === "fatal") levels.push("fatal");
+  else if (minLogLevel === "error") levels.push("fatal", "error");
+  else if (minLogLevel === "warn") levels.push("fatal", "error", "warn");
+  else if (minLogLevel === "info")
+    levels.push("fatal", "error", "warn", "info");
+  else if (minLogLevel === "debug")
+    levels.push("fatal", "error", "warn", "info", "debug");
+  else if (minLogLevel === "verbose")
+    levels.push("fatal", "error", "warn", "info", "debug", "verbose");
 
-  const syncDetail = await getSyncDetail(id, logLevels);
+  const syncDetail = await getSyncDetail(id, levels);
 
   if (!syncDetail) throw new Response("Not Found", { status: 404 });
 
@@ -60,8 +68,28 @@ type SyncLogMessageProps = {
   message: string;
 };
 
+function getLogLevelDescription(level: SyncLogLevel) {
+  switch (level) {
+    case "debug":
+      return "Debug";
+    case "error":
+      return "Error";
+    case "fatal":
+      return "Fatal";
+    case "info":
+      return "Info";
+    case "verbose":
+      return "Verbose";
+    case "warn":
+      return "Warning";
+
+    default:
+      exhaustiveCheck(level, "Unknown log level");
+  }
+}
+
 function SyncLogMessage({ timestamp, level, message }: SyncLogMessageProps) {
-  const levelClassName = classnames("whitespace-normal", {
+  const levelClassName = classnames("whitespace-normal break-all", {
     "text-purple-600": level === "fatal",
     "text-red-600": level === "error",
     "text-orange-600": level === "warn",
@@ -71,50 +99,12 @@ function SyncLogMessage({ timestamp, level, message }: SyncLogMessageProps) {
   });
 
   return (
-    <div className="grid grid-cols-12 gap-4">
-      <span className={classnames(levelClassName)}>{level}</span>
-      <span className={classnames(levelClassName, "col-span-9")}>
-        {message}
-      </span>
-      <span className="col-span-2 ml-auto text-gray-500">
+    <div className="flex gap-4">
+      <span className={levelClassName}>{message}</span>
+      <span className="ml-auto flex gap-4 text-gray-500">
+        <span>{getLogLevelDescription(level)}</span>
         {format(new Date(timestamp), "P pp", { locale: enAU })}
       </span>
-    </div>
-  );
-}
-
-type FilterChipProps = {
-  name: string;
-  value: string;
-  title: string;
-  selected: boolean;
-};
-
-function FilterChip({ name, value, title, selected }: FilterChipProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  return (
-    <div
-      className={classnames(
-        "flex cursor-pointer select-none items-center gap-1 rounded-lg border py-1 pr-4 text-sm text-gray-300",
-        {
-          "border-gray-700 bg-gray-700 pl-2": selected,
-          "border-gray-400 bg-transparent pl-4": !selected,
-        }
-      )}
-      onClick={() => {
-        inputRef.current?.click();
-      }}
-    >
-      {selected && <CheckIcon className="h-4 w-4" />}
-      <input
-        type="checkbox"
-        defaultChecked={selected}
-        name={name}
-        value={value}
-        ref={inputRef}
-        className="hidden"
-      />
-      {title}
     </div>
   );
 }
@@ -124,7 +114,7 @@ export default function SyncHistoryDetail() {
   const [searchParams] = useSearchParams();
   const submit = useSubmit();
   useRefreshOnInterval({ enabled: true, interval: 5000 });
-  const logLevels = searchParams.getAll("level");
+  const minLogLevel = getLogLevel(searchParams.get("minLogLevel") ?? "info");
 
   return (
     <div className="flex flex-col gap-4">
@@ -197,36 +187,17 @@ export default function SyncHistoryDetail() {
               onChange={(e) => submit(e.currentTarget)}
               className="ml-auto flex items-center gap-2"
             >
-              <FilterChip
-                name="level"
-                value="error"
-                title="Error"
-                selected={logLevels.length === 0 || logLevels.includes("error")}
-              />
-              <FilterChip
-                name="level"
-                value="warn"
-                title="Warning"
-                selected={logLevels.length === 0 || logLevels.includes("warn")}
-              />
-              <FilterChip
-                name="level"
-                value="info"
-                title="Info"
-                selected={logLevels.length === 0 || logLevels.includes("info")}
-              />
-              <FilterChip
-                name="level"
-                value="debug"
-                title="Debug"
-                selected={logLevels.includes("debug")}
-              />
-              <FilterChip
-                name="level"
-                value="verbose"
-                title="Verbose"
-                selected={logLevels.includes("verbose")}
-              />
+              <select
+                name="minLogLevel"
+                value={minLogLevel ?? "info"}
+                className="rounded-lg border-none bg-gray-700 py-2 text-sm text-gray-400 focus:border-none focus:ring-0"
+              >
+                <option value="info" className="p-4 hover:text-ynab">
+                  Info
+                </option>
+                <option value="debug">Debug</option>
+                <option value="verbose">Verbose</option>
+              </select>
             </Form>
           </div>
 

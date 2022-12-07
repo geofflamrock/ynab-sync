@@ -1,6 +1,5 @@
 import { KeyIcon } from "@heroicons/react/24/outline";
 import { NavLink, useOutletContext } from "@remix-run/react";
-import { format, formatDistanceToNowStrict } from "date-fns";
 import type { AccountDetail } from "~/../api";
 import { BankLogo } from "~/components/bank/BankLogo";
 import { getBankTitle } from "~/components/bank/BankTitle";
@@ -9,7 +8,6 @@ import { Paper } from "~/components/layout/Paper";
 import { DetailSection } from "~/components/primitive/DetailSection";
 import { SubHeading } from "~/components/primitive/SubHeading";
 import { SyncStatusWithLastSyncTime } from "~/components/sync/SyncStatus";
-import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
 import { YnabIcon } from "~/components/ynab/YnabIcon";
 
 export default function Account() {
