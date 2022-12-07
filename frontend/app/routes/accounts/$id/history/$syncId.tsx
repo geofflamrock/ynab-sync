@@ -196,17 +196,19 @@ export default function SyncHistoryDetail() {
               </select>
             </Form>
           </div>
-
-          <pre className="flex flex-col gap-1 text-sm">
-            {syncDetail.logs.map((log, index) => (
-              <SyncLogMessage
-                timestamp={log.timestamp}
-                level={log.level}
-                message={log.message}
-                key={index}
-              />
-            ))}
-          </pre>
+          {syncDetail.logs.length > 0 && (
+            <pre className="flex flex-col gap-1 text-sm">
+              {syncDetail.logs.map((log, index) => (
+                <SyncLogMessage
+                  timestamp={log.timestamp}
+                  level={log.level}
+                  message={log.message}
+                  key={index}
+                />
+              ))}
+            </pre>
+          )}
+          {syncDetail.logs.length === 0 && <p>No logs found</p>}
         </div>
       </Paper>
     </div>
