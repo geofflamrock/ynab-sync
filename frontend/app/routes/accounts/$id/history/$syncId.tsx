@@ -186,7 +186,7 @@ export default function SyncHistoryDetail() {
               <select
                 name="minLogLevel"
                 value={minLogLevel ?? "info"}
-                className="rounded-lg border-none bg-gray-700 py-2 text-sm text-gray-400 focus:border-none focus:ring-0"
+                className="rounded-lg border-none bg-gray-100 py-2 text-sm text-gray-600 focus:border-none focus:ring-0 dark:bg-gray-700 dark:text-gray-400"
               >
                 <option value="info" className="p-4 hover:text-ynab">
                   Info
