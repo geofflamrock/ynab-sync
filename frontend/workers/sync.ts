@@ -1,4 +1,4 @@
-import { updateSync, updateSyncAndAccountStatus } from "../api";
+import { updateSuccessfulSync, updateSync } from "../api";
 import { getInProgressSyncs } from "../api";
 import { getNextSync } from "../api";
 import { syncBankAccountToYnab } from "../api";
@@ -19,7 +19,7 @@ async function cancelInProgressSyncs() {
     taskLog.error(
       "Sync was in progress when application started, marking sync as error"
     );
-    await updateSyncAndAccountStatus(sync.id, "error");
+    await updateSync(sync.id, "error");
   }
 }
 
@@ -38,7 +38,7 @@ async function pollAndSyncIfRequired() {
       systemLogger.info(
         `Found sync '${nextSync.id}' to process from ${nextSync.account.bankAccount.type} bank account '${nextSync.account.bankAccount.name}' to ynab account '${nextSync.account.ynabAccount.name}' in budget '${nextSync.account.ynabAccount.budget.name}'`
       );
-      await updateSyncAndAccountStatus(nextSync.id, "syncing");
+      await updateSync(nextSync.id, "syncing");
 
       try {
         const importResults = await syncBankAccountToYnab(
@@ -50,10 +50,10 @@ async function pollAndSyncIfRequired() {
           createSyncTaskLogger(nextSync.id)
         );
 
-        await updateSync(nextSync.id, "synced", importResults);
+        await updateSuccessfulSync(nextSync.id, importResults);
       } catch (error) {
         systemLogger.error("An error has occurred syncing", error);
-        await updateSyncAndAccountStatus(nextSync.id, "error");
+        await updateSync(nextSync.id, "error");
       }
     } else {
       systemLogger.verbose("No sync to process, sleeping for 5 seconds");

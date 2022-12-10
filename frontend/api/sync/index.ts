@@ -143,9 +143,8 @@ export function parseSyncOptions(options: string): SyncOptions {
   };
 }
 
-export async function updateSync(
+export async function updateSuccessfulSync(
   syncId: number,
-  status: SyncStatus,
   importResults?: TransactionImportResults
 ) {
   const now = new Date();
@@ -154,7 +153,7 @@ export async function updateSync(
       id: syncId,
     },
     data: {
-      status: status,
+      status: "synced",
       date: now,
       transactionsCreatedCount:
         importResults !== undefined
@@ -181,27 +180,14 @@ export async function updateSync(
   });
 }
 
-export async function updateSyncAndAccountStatus(
-  syncId: number,
-  status: SyncStatus
-) {
-  const now = new Date();
-  const sync = await prisma.sync.update({
+export async function updateSync(syncId: number, status: SyncStatus) {
+  await prisma.sync.update({
     where: {
       id: syncId,
     },
     data: {
       status: status,
-      date: now,
-    },
-  });
-  await prisma.account.update({
-    where: {
-      id: sync.accountId,
-    },
-    data: {
-      syncStatus: status,
-      lastSyncTime: now,
+      date: new Date(),
     },
   });
 }

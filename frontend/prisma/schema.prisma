@@ -56,8 +56,6 @@ model Account {
   ynabCredentials  YnabCredential @relation(fields: [ynabCredentialId], references: [id])
   ynabAccountId    String
   ynabAccount      YnabAccount    @relation(fields: [ynabAccountId], references: [id])
-  syncStatus       String         @default("notsynced")
-  lastSyncTime     DateTime?
   history          Sync[]
 }
 
