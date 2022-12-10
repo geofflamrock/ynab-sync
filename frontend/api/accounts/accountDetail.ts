@@ -79,6 +79,9 @@ export const getAccountDetail = async (
 
   if (account === null) return undefined;
 
+  const latestSync =
+    account.history.length > 0 ? account.history[0] : undefined;
+
   return {
     id: account.id,
     bank: getBankAccountDetail(account.bankAccount, account.bankCredentials),
@@ -110,9 +113,8 @@ export const getAccountDetail = async (
         };
       }
     ),
-    lastSyncTime:
-      account.lastSyncTime === null ? undefined : account.lastSyncTime,
-    status: getSyncStatus(account.syncStatus),
+    lastSyncTime: latestSync ? latestSync.date : undefined,
+    status: latestSync ? getSyncStatus(latestSync.status) : "notsynced",
   };
 };
 
