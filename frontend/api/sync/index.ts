@@ -169,15 +169,6 @@ export async function updateSuccessfulSync(
           : undefined,
     },
   });
-  await prisma.account.update({
-    where: {
-      id: sync.accountId,
-    },
-    data: {
-      syncStatus: status,
-      lastSyncTime: now,
-    },
-  });
 }
 
 export async function updateSync(syncId: number, status: SyncStatus) {
@@ -219,16 +210,6 @@ export const syncNow = async (accountId: number, options: SyncOptions) => {
       status: "queued",
       date: now,
       details: formatSyncOptions(options),
-    },
-  });
-
-  await prisma.account.update({
-    where: {
-      id: account.id,
-    },
-    data: {
-      syncStatus: "queued",
-      lastSyncTime: now,
     },
   });
 
