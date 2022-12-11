@@ -4,8 +4,10 @@ import fs from "fs";
 import os from "os";
 import prettyBytes from "pretty-bytes";
 import cliProgress from "cli-progress";
+import { Logger } from "ynab-sync-core";
 
 export async function createBrowser(
+  logger: Logger,
   downloadDirectory?: string
 ): Promise<puppeteer.Browser> {
   const chromiumDownloadDirectory =
@@ -27,7 +29,7 @@ export async function createBrowser(
     undefined;
 
   if (!localRevisions.includes(revision)) {
-    console.log(
+    logger.info(
       `Downloading chromium revision ${revision} to '${chromiumDownloadDirectory}'`
     );
 
@@ -53,7 +55,7 @@ export async function createBrowser(
         }
       }
     );
-    console.log(
+    logger.info(
       `Downloaded chromium revision ${revision} to '${download.executablePath}'`
     );
 

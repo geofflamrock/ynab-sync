@@ -21,9 +21,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2.2.4
         with:
-          version: 6.20.3
+          version: 7.9.5
           run_install: true
 
       - name: Create versioning PR

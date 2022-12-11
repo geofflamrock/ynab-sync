@@ -6,17 +6,23 @@
   "module": "dist/index.js",
   "main": "dist/index.js",
   "scripts": {
-    "build": "pnpm run build --filter \"{packages}\"",
+    "build": "pnpm run --recursive build",
+    "build:dev": "pnpm run --recursive build:dev",
     "changeset": "changeset",
-    "ci:pkg": "pnpm run build && pnpm ci:pkg -r",
+    "ci:pkg": "pnpm run build && pnpm --recursive ci:pkg",
     "ci:publish": "pnpm run build && pnpm changeset publish",
     "ci:version": "pnpm run changeset version && pnpm install --frozen-lockfile=false",
-    "lint:fix": "eslint . --fix",
-    "lint": "eslint .",
-    "outdated": "pnpm outdated --filter \"{packages}\"",
-    "pkg": "pnpm run build && pnpm pkg -r",
+    "dev": "pnpm run build:dev && pnpm run --recursive dev",
+    "lint:fix": "pnpm run --recursive lint:fix",
+    "lint": "pnpm run --recursive lint",
+    "outdated": "pnpm --recursive outdated",
+    "pkg": "pnpm run build && pnpm --recursive pkg",
     "preinstall": "npx only-allow pnpm",
-    "test": "pnpm run test --filter \"{packages}\""
+    "test": "pnpm run --recursive test"
+  },
+  "engines": {
+    "pnpm": "^7.0.0",
+    "node": "^16.0.0"
   },
   "repository": {
     "type": "git",

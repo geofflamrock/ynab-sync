@@ -4,7 +4,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc --declaration"
+    "build": "tsc --declaration",
+    "build:dev": "tsc --declaration"
   },
   "name": "ynab-sync-core",
   "author": "Geoff Lamrock",
@@ -18,6 +19,7 @@
     "csv-parse": "^4.16.0",
     "date-fns": "^2.22.1",
     "lodash": "^4.17.21",
+    "keyv": "^4.5.0",
     "ofx": "^0.5.0",
     "string-template": "^1.0.0",
     "ynab": "^1.25.0",

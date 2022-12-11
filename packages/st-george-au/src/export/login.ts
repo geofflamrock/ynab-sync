@@ -1,4 +1,5 @@
 import { Page, TimeoutError } from "puppeteer";
+import { Logger } from "ynab-sync-core";
 
 export type LoginOptions = {
   debug: boolean;
@@ -13,7 +14,8 @@ export async function login(
   options: LoginOptions = {
     debug: false,
     loginTimeoutInMs: 5000,
-  }
+  },
+  logger: Logger
 ): Promise<void> {
   await page.goto("https://ibanking.stgeorge.com.au/ibank/loginPage.action");
 
@@ -32,7 +34,7 @@ export async function login(
       throw e;
     } else {
       if (options.debug)
-        console.log("A timeout error has occurred attempting to login");
+        logger.info("A timeout error has occurred attempting to login");
     }
   }
 

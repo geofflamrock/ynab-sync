@@ -4,6 +4,7 @@ import {
   syncTransactions,
 } from "ynab-sync-westpac-au";
 import commander from "commander";
+import { consoleLogger } from "../logging/consoleLogger";
 
 type WestpacTransactionSyncCommandArgs = {
   westpacUsername: string;
@@ -108,31 +109,34 @@ export const createWestpacAuSyncCommand = (): commander.Command => {
       "Directory to use when downloading tools to use during sync"
     )
     .action(async (args: WestpacTransactionSyncCommandArgs) => {
-      await syncTransactions({
-        westpacCredentials: {
-          username: args.westpacUsername,
-          password: args.westpacPassword,
+      await syncTransactions(
+        {
+          westpacCredentials: {
+            username: args.westpacUsername,
+            password: args.westpacPassword,
+          },
+          westpacAccount: {
+            accountName: args.westpacAccountName,
+          },
+          ynabCredentials: {
+            apiKey: args.ynabApiKey,
+          },
+          ynabAccount: {
+            budgetId: args.ynabBudgetId,
+            accountId: args.ynabAccountId,
+          },
+          options: {
+            debug: args.debug,
+            numberOfDaysToSync: args.numberOfDaysToSync,
+            downloadDirectory: args.downloadDirectory,
+            endDate: args.endDate,
+            importIdTemplate: args.importIdTemplate,
+            loginTimeoutInMs: args.loginTimeout,
+            startDate: args.startDate,
+            toolsDirectory: args.toolsDirectory,
+          },
         },
-        westpacAccount: {
-          accountName: args.westpacAccountName,
-        },
-        ynabCredentials: {
-          apiKey: args.ynabApiKey,
-        },
-        ynabAccount: {
-          budgetId: args.ynabBudgetId,
-          accountId: args.ynabAccountId,
-        },
-        options: {
-          debug: args.debug,
-          numberOfDaysToSync: args.numberOfDaysToSync,
-          downloadDirectory: args.downloadDirectory,
-          endDate: args.endDate,
-          importIdTemplate: args.importIdTemplate,
-          loginTimeoutInMs: args.loginTimeout,
-          startDate: args.startDate,
-          toolsDirectory: args.toolsDirectory,
-        },
-      });
+        consoleLogger
+      );
     });
 };

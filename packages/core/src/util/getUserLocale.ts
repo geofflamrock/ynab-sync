@@ -1,3 +1,4 @@
+import { Locale } from "date-fns";
 import * as locales from "date-fns/locale";
 import osLocale from "os-locale";
 

@@ -3,6 +3,7 @@ import { TransactionDetail, SaveTransaction } from "ynab";
 import format from "string-template";
 import parse from "csv-parse/lib/sync";
 import { formatISO } from "date-fns";
+import { Logger } from "../logging";
 
 export type CsvTransactionParserOptions = {
   importIdTemplate?: string;
@@ -16,12 +17,13 @@ export type CsvTransactionParserOptions = {
 export function parseCsv(
   accountId: string,
   filePath: string,
-  options: CsvTransactionParserOptions
+  options: CsvTransactionParserOptions,
+  logger: Logger
 ): TransactionDetail[] {
   const defaultImportIdTemplate: string = "{date}-{amount}-{payee}";
   const transactions: TransactionDetail[] = [];
 
-  if (options.debug) console.log(`Reading transactions from '${filePath}`);
+  if (options.debug) logger.debug(`Reading transactions from '${filePath}`);
 
   const csvRawData = fs.readFileSync(filePath, "utf8");
   const csvParsed = parse(csvRawData, {
@@ -69,7 +71,7 @@ export function parseCsv(
     if (importId.length > 36) importId = importId.slice(0, 36);
 
     if (options.debug) {
-      console.log(
+      logger.verbose(
         `Created import id '${importId}' from template '${
           options.importIdTemplate || defaultImportIdTemplate
         }' and parameters`,
@@ -80,7 +82,7 @@ export function parseCsv(
     transaction.import_id = importId;
 
     if (options.debug) {
-      console.log("Parsed transaction", transaction);
+      logger.debug("Parsed transaction", transaction);
     }
 
     transactions.push(transaction);

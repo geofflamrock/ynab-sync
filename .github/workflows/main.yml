@@ -55,9 +55,9 @@ jobs:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2.2.4
         with:
-          version: 6.34.0
+          version: 7.9.5
           run_install: true
 
       - name: Build
@@ -67,7 +67,7 @@ jobs:
         run: pnpm run test
 
       - name: Create CLI Package
-        run: "pnpm run ci:pkg -- -- --target ${{ matrix.target }} --output ./bin/cli/${{ matrix.binary-name }}"
+        run: "pnpm run ci:pkg --target ${{ matrix.target }} --output ./bin/cli/${{ matrix.binary-name }}"
 
       - name: Publish CLI Package
         uses: actions/upload-artifact@v2
@@ -151,9 +151,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2.2.4
         with:
-          version: 6.20.3
+          version: 7.9.5
           run_install: true
 
       - name: Publish packages to npm
