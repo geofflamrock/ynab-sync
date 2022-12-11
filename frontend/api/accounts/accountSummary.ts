@@ -45,10 +45,19 @@ export const getAccountSummaries = async (): Promise<Array<AccountSummary>> => {
           budget: true,
         },
       },
+      history: {
+        orderBy: {
+          date: "desc",
+        },
+        take: 1,
+      },
     },
   });
 
   return accounts.map<AccountSummary>((account) => {
+    const latestSync =
+      account.history.length > 0 ? account.history[0] : undefined;
+
     return {
       id: account.id,
       bankAccount: getBankAccountSummary(account.bankAccount),
@@ -56,9 +65,11 @@ export const getAccountSummaries = async (): Promise<Array<AccountSummary>> => {
         accountName: account.ynabAccount.name,
         budgetName: account.ynabAccount.budget.name,
       },
-      status: getSyncStatus(account.syncStatus),
-      lastSyncTime:
-        account.lastSyncTime === null ? undefined : account.lastSyncTime,
+      status:
+        latestSync !== undefined
+          ? getSyncStatus(latestSync.status)
+          : "notsynced",
+      lastSyncTime: latestSync?.date ?? undefined,
     };
   });
 };

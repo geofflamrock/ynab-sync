@@ -128,20 +128,25 @@ export const syncTransactions = async (
 
   logger.info(`Parsing transactions from '${outputFilePath}'`);
 
-  const transactions = parseCsv(params.ynabAccount.accountId, outputFilePath, {
-    importIdTemplate: params.options.importIdTemplate,
-    debug: params.options.debug,
-    getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
-    getAmount: (input: any) => {
-      if (input.Debit) {
-        return input.Debit * -1;
-      } else {
-        return input.Credit;
-      }
+  const transactions = parseCsv(
+    params.ynabAccount.accountId,
+    outputFilePath,
+    {
+      importIdTemplate: params.options.importIdTemplate,
+      debug: params.options.debug,
+      getDate: (input: any) => parse(input.Date, "dd/MM/yyyy", new Date()),
+      getAmount: (input: any) => {
+        if (input.Debit) {
+          return input.Debit * -1;
+        } else {
+          return input.Credit;
+        }
+      },
+      getMemo: (input: any) => undefined,
+      getPayee: (input: any) => input.Description,
     },
-    getMemo: (input: any) => undefined,
-    getPayee: (input: any) => input.Description,
-  });
+    logger
+  );
 
   logger.info(
     `Parsed ${transactions.length} transactions from '${outputFilePath}'`
