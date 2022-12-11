@@ -1,6 +1,6 @@
 {
   "name": "ynab-sync-cli",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Command line interface for running YNAB syncs",
   "scripts": {
     "build": "tsc",
@@ -15,7 +15,7 @@
     "keyv": "^4.5.0",
     "os-locale": "^5.0.0",
     "ynab-sync-core": "0.3.0",
-    "ynab-sync-st-george-au": "0.3.1",
+    "ynab-sync-st-george-au": "0.3.2",
     "ynab-sync-westpac-au": "0.4.1"
   },
   "devDependencies": {
