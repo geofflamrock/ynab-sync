@@ -119,6 +119,7 @@ export default function SyncHistoryDetail() {
           <SubHeading title="Details" />
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <DetailSection
+              layout="condensed"
               icon={
                 <SyncStatusIcon
                   status={syncDetail.status}
@@ -130,6 +131,11 @@ export default function SyncHistoryDetail() {
                 {
                   name: "Status",
                   value: getSyncStatusTitle(syncDetail.status),
+                },
+                { name: "Sync number", value: syncDetail.id.toString() },
+                {
+                  name: "Started",
+                  value: format(new Date(syncDetail.date), "Pp"),
                 },
               ]}
             />
