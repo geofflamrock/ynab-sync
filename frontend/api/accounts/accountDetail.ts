@@ -49,6 +49,7 @@ export type AccountDetail = {
   status: SyncStatus;
   lastSyncTime?: Date;
   history: Array<SyncDetail>;
+  totalTransactionsSynced?: number;
 };
 
 export const getAccountDetail = async (
@@ -78,6 +79,15 @@ export const getAccountDetail = async (
   });
 
   if (account === null) return undefined;
+
+  const totalTransactionsSynced = await prisma.sync.aggregate({
+    where: {
+      accountId: id,
+    },
+    _sum: {
+      transactionsCreatedCount: true,
+    },
+  });
 
   const latestSync =
     account.history.length > 0 ? account.history[0] : undefined;
@@ -115,6 +125,8 @@ export const getAccountDetail = async (
     ),
     lastSyncTime: latestSync ? latestSync.date : undefined,
     status: latestSync ? getSyncStatus(latestSync.status) : "notsynced",
+    totalTransactionsSynced:
+      totalTransactionsSynced?._sum?.transactionsCreatedCount ?? undefined,
   };
 };
 

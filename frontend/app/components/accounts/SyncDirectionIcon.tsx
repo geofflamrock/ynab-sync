@@ -1,5 +1,14 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import classnames from "classnames";
 
-export function SyncDirectionIcon() {
-  return <ArrowRightIcon className="h-4 w-4 text-gray-500" />;
+type SyncDirectionIconProps = {
+  className?: string;
+};
+
+export function SyncDirectionIcon({ className }: SyncDirectionIconProps) {
+  return (
+    <ArrowRightIcon
+      className={classnames("h-4 w-4 text-gray-500", className)}
+    />
+  );
 }
