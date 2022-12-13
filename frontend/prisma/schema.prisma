@@ -60,13 +60,16 @@ model Account {
 }
 
 model Sync {
-  id                         Int      @id @default(autoincrement())
+  id                         Int       @id @default(autoincrement())
   accountId                  Int
-  account                    Account  @relation(fields: [accountId], references: [id])
-  date                       DateTime
-  status                     String   @default("queued")
-  details                    String   @default("{}")
+  account                    Account   @relation(fields: [accountId], references: [id])
+  status                     String    @default("queued")
+  details                    String    @default("{}")
   transactionsCreatedCount   Int?
   transactionsUpdatedCount   Int?
   transactionsUnchangedCount Int?
+  minTransactionDate         DateTime?
+  maxTransactionDate         DateTime?
+  created                    DateTime  @default(now())
+  lastUpdated                DateTime  @default(now())
 }

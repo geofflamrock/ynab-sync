@@ -56,7 +56,7 @@ export default function Account() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-4">
         <Paper className="flex h-48 w-48 flex-col items-center justify-around gap-4 p-8">
           <div className="flex flex-col items-center justify-center gap-1">
             <SyncStatusIcon status={account.status} size="xl" />
@@ -69,16 +69,28 @@ export default function Account() {
             }
           />
         </Paper>
+        {account.minTransactionDate && (
+          <Paper className="flex h-48 w-48 flex-col items-center justify-around gap-8 p-8">
+            <span className="text-center text-xl">
+              {format(new Date(account.minTransactionDate), "PP")}
+            </span>
+            <span className="text-center text-sm text-gray-500">
+              Transactions synced from
+            </span>
+          </Paper>
+        )}
+        {account.maxTransactionDate && (
+          <Paper className="flex h-48 w-48 flex-col items-center justify-around gap-8 p-8">
+            <span className="text-center text-xl">
+              {format(new Date(account.maxTransactionDate), "PP")}
+            </span>
+            <span className="text-center text-sm text-gray-500">
+              Transactions synced up to
+            </span>
+          </Paper>
+        )}
         <Paper className="flex h-48 w-48 flex-col items-center justify-around gap-8 p-8">
-          <span className="text-center text-xl">
-            {format(new Date(), "PP")}
-          </span>
-          <span className="text-center text-sm text-gray-500">
-            Transactions synced up to
-          </span>
-        </Paper>
-        <Paper className="flex h-48 w-48 flex-col items-center justify-around gap-8 p-8">
-          <span className="text-2xl">{account.totalTransactionsSynced}</span>
+          <span className="text-xl">{account.totalTransactionsSynced}</span>
           <span className="text-center text-sm text-gray-500">
             Total transactions synced
           </span>
@@ -105,16 +117,6 @@ export default function Account() {
                 { name: "Account", value: account.ynab.accountName },
               ]}
             />
-            <DetailSection
-              icon={<KeyIcon className="mt-2 h-8 w-8" />}
-              items={account.bank.credentials.fields.map((field) => {
-                return { name: field.displayName, value: "********" };
-              })}
-            />
-            <DetailSection
-              icon={<KeyIcon className="mt-2 h-8 w-8" />}
-              items={[{ name: "API Key", value: "********" }]}
-            />
           </div>
         </ExpandablePaper>
         <ExpandablePaper title="History">
@@ -127,7 +129,7 @@ export default function Account() {
               >
                 <SyncStatusWithLastSyncTime
                   status={h.status}
-                  lastSyncTime={h.date}
+                  lastSyncTime={h.lastUpdated}
                 />
                 <div className="ml-auto text-sm">
                   {h.status === "synced" && (
@@ -191,7 +193,7 @@ export default function Account() {
               >
                 <SyncStatusWithLastSyncTime
                   status={h.status}
-                  lastSyncTime={h.date}
+                  lastSyncTime={h.lastUpdated}
                 />
                 <div className="ml-auto text-sm">
                   {h.status === "synced" && (

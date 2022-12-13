@@ -47,7 +47,7 @@ export const getAccountSummaries = async (): Promise<Array<AccountSummary>> => {
       },
       history: {
         orderBy: {
-          date: "desc",
+          lastUpdated: "desc",
         },
         take: 1,
       },
@@ -69,7 +69,7 @@ export const getAccountSummaries = async (): Promise<Array<AccountSummary>> => {
         latestSync !== undefined
           ? getSyncStatus(latestSync.status)
           : "notsynced",
-      lastSyncTime: latestSync?.date ?? undefined,
+      lastSyncTime: latestSync?.lastUpdated ?? undefined,
     };
   });
 };

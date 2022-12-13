@@ -2,7 +2,6 @@ import type { BankAccount, Sync, BankCredential } from "@prisma/client";
 import { prisma } from "../client";
 import type { SyncStatus } from "../sync";
 import { getSyncStatus } from "../sync";
-import { orderBy } from "lodash";
 import type {
   BankCredentialFields,
   SupportedBankTypes,
@@ -36,10 +35,13 @@ export type YnabAccountDetail = {
 export type SyncDetail = {
   id: number;
   status: SyncStatus;
-  date: Date;
+  created: Date;
+  lastUpdated: Date;
   transactionsCreatedCount?: number;
   transactionsUpdatedCount?: number;
   transactionsUnchangedCount?: number;
+  minTransactionDate?: Date;
+  maxTransactionDate?: Date;
 };
 
 export type AccountDetail = {
@@ -50,6 +52,8 @@ export type AccountDetail = {
   lastSyncTime?: Date;
   history: Array<SyncDetail>;
   totalTransactionsSynced?: number;
+  minTransactionDate?: Date;
+  maxTransactionDate?: Date;
 };
 
 export const getAccountDetail = async (
@@ -70,7 +74,7 @@ export const getAccountDetail = async (
       ynabCredentials: true,
       history: {
         orderBy: {
-          date: "desc",
+          lastUpdated: "desc",
         },
         skip: 0,
         take: 10,
@@ -80,12 +84,18 @@ export const getAccountDetail = async (
 
   if (account === null) return undefined;
 
-  const totalTransactionsSynced = await prisma.sync.aggregate({
+  const syncStatistics = await prisma.sync.aggregate({
     where: {
       accountId: id,
     },
     _sum: {
       transactionsCreatedCount: true,
+    },
+    _min: {
+      minTransactionDate: true,
+    },
+    _max: {
+      maxTransactionDate: true,
     },
   });
 
@@ -102,31 +112,32 @@ export const getAccountDetail = async (
       budgetName: account.ynabAccount.budget.name,
       credentialsId: account.ynabCredentials.id,
     },
-    history: orderBy(account.history, ["date"], ["desc"]).map<SyncDetail>(
-      (h: Sync) => {
-        return {
-          date: h.date,
-          id: h.id,
-          status: getSyncStatus(h.status),
-          transactionsCreatedCount:
-            h.transactionsCreatedCount !== null
-              ? h.transactionsCreatedCount
-              : undefined,
-          transactionsUpdatedCount:
-            h.transactionsUpdatedCount !== null
-              ? h.transactionsUpdatedCount
-              : undefined,
-          transactionsUnchangedCount:
-            h.transactionsUnchangedCount !== null
-              ? h.transactionsUnchangedCount
-              : undefined,
-        };
-      }
-    ),
-    lastSyncTime: latestSync ? latestSync.date : undefined,
+    history: account.history.map<SyncDetail>((h: Sync) => {
+      return {
+        id: h.id,
+        status: getSyncStatus(h.status),
+        transactionsCreatedCount:
+          h.transactionsCreatedCount !== null
+            ? h.transactionsCreatedCount
+            : undefined,
+        transactionsUpdatedCount:
+          h.transactionsUpdatedCount !== null
+            ? h.transactionsUpdatedCount
+            : undefined,
+        transactionsUnchangedCount:
+          h.transactionsUnchangedCount !== null
+            ? h.transactionsUnchangedCount
+            : undefined,
+        created: h.created,
+        lastUpdated: h.lastUpdated,
+      };
+    }),
+    lastSyncTime: latestSync ? latestSync.lastUpdated : undefined,
     status: latestSync ? getSyncStatus(latestSync.status) : "notsynced",
     totalTransactionsSynced:
-      totalTransactionsSynced?._sum?.transactionsCreatedCount ?? undefined,
+      syncStatistics?._sum?.transactionsCreatedCount ?? undefined,
+    minTransactionDate: syncStatistics?._min?.minTransactionDate ?? undefined,
+    maxTransactionDate: syncStatistics?._max?.maxTransactionDate ?? undefined,
   };
 };
 
