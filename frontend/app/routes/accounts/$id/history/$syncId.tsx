@@ -119,6 +119,7 @@ export default function SyncHistoryDetail() {
           <SubHeading title="Details" />
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <DetailSection
+              layout="condensed"
               icon={
                 <SyncStatusIcon
                   status={syncDetail.status}
@@ -131,45 +132,57 @@ export default function SyncHistoryDetail() {
                   name: "Status",
                   value: getSyncStatusTitle(syncDetail.status),
                 },
-              ]}
-            />
-            <DetailSection
-              icon={<CalendarDaysIcon className="mt-2 h-8 w-8" />}
-              items={[
+                { name: "Sync number", value: syncDetail.id.toString() },
                 {
-                  name: "Min transaction date",
-                  value: format(
-                    parseISO(syncDetail.options.startDate),
-                    "dd/MM/yyyy"
-                  ),
+                  name: "Started",
+                  value: format(new Date(syncDetail.created), "Pp"),
                 },
               ]}
             />
             {syncDetail.status === "synced" && (
-              <DetailSection
-                layout="condensed"
-                icon={<CreditCardIcon className="mt-2 h-8 w-8" />}
-                items={[
-                  {
-                    name: "New",
-                    value:
-                      syncDetail.transactionsCreatedCount?.toString() ??
-                      "Unknown",
-                  },
-                  {
-                    name: "Updated",
-                    value:
-                      syncDetail.transactionsUpdatedCount?.toString() ??
-                      "Unknown",
-                  },
-                  {
-                    name: "Not changed",
-                    value:
-                      syncDetail.transactionsUnchangedCount?.toString() ??
-                      "Unknown",
-                  },
-                ]}
-              />
+              <>
+                <DetailSection
+                  icon={<CalendarDaysIcon className="mt-2 h-8 w-8" />}
+                  items={[
+                    {
+                      name: "Min transaction date",
+                      value: syncDetail.minTransactionDate
+                        ? format(parseISO(syncDetail.minTransactionDate), "PP")
+                        : "",
+                    },
+                    {
+                      name: "Max transaction date",
+                      value: syncDetail.maxTransactionDate
+                        ? format(parseISO(syncDetail.maxTransactionDate), "PP")
+                        : "",
+                    },
+                  ]}
+                />
+                <DetailSection
+                  layout="condensed"
+                  icon={<CreditCardIcon className="mt-2 h-8 w-8" />}
+                  items={[
+                    {
+                      name: "New",
+                      value:
+                        syncDetail.transactionsCreatedCount?.toString() ??
+                        "Unknown",
+                    },
+                    {
+                      name: "Updated",
+                      value:
+                        syncDetail.transactionsUpdatedCount?.toString() ??
+                        "Unknown",
+                    },
+                    {
+                      name: "Not changed",
+                      value:
+                        syncDetail.transactionsUnchangedCount?.toString() ??
+                        "Unknown",
+                    },
+                  ]}
+                />
+              </>
             )}
           </div>
         </div>

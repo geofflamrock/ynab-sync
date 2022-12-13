@@ -1,11 +1,10 @@
 import { formatISO, parseISO } from "date-fns";
-import { existsSync } from "fs";
-// import { existsSync } from "fs";
 import { readFile } from "fs/promises";
 import { EOL } from "os";
 import { prisma } from "../client";
 import { pathExistsSync } from "fs-extra";
 import type { TransactionImportResults } from "ynab-sync-core";
+import { max, maxBy, min, minBy } from "lodash";
 
 export type SyncStatus =
   | "notsynced"
@@ -48,12 +47,15 @@ export type SyncLogMessage = {
 
 export type SyncDetailWithLogs = {
   id: number;
-  date: Date;
   status: SyncStatus;
   options: SyncOptions;
   transactionsCreatedCount?: number;
   transactionsUpdatedCount?: number;
   transactionsUnchangedCount?: number;
+  minTransactionDate?: Date;
+  maxTransactionDate?: Date;
+  created: Date;
+  lastUpdated: Date;
   logs: Array<SyncLogMessage>;
 };
 
@@ -88,21 +90,15 @@ export async function getSyncDetail(
 
   return {
     id: sync.id,
-    date: sync.date,
     status: getSyncStatus(sync.status),
     options: parseSyncOptions(sync.details),
-    transactionsCreatedCount:
-      sync.transactionsCreatedCount !== null
-        ? sync.transactionsCreatedCount
-        : undefined,
-    transactionsUnchangedCount:
-      sync.transactionsUnchangedCount !== null
-        ? sync.transactionsUnchangedCount
-        : undefined,
-    transactionsUpdatedCount:
-      sync.transactionsUpdatedCount !== null
-        ? sync.transactionsUpdatedCount
-        : undefined,
+    transactionsCreatedCount: sync.transactionsCreatedCount ?? undefined,
+    transactionsUnchangedCount: sync.transactionsUnchangedCount ?? undefined,
+    transactionsUpdatedCount: sync.transactionsUpdatedCount ?? undefined,
+    minTransactionDate: sync.minTransactionDate ?? undefined,
+    maxTransactionDate: sync.maxTransactionDate ?? undefined,
+    created: sync.created,
+    lastUpdated: sync.lastUpdated,
     logs,
   };
 }
@@ -145,27 +141,60 @@ export function parseSyncOptions(options: string): SyncOptions {
 
 export async function updateSuccessfulSync(
   syncId: number,
-  importResults?: TransactionImportResults
+  importResults: TransactionImportResults
 ) {
-  const now = new Date();
-  const sync = await prisma.sync.update({
+  const minCreatedTransaction = minBy(
+    importResults.transactionsCreated,
+    (t) => t.date
+  );
+  const minUpdatedTransaction = minBy(
+    importResults.transactionsUpdated,
+    (t) => t.date
+  );
+  const minUnchangedTransaction = minBy(
+    importResults.transactionsUnchanged,
+    (t) => t.date
+  );
+  const minTransactionDate = min([
+    minCreatedTransaction?.date,
+    minUpdatedTransaction?.date,
+    minUnchangedTransaction?.date,
+  ]);
+  const maxCreatedTransaction = maxBy(
+    importResults.transactionsCreated,
+    (t) => t.date
+  );
+  const maxUpdatedTransaction = maxBy(
+    importResults.transactionsUpdated,
+    (t) => t.date
+  );
+  const maxUnchangedTransaction = maxBy(
+    importResults.transactionsUnchanged,
+    (t) => t.date
+  );
+  const maxTransactionDate = max([
+    maxCreatedTransaction?.date,
+    maxUnchangedTransaction?.date,
+    maxUpdatedTransaction?.date,
+  ]);
+
+  await prisma.sync.update({
     where: {
       id: syncId,
     },
     data: {
       status: "synced",
-      date: now,
-      transactionsCreatedCount:
-        importResults !== undefined
-          ? importResults.transactionsCreated.length
+      lastUpdated: new Date(),
+      transactionsCreatedCount: importResults.transactionsCreated.length,
+      transactionsUnchangedCount: importResults.transactionsUnchanged.length,
+      transactionsUpdatedCount: importResults.transactionsUpdated.length,
+      minTransactionDate:
+        minTransactionDate !== undefined
+          ? parseISO(minTransactionDate)
           : undefined,
-      transactionsUnchangedCount:
-        importResults !== undefined
-          ? importResults.transactionsUnchanged.length
-          : undefined,
-      transactionsUpdatedCount:
-        importResults !== undefined
-          ? importResults.transactionsUpdated.length
+      maxTransactionDate:
+        maxTransactionDate !== undefined
+          ? parseISO(maxTransactionDate)
           : undefined,
     },
   });
@@ -178,7 +207,7 @@ export async function updateSync(syncId: number, status: SyncStatus) {
     },
     data: {
       status: status,
-      date: new Date(),
+      lastUpdated: new Date(),
     },
   });
 }
@@ -208,7 +237,8 @@ export const syncNow = async (accountId: number, options: SyncOptions) => {
     data: {
       accountId: account.id,
       status: "queued",
-      date: now,
+      created: now,
+      lastUpdated: now,
       details: formatSyncOptions(options),
     },
   });
@@ -222,7 +252,7 @@ export async function getNextSync() {
       status: "queued",
     },
     orderBy: {
-      date: "asc",
+      lastUpdated: "asc",
     },
     include: {
       account: {
@@ -247,7 +277,7 @@ export async function getInProgressSyncs() {
       status: "syncing",
     },
     orderBy: {
-      date: "asc",
+      lastUpdated: "asc",
     },
   });
 }

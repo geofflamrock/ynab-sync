@@ -11,7 +11,7 @@ import classnames from "classnames";
 
 export type SyncStatusIconProps = {
   status: SyncStatus;
-  size?: "small" | "large";
+  size?: "small" | "large" | "xl" | "2xl";
   className?: string;
 };
 
@@ -24,6 +24,8 @@ export function SyncStatusIcon({
     {
       "h-6 w-6": size === undefined || size === "small",
       "h-8 w-8": size === "large",
+      "h-12 w-12": size === "xl",
+      "h-16 w-16": size === "2xl",
     },
     className
   );
