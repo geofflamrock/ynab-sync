@@ -1,5 +1,11 @@
 # ynab-sync-core
 
+## 0.4.0
+
+### Minor Changes
+
+- c15439f: Initial version of UI
+
 ## 0.3.0
 
 ### Minor Changes

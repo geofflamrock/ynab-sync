@@ -1,5 +1,18 @@
 # ynab-sync-cli
 
+## 0.5.0
+
+### Minor Changes
+
+- c15439f: Initial version of UI
+
+### Patch Changes
+
+- Updated dependencies [c15439f]
+  - ynab-sync-core@0.4.0
+  - ynab-sync-st-george-au@0.4.0
+  - ynab-sync-westpac-au@0.5.0
+
 ## 0.4.2
 
 ### Patch Changes

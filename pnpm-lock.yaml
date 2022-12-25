@@ -91,9 +91,9 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       tiny-invariant: 1.3.1
       winston: 3.8.2
-      ynab-sync-core: link:../packages/core
+      ynab-sync-core: 0.3.0
       ynab-sync-st-george-au: 0.3.1
-      ynab-sync-westpac-au: link:../packages/westpac-au
+      ynab-sync-westpac-au: 0.4.1
     devDependencies:
       '@remix-run/dev': 1.7.4_uroeops6y5plvzrhwx7fnuiija
       '@remix-run/eslint-config': 1.7.4_lmezopescv3nnfjcfgbaewnf6i
@@ -127,9 +127,9 @@ importers:
       pkg: ^5.3.0
       tslib: ^2.3.0
       typescript: ^4.3.4
-      ynab-sync-core: 0.3.0
-      ynab-sync-st-george-au: 0.3.2
-      ynab-sync-westpac-au: 0.4.1
+      ynab-sync-core: 0.4.0
+      ynab-sync-st-george-au: 0.4.0
+      ynab-sync-westpac-au: 0.5.0
     dependencies:
       commander: 7.2.0
       date-fns: 2.22.1
@@ -186,7 +186,7 @@ importers:
       puppeteer: ^9.1.1
       tslib: ^2.2.0
       typescript: ^4.2.4
-      ynab-sync-core: 0.3.0
+      ynab-sync-core: 0.4.0
     dependencies:
       cli-progress: 3.9.0
       keyv: 4.5.0
@@ -213,8 +213,8 @@ importers:
       tslib: ^2.2.0
       typescript: ^4.2.4
       ynab: ^1.25.0
-      ynab-sync-core: 0.3.0
-      ynab-sync-puppeteer: 0.1.0
+      ynab-sync-core: 0.4.0
+      ynab-sync-puppeteer: 0.2.0
     dependencies:
       date-fns: 2.22.1
       keyv: 4.5.0
@@ -243,8 +243,8 @@ importers:
       tmp: ^0.2.1
       tslib: ^2.2.0
       typescript: ^4.2.4
-      ynab-sync-core: 0.3.0
-      ynab-sync-puppeteer: 0.1.0
+      ynab-sync-core: 0.4.0
+      ynab-sync-puppeteer: 0.2.0
     dependencies:
       date-fns: 2.22.1
       keyv: 4.5.0
@@ -10029,7 +10029,7 @@ packages:
     dev: true
 
   /string-template/1.0.0:
-    resolution: {integrity: sha1-np8iM9wA8hhxjsN5oopWc+zKi5Y=}
+    resolution: {integrity: sha512-SLqR3GBUXuoPP5MmYtD7ompvXiG87QjT6lzOszyXjTM86Uu7At7vNnt2xgyTLq5o9T4IxTYFyGxcULqpsmsfdg==}
     dev: false
 
   /string-width/1.0.2:
@@ -11206,6 +11206,21 @@ packages:
       puppeteer: 9.1.1
       tmp: 0.2.1
       ynab: 1.25.0
+      ynab-sync-core: 0.3.0
+      ynab-sync-puppeteer: 0.1.0
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: false
+
+  /ynab-sync-westpac-au/0.4.1:
+    resolution: {integrity: sha512-vN9sqASAPx2k52/7Ww9U6ASJf5KhCzGcDg8Yxhx2RHscA1p1GUxseYwDUC2qWNyT90d4k8dfVfVzV91DEjrpeA==}
+    dependencies:
+      date-fns: 2.29.3
+      lodash: 4.17.21
+      puppeteer: 9.1.1
+      tmp: 0.2.1
       ynab-sync-core: 0.3.0
       ynab-sync-puppeteer: 0.1.0
     transitivePeerDependencies:
