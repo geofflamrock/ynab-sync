@@ -57,6 +57,7 @@ model Account {
   ynabAccountId    String
   ynabAccount      YnabAccount    @relation(fields: [ynabAccountId], references: [id])
   history          Sync[]
+  scheduleCron     String?
 }
 
 model Sync {

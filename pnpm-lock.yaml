@@ -47,6 +47,8 @@ importers:
       '@types/react-dom': ^18.0.6
       classnames: ^2.3.2
       copyfiles: 2.4.1
+      cron-parser: ^4.7.0
+      cronstrue: ^2.21.0
       date-fns: ^2.29.3
       dotenv: 16.0.3
       esbuild: 0.15.14
@@ -78,6 +80,8 @@ importers:
       '@remix-run/react': 1.7.4_biqbaboplfbrettd7655fr4n2y
       '@remix-run/serve': 1.7.4_biqbaboplfbrettd7655fr4n2y
       classnames: 2.3.2
+      cron-parser: 4.7.0
+      cronstrue: 2.21.0
       date-fns: 2.29.3
       dotenv: 16.0.3
       fs-extra: 10.1.0
@@ -3825,6 +3829,18 @@ packages:
     resolution: {integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=}
     dev: true
 
+  /cron-parser/4.7.0:
+    resolution: {integrity: sha512-BdAELR+MCT2ZWsIBhZKDuUqIUCBjHHulPJnm53OfdRLA4EWBjva3R+KM5NeidJuGsNXdEcZkjC7SCnkW5rAFSA==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      luxon: 3.1.1
+    dev: false
+
+  /cronstrue/2.21.0:
+    resolution: {integrity: sha512-YxabE1ZSHA1zJZMPCTSEbc0u4cRRenjqqTgCwJT7OvkspPSvfYFITuPFtsT+VkBuavJtFv2kJXT+mKSnlUJxfg==}
+    hasBin: true
+    dev: false
+
   /cross-spawn/5.1.0:
     resolution: {integrity: sha1-6L0O/uWPz/b4+UUQoKVUu/ojVEk=}
     dependencies:
@@ -7240,6 +7256,11 @@ packages:
     resolution: {integrity: sha512-EIRtP1GrSJny0dqb50QXRUNBxHJhcpxHC++M5tD7RYbvLLn5KVWKsbyswSSqDuU15UFi3bgTQIY8nhDMeF6aDQ==}
     engines: {node: '>=12'}
     dev: true
+
+  /luxon/3.1.1:
+    resolution: {integrity: sha512-Ah6DloGmvseB/pX1cAmjbFvyU/pKuwQMQqz7d0yvuDlVYLTs2WeDHQMpC8tGjm1da+BriHROW/OEIT/KfYg6xw==}
+    engines: {node: '>=12'}
+    dev: false
 
   /lz-string/1.4.4:
     resolution: {integrity: sha512-0ckx7ZHRPqb0oUm8zNr+90mtf9DQB60H1wMCjBtfi62Kl3a7JbHob6gA2bC+xRvZoOL+1hzUK8jeuEIQE8svEQ==}

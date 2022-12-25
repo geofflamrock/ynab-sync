@@ -1,17 +1,14 @@
 import {
   ChevronDownIcon,
-  ChevronRightIcon,
   ChevronUpIcon,
+  ClockIcon,
   KeyIcon,
 } from "@heroicons/react/24/outline";
 import { NavLink, useOutletContext } from "@remix-run/react";
 import classNames from "classnames";
-import { format } from "date-fns";
+import { format, formatRelative } from "date-fns";
 import { useState } from "react";
 import type { AccountDetail } from "~/../api";
-import { BankAccountSummary } from "~/components/accounts/BankAccountSummary";
-import { SyncDirectionIcon } from "~/components/accounts/SyncDirectionIcon";
-import { YnabAccountSummary } from "~/components/accounts/YnabAccountSummary";
 import { BankLogo } from "~/components/bank/BankLogo";
 import { getBankTitle } from "~/components/bank/BankTitle";
 import { useRefreshOnInterval } from "~/components/hooks/useRefreshOnInterval";
@@ -19,10 +16,15 @@ import { Paper } from "~/components/layout/Paper";
 import { DetailSection } from "~/components/primitive/DetailSection";
 import { SubHeading } from "~/components/primitive/SubHeading";
 import { SyncNowButton } from "~/components/sync/SyncNowButton";
-import { SyncStatusWithLastSyncTime } from "~/components/sync/SyncStatus";
+import {
+  LastSyncTime,
+  SyncStatusWithLastSyncTime,
+} from "~/components/sync/SyncStatus";
 import { SyncStatusIcon } from "~/components/sync/SyncStatusIcon";
 import { SyncStatusTitle } from "~/components/sync/SyncStatusTitle";
 import { YnabIcon } from "~/components/ynab/YnabIcon";
+import cronstrue from "cronstrue";
+import parser from "cron-parser";
 
 type ExpandablePaperProps = {
   title: string;
@@ -50,6 +52,20 @@ function ExpandablePaper({ title, children, className }: ExpandablePaperProps) {
   );
 }
 
+type SummaryCardProps = {
+  description: string;
+  value: string;
+};
+
+function SummaryCard({ description, value }: SummaryCardProps) {
+  return (
+    <Paper className="flex h-48 w-48 flex-col items-center justify-evenly gap-8 p-8">
+      <span className="text-center text-xl">{value}</span>
+      <span className="text-center text-sm text-gray-500">{description}</span>
+    </Paper>
+  );
+}
+
 export default function Account() {
   const account = useOutletContext<AccountDetail>();
   useRefreshOnInterval({ enabled: true, interval: 5000 });
@@ -61,6 +77,7 @@ export default function Account() {
           <div className="flex flex-col items-center justify-center gap-1">
             <SyncStatusIcon status={account.status} size="xl" />
             <SyncStatusTitle status={account.status} />
+            <LastSyncTime lastSyncTime={account.lastSyncTime} />
           </div>
           <SyncNowButton
             accountId={account.id}
@@ -69,32 +86,32 @@ export default function Account() {
             }
           />
         </Paper>
-        {account.minTransactionDate && (
-          <Paper className="flex h-48 w-48 flex-col items-center justify-around gap-8 p-8">
-            <span className="text-center text-xl">
-              {format(new Date(account.minTransactionDate), "PP")}
-            </span>
-            <span className="text-center text-sm text-gray-500">
-              Transactions synced from
-            </span>
-          </Paper>
-        )}
+        <SummaryCard
+          description="Next sync"
+          value={
+            account.schedule
+              ? formatRelative(
+                  parser
+                    .parseExpression(account.schedule, {
+                      currentDate: account.lastSyncTime,
+                    })
+                    .next()
+                    .toDate(),
+                  new Date()
+                )
+              : "No schedule"
+          }
+        />
         {account.maxTransactionDate && (
-          <Paper className="flex h-48 w-48 flex-col items-center justify-around gap-8 p-8">
-            <span className="text-center text-xl">
-              {format(new Date(account.maxTransactionDate), "PP")}
-            </span>
-            <span className="text-center text-sm text-gray-500">
-              Transactions synced up to
-            </span>
-          </Paper>
+          <SummaryCard
+            description="Synced to"
+            value={format(new Date(account.maxTransactionDate), "PP")}
+          />
         )}
-        <Paper className="flex h-48 w-48 flex-col items-center justify-around gap-8 p-8">
-          <span className="text-xl">{account.totalTransactionsSynced}</span>
-          <span className="text-center text-sm text-gray-500">
-            Total transactions synced
-          </span>
-        </Paper>
+        <SummaryCard
+          description="Total synced"
+          value={account.totalTransactionsSynced?.toString() ?? "0"}
+        />
       </div>
       <div className="flex flex-col gap-4">
         <ExpandablePaper title="Details">
@@ -109,12 +126,22 @@ export default function Account() {
                 }),
               ]}
             />
-
             <DetailSection
               icon={<YnabIcon className="mt-2" />}
               items={[
                 { name: "Budget", value: account.ynab.budgetName },
                 { name: "Account", value: account.ynab.accountName },
+              ]}
+            />
+            <DetailSection
+              icon={<ClockIcon className="mt-1 -ml-1 h-10 w-10" />}
+              items={[
+                {
+                  name: "Schedule",
+                  value: account.schedule
+                    ? cronstrue.toString(account.schedule, { verbose: true })
+                    : "Not set",
+                },
               ]}
             />
           </div>
