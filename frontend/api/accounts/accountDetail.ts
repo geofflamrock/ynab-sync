@@ -48,6 +48,7 @@ export type AccountDetail = {
   id: number;
   bank: BankAccountDetail;
   ynab: YnabAccountDetail;
+  schedule?: string;
   status: SyncStatus;
   lastSyncTime?: Date;
   history: Array<SyncDetail>;
@@ -112,6 +113,7 @@ export const getAccountDetail = async (
       budgetName: account.ynabAccount.budget.name,
       credentialsId: account.ynabCredentials.id,
     },
+    schedule: account.scheduleCron ?? undefined,
     history: account.history.map<SyncDetail>((h: Sync) => {
       return {
         id: h.id,

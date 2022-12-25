@@ -133,10 +133,6 @@ export default function SyncHistoryDetail() {
                   value: getSyncStatusTitle(syncDetail.status),
                 },
                 { name: "Sync number", value: syncDetail.id.toString() },
-                {
-                  name: "Started",
-                  value: format(new Date(syncDetail.created), "Pp"),
-                },
               ]}
             />
             {syncDetail.status === "synced" && (
