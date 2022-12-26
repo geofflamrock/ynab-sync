@@ -1,6 +1,7 @@
 const { initRemix } = require("remix-electron");
 const { app, BrowserWindow } = require("electron");
 const { join } = require("node:path");
+const { Worker } = require("node:worker_threads");
 const env = process.env.NODE_ENV || "development";
 
 // If development environment
@@ -24,6 +25,13 @@ app.on("ready", async () => {
     win = new BrowserWindow({ show: false });
     await win.loadURL(url);
     win.show();
+
+    var syncWorker = new Worker(
+      join(__dirname, "..", "build", "workers", "sync.js")
+    );
+    var scheduleWorker = new Worker(
+      join(__dirname, "..", "build", "workers", "schedule.js")
+    );
   } catch (error) {
     console.error(error);
   }
