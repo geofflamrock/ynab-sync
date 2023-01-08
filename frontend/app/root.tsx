@@ -39,8 +39,7 @@ export const links: LinksFunction = () => [
     type: "image/png",
     sizes: "16x16",
   },
-  { rel: "preconnect", href: "https://rsms.me/" },
-  { rel: "stylesheet", href: "https://rsms.me/inter/inter.css" },
+  { rel: "stylesheet", href: "/fonts/inter/inter.css" },
   { rel: "stylesheet", href: styles },
 ];
 
