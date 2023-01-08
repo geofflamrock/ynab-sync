@@ -1,7 +1,6 @@
 const { initRemix } = require("remix-electron");
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, utilityProcess } = require("electron");
 const { join } = require("node:path");
-const { Worker } = require("node:worker_threads");
 const env = process.env.NODE_ENV || "development";
 
 // If development environment
@@ -22,14 +21,17 @@ app.on("ready", async () => {
       publicFolder: join(__dirname, "..", "public"),
     });
 
-    win = new BrowserWindow({ show: false });
+    win = new BrowserWindow({
+      show: false,
+      icon: join(__dirname, "..", "public", "android-chrome-192x192.png"),
+    });
+    win.on("ready-to-show", () => {
+      win.show();
+    });
     await win.loadURL(url);
-    win.show();
 
-    var syncWorker = new Worker(
-      join(__dirname, "..", "build", "workers", "sync.js")
-    );
-    var scheduleWorker = new Worker(
+    utilityProcess.fork(join(__dirname, "..", "build", "workers", "sync.js"));
+    utilityProcess.fork(
       join(__dirname, "..", "build", "workers", "schedule.js")
     );
   } catch (error) {
