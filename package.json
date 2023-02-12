@@ -16,6 +16,7 @@
     "lint:fix": "pnpm run --recursive lint:fix",
     "lint": "pnpm run --recursive lint",
     "outdated": "pnpm --recursive outdated",
+    "package": "pnpm run --recursive package",
     "pkg": "pnpm run build && pnpm --recursive pkg",
     "preinstall": "npx only-allow pnpm",
     "test": "pnpm run --recursive test"

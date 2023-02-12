@@ -22,16 +22,14 @@ const NavigationItem = ({ name, icon, to, className }: NavigationItemProps) => (
     to={to}
     className={({ isActive }) =>
       classnames(
-        "group flex flex-col items-center gap-1 py-4 text-gray-700 dark:text-gray-300",
-        { active: isActive },
+        "group flex flex-col items-center border-l-2 border-l-transparent py-4 text-gray-700 dark:text-gray-300",
+        { "!border-l-ynab": isActive },
         className
       )
     }
   >
-    <div className="rounded-full py-1 px-4 group-hover:bg-gray-100 group-[.active]:bg-ynab group-[.active]:text-gray-800 dark:group-hover:bg-gray-700 dark:group-[.active]:bg-ynab">
-      {icon}
-    </div>
-    {name && <span className="text-xs">{name}</span>}
+    <div className="group-hover:text-gray-100">{icon}</div>
+    {/* {name && <span className="text-xs">{name}</span>} */}
   </NavLink>
 );
 
@@ -41,8 +39,8 @@ type NavigationProps = {
 
 export function NavigationRail({ environment }: NavigationProps) {
   return (
-    <div className="flex h-full w-20 flex-col dark:border-r-0 dark:border-r-gray-700 dark:bg-gray-800">
-      <NavigationItem to="/" icon={<Bars3Icon className="h-6 w-6" />} />
+    <div className="flex h-full w-14 flex-col dark:border-r-0 dark:border-r-gray-700 dark:bg-gray-800">
+      {/* <NavigationItem to="/" icon={<Bars3Icon className="h-6 w-6" />} /> */}
       <NavigationItem
         to="/accounts"
         icon={<CreditCardIcon className="h-6 w-6" />}

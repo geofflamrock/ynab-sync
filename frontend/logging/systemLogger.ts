@@ -6,7 +6,13 @@ const winstonSystemLogger = winston.createLogger({
   levels: logLevels.levels,
   level: "debug",
   format: winston.format.simple(),
-  transports: [new winston.transports.Console()],
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({
+      dirname: ".",
+      filename: `ynab-sync.log`,
+    }),
+  ],
 });
 
 winston.addColors(logLevels.colors);
