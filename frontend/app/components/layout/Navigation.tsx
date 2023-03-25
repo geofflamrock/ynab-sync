@@ -43,12 +43,12 @@ export function NavigationRail({ environment }: NavigationProps) {
       {/* <NavigationItem to="/" icon={<Bars3Icon className="h-6 w-6" />} /> */}
       <NavigationItem
         to="/accounts"
-        icon={<CreditCardIcon className="h-6 w-6" />}
+        icon={<CreditCardIcon className="h-7 w-7" />}
         name="Accounts"
       />
       <NavigationItem
         to="/credentials"
-        icon={<KeyIcon className="h-6 w-6" />}
+        icon={<KeyIcon className="h-7 w-7" />}
         name="Credentials"
       />
       <div className="mt-auto">
@@ -61,7 +61,7 @@ export function NavigationRail({ environment }: NavigationProps) {
         )} */}
         <NavigationItem
           to="/settings"
-          icon={<Cog6ToothIcon className="h-6 w-6" />}
+          icon={<Cog6ToothIcon className="h-7 w-7" />}
           name="Settings"
         />
       </div>

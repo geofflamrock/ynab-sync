@@ -2,6 +2,9 @@ import { initRemix } from "remix-electron";
 import { app, BrowserWindow, Menu, utilityProcess } from "electron";
 import { join } from "path";
 import { systemLogger } from "logging";
+import { existsSync, readFileSync, writeFileSync } from "fs-extra";
+import type { YnabSyncConfig } from "config";
+import { getConfig, setConfig } from "config";
 
 const env = process.env.NODE_ENV || "development";
 
@@ -16,11 +19,28 @@ const env = process.env.NODE_ENV || "development";
 if (require("electron-squirrel-startup")) app.quit();
 
 try {
+  // load config
+  const configFilePath = "./ynab-sync.config.json";
+
+  if (existsSync(configFilePath)) {
+    const config: YnabSyncConfig = JSON.parse(
+      readFileSync(configFilePath).toString()
+    );
+
+    setConfig(config);
+  } else {
+    writeFileSync(configFilePath, JSON.stringify(getConfig()));
+  }
+
   systemLogger.info("Starting ynab-sync application");
 
   let win: BrowserWindow;
 
   systemLogger.info(`Electron app`, app);
+
+  process.env.YNAB_SYNC_DATABASE_URL = `file:${
+    getConfig().dataDirectory
+  }/ynab-sync.db`;
 
   app.on("ready", async () => {
     try {

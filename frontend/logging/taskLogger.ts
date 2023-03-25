@@ -1,6 +1,7 @@
 import type { Logger } from "ynab-sync-core";
 import { createLogger, format, transports } from "winston";
 import { logLevels } from "./levels";
+import { getConfig } from "config";
 const { combine, timestamp, json } = format;
 
 export function createTaskLogger(id: string): Logger {
@@ -10,7 +11,7 @@ export function createTaskLogger(id: string): Logger {
     format: combine(timestamp(), json()),
     transports: [
       new transports.File({
-        dirname: ".",
+        dirname: getConfig().taskLogsDirectory,
         filename: `${id}.log`,
       }),
     ],

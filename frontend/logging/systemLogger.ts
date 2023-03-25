@@ -1,15 +1,19 @@
 import type { Logger } from "ynab-sync-core";
 import winston from "winston";
 import { logLevels } from "./levels";
+import { getConfig } from "config";
 
 const winstonSystemLogger = winston.createLogger({
   levels: logLevels.levels,
   level: "debug",
-  format: winston.format.simple(),
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.simple()
+  ),
   transports: [
     new winston.transports.Console(),
     new winston.transports.File({
-      dirname: ".",
+      dirname: getConfig().systemLogsDirectory,
       filename: `ynab-sync.log`,
     }),
   ],
