@@ -5,6 +5,8 @@ import { prisma } from "../client";
 import { pathExistsSync } from "fs-extra";
 import type { TransactionImportResults } from "ynab-sync-core";
 import { max, maxBy, min, minBy } from "lodash";
+import { getConfig } from "../../config";
+import { join } from "path";
 
 export type SyncStatus =
   | "notsynced"
@@ -72,7 +74,9 @@ export async function getSyncDetail(
   if (sync === null)
     throw new Error(`Sync with id ${syncId} could not be found`);
 
-  const syncLogFilePath = `./Sync-${sync.id}.log`;
+  const config = getConfig();
+
+  const syncLogFilePath = join(config.taskLogsDirectory, `Sync-${sync.id}.log`);
 
   const logs: Array<SyncLogMessage> = [];
 

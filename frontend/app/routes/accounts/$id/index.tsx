@@ -28,12 +28,18 @@ import parser from "cron-parser";
 
 type ExpandablePaperProps = {
   title: string;
+  initiallyOpen?: boolean;
   children: React.ReactNode;
   className?: string;
 };
 
-function ExpandablePaper({ title, children, className }: ExpandablePaperProps) {
-  const [open, setOpen] = useState(false);
+function ExpandablePaper({
+  title,
+  initiallyOpen,
+  children,
+  className,
+}: ExpandablePaperProps) {
+  const [open, setOpen] = useState(initiallyOpen ?? false);
 
   return (
     <Paper className={classNames("flex flex-col p-0", className)}>
@@ -114,7 +120,7 @@ export default function Account() {
         />
       </div>
       <div className="flex flex-col gap-4">
-        <ExpandablePaper title="Details">
+        <ExpandablePaper title="Details" initiallyOpen={true}>
           <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-2">
             <DetailSection
               icon={<BankLogo bank={account.bank} className="mt-2" />}
@@ -146,7 +152,7 @@ export default function Account() {
             />
           </div>
         </ExpandablePaper>
-        <ExpandablePaper title="History">
+        <ExpandablePaper title="History" initiallyOpen={true}>
           <div className="flex flex-col pb-4">
             {account.history.map((h) => (
               <NavLink

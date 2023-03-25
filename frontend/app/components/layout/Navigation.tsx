@@ -15,15 +15,30 @@ type NavigationItemProps = {
   icon: React.ReactElement;
   to: string;
   className?: string;
+  orientation?: "vertical" | "horizontal";
 };
 
-const NavigationItem = ({ name, icon, to, className }: NavigationItemProps) => (
+const NavigationItem = ({
+  name,
+  icon,
+  to,
+  className,
+  orientation,
+}: NavigationItemProps) => (
   <NavLink
     to={to}
     className={({ isActive }) =>
       classnames(
-        "group flex flex-col items-center border-l-2 border-l-transparent py-4 text-gray-700 dark:text-gray-300",
-        { "!border-l-ynab": isActive },
+        "group flex flex-col items-center justify-center text-gray-700 dark:text-gray-300",
+        {
+          "border-l-2 border-l-transparent py-4":
+            orientation === undefined || orientation === "vertical",
+        },
+        {
+          "h-full border-b-2 border-b-transparent px-4":
+            orientation === "horizontal",
+        },
+        { "!border-l-ynab !border-b-ynab": isActive },
         className
       )
     }
@@ -45,11 +60,13 @@ export function NavigationRail({ environment }: NavigationProps) {
         to="/accounts"
         icon={<CreditCardIcon className="h-7 w-7" />}
         name="Accounts"
+        orientation="vertical"
       />
       <NavigationItem
         to="/credentials"
         icon={<KeyIcon className="h-7 w-7" />}
         name="Credentials"
+        orientation="vertical"
       />
       <div className="mt-auto">
         {/* {environment === "development" && (
@@ -63,6 +80,7 @@ export function NavigationRail({ environment }: NavigationProps) {
           to="/settings"
           icon={<Cog6ToothIcon className="h-7 w-7" />}
           name="Settings"
+          orientation="vertical"
         />
       </div>
     </div>
@@ -71,16 +89,18 @@ export function NavigationRail({ environment }: NavigationProps) {
 
 export function NavigationBar({ environment }: NavigationProps) {
   return (
-    <div className="flex h-16 w-full items-center justify-around dark:border-t-0 dark:border-t-gray-700 dark:bg-gray-800">
+    <div className="flex h-14 w-full items-center justify-around dark:bg-gray-800">
       <NavigationItem
         to="/accounts"
-        icon={<CreditCardIcon className="h-6 w-6" />}
+        icon={<CreditCardIcon className="h-7 w-7" />}
         name="Accounts"
+        orientation="horizontal"
       />
       <NavigationItem
         to="/credentials"
-        icon={<KeyIcon className="h-6 w-6" />}
+        icon={<KeyIcon className="h-7 w-7" />}
         name="Credentials"
+        orientation="horizontal"
       />
       {/* {environment === "development" && (
         <NavigationItem
@@ -91,8 +111,9 @@ export function NavigationBar({ environment }: NavigationProps) {
       )} */}
       <NavigationItem
         to="/settings"
-        icon={<Cog6ToothIcon className="h-6 w-6" />}
+        icon={<Cog6ToothIcon className="h-7 w-7" />}
         name="Settings"
+        orientation="horizontal"
       />
     </div>
   );
