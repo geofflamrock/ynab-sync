@@ -29,9 +29,9 @@ const NavigationItem = ({
     to={to}
     className={({ isActive }) =>
       classnames(
-        "group flex flex-col items-center justify-center text-gray-700 dark:text-gray-300",
+        "group flex flex-row items-center gap-3 px-4 text-gray-700 dark:text-gray-300",
         {
-          "border-l-2 border-l-transparent py-4":
+          "border-l-2 border-l-transparent py-2":
             orientation === undefined || orientation === "vertical",
         },
         {
@@ -44,7 +44,7 @@ const NavigationItem = ({
     }
   >
     <div className="group-hover:text-gray-100">{icon}</div>
-    {/* {name && <span className="text-xs">{name}</span>} */}
+    {name && <span className="text-sm group-hover:text-gray-100">{name}</span>}
   </NavLink>
 );
 
@@ -54,17 +54,17 @@ type NavigationProps = {
 
 export function NavigationRail({ environment }: NavigationProps) {
   return (
-    <div className="flex h-full w-14 flex-col dark:border-r-0 dark:border-r-gray-700 dark:bg-gray-800">
+    <div className="flex h-full w-64 flex-col gap-2 bg-gray-50 pt-4 pb-2 dark:bg-gray-900">
       {/* <NavigationItem to="/" icon={<Bars3Icon className="h-6 w-6" />} /> */}
       <NavigationItem
         to="/accounts"
-        icon={<CreditCardIcon className="h-7 w-7" />}
+        icon={<CreditCardIcon className="h-8 w-8" />}
         name="Accounts"
         orientation="vertical"
       />
       <NavigationItem
         to="/credentials"
-        icon={<KeyIcon className="h-7 w-7" />}
+        icon={<KeyIcon className="h-8 w-8" />}
         name="Credentials"
         orientation="vertical"
       />
@@ -78,7 +78,7 @@ export function NavigationRail({ environment }: NavigationProps) {
         )} */}
         <NavigationItem
           to="/settings"
-          icon={<Cog6ToothIcon className="h-7 w-7" />}
+          icon={<Cog6ToothIcon className="h-8 w-8" />}
           name="Settings"
           orientation="vertical"
         />

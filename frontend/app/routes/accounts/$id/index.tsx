@@ -78,7 +78,7 @@ export default function Account() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-wrap items-center justify-center gap-4">
+      {/* <div className="flex flex-wrap items-center justify-center gap-4">
         <Paper className="flex h-48 w-48 flex-col items-center justify-around gap-4 p-8">
           <div className="flex flex-col items-center justify-center gap-1">
             <SyncStatusIcon status={account.status} size="xl" />
@@ -118,7 +118,7 @@ export default function Account() {
           description="Total synced"
           value={account.totalTransactionsSynced?.toString() ?? "0"}
         />
-      </div>
+      </div> */}
       <div className="flex flex-col gap-4">
         <ExpandablePaper title="Details" initiallyOpen={true}>
           <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-2">
@@ -152,7 +152,7 @@ export default function Account() {
             />
           </div>
         </ExpandablePaper>
-        <ExpandablePaper title="History" initiallyOpen={true}>
+        <ExpandablePaper title="History" initiallyOpen={false}>
           <div className="flex flex-col pb-4">
             {account.history.map((h) => (
               <NavLink

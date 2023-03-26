@@ -123,7 +123,7 @@ export default function SyncHistoryDetail() {
               icon={
                 <SyncStatusIcon
                   status={syncDetail.status}
-                  size="large"
+                  size="lg"
                   className="mt-2"
                 />
               }
